@@ -11,7 +11,7 @@ web_agent = Agent(
     role="Handle web search requests",
     model=OpenAIChat(id="gpt-4o-mini"),
     tools=[DuckDuckGoTools()],
-    instructions="Always include sources.",
+    instructions="Sempre inclua fontes.",
     add_datetime_to_context=True,
 )
 
@@ -20,7 +20,7 @@ finance_agent = Agent(
     role="Handle financial data requests",
     model=OpenAIChat(id="gpt-4o-mini"),
     tools=[YFinanceTools()],
-    instructions="Use tables to display data.",
+    instructions="Use tabelas para exibir dados.",
     add_datetime_to_context=True,
 )
 
@@ -30,8 +30,8 @@ team_leader = Team(
     members=[web_agent, finance_agent],
     tools=[ReasoningTools(add_instructions=True)],
     instructions=[
-        "Use tables to display data.",
-        "Only respond with the final answer, no other text.",
+        "Use tabelas para exibir dados.",
+        "Responda apenas com a resposta final, nenhum outro texto.",
     ],
     markdown=True,
     show_members_responses=True,

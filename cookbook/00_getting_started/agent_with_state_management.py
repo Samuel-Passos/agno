@@ -1,22 +1,22 @@
 """
-Agent with State Management - Finance Agent with Watchlist
-===========================================================
-This example shows how to give your agent persistent state that it can
-read and modify. The agent maintains a stock watchlist across conversations.
+Agente com Gerenciamento de Estado - Agente Financeiro com Lista de Observação
+================================================================================
+Este exemplo mostra como dar ao seu agente estado persistente que ele pode
+ler e modificar. O agente mantém uma lista de observação de ações entre conversas.
 
-Different from storage (conversation history) and memory (user preferences),
-state is structured data the agent actively manages: counters, lists, flags.
+Diferente de armazenamento (histórico de conversas) e memória (preferências do usuário),
+estado é dados estruturados que o agente gerencia ativamente: contadores, listas, flags.
 
-Key concepts:
-- session_state: A dict that persists across runs
-- Tools can read/write state via run_context.session_state
-- State variables can be injected into instructions with {variable_name}
+Conceitos-chave:
+- session_state: Um dict que persiste entre execuções
+- Ferramentas podem ler/escrever estado via run_context.session_state
+- Variáveis de estado podem ser injetadas nas instruções com {variable_name}
 
-Example prompts to try:
-- "Add NVDA and AMD to my watchlist"
-- "What's on my watchlist?"
-- "Remove AMD from the list"
-- "How are my watched stocks doing today?"
+Exemplos de prompts para testar:
+- "Adicione NVDA e AMD à minha lista de observação"
+- "O que está na minha lista de observação?"
+- "Remova AMD da lista"
+- "Como estão minhas ações observadas hoje?"
 """
 
 from agno.agent import Agent
@@ -26,88 +26,88 @@ from agno.run import RunContext
 from agno.tools.yfinance import YFinanceTools
 
 # ============================================================================
-# Storage Configuration
+# Configuração de Armazenamento
 # ============================================================================
 agent_db = SqliteDb(db_file="tmp/agents.db")
 
 
 # ============================================================================
-# Custom Tools that Modify State
+# Ferramentas Personalizadas que Modificam Estado
 # ============================================================================
 def add_to_watchlist(run_context: RunContext, ticker: str) -> str:
     """
-    Add a stock ticker to the watchlist.
+    Adiciona um ticker de ação à lista de observação.
 
     Args:
-        ticker: Stock ticker symbol (e.g., NVDA, AAPL)
+        ticker: Símbolo do ticker da ação (ex: NVDA, AAPL)
 
     Returns:
-        Confirmation message
+        Mensagem de confirmação
     """
     ticker = ticker.upper().strip()
     watchlist = run_context.session_state.get("watchlist", [])
 
     if ticker in watchlist:
-        return f"{ticker} is already on your watchlist"
+        return f"{ticker} já está na sua lista de observação"
 
     watchlist.append(ticker)
     run_context.session_state["watchlist"] = watchlist
 
-    return f"Added {ticker} to watchlist. Current watchlist: {', '.join(watchlist)}"
+    return f"Adicionado {ticker} à lista de observação. Lista atual: {', '.join(watchlist)}"
 
 
 def remove_from_watchlist(run_context: RunContext, ticker: str) -> str:
     """
-    Remove a stock ticker from the watchlist.
+    Remove um ticker de ação da lista de observação.
 
     Args:
-        ticker: Stock ticker symbol to remove
+        ticker: Símbolo do ticker da ação a remover
 
     Returns:
-        Confirmation message
+        Mensagem de confirmação
     """
     ticker = ticker.upper().strip()
     watchlist = run_context.session_state.get("watchlist", [])
 
     if ticker not in watchlist:
-        return f"{ticker} is not on your watchlist"
+        return f"{ticker} não está na sua lista de observação"
 
     watchlist.remove(ticker)
     run_context.session_state["watchlist"] = watchlist
 
     if watchlist:
-        return f"Removed {ticker}. Remaining watchlist: {', '.join(watchlist)}"
-    return f"Removed {ticker}. Watchlist is now empty."
+        return f"Removido {ticker}. Lista restante: {', '.join(watchlist)}"
+    return f"Removido {ticker}. A lista de observação está vazia agora."
 
 
 # ============================================================================
-# Agent Instructions
+# Instruções do Agente
 # ============================================================================
 instructions = """\
-You are a Finance Agent that manages a stock watchlist.
+Você é um Agente Financeiro que gerencia uma lista de observação de ações.
 
-## Current Watchlist
+## Lista de Observação Atual
 {watchlist}
 
-## Capabilities
+## Capacidades
 
-1. Manage watchlist
-   - Add stocks: use add_to_watchlist tool
-   - Remove stocks: use remove_from_watchlist tool
+1. Gerenciar lista de observação
+   - Adicionar ações: use a ferramenta add_to_watchlist
+   - Remover ações: use a ferramenta remove_from_watchlist
 
-2. Get stock data
-   - Use YFinance tools to fetch prices and metrics for watched stocks
-   - Compare stocks on the watchlist
+2. Obter dados de ações
+   - Use ferramentas YFinance para buscar preços e métricas das ações observadas
+   - Compare ações na lista de observação
 
-## Rules
+## Regras
 
-- Always confirm watchlist changes
-- When asked about "my stocks" or "watchlist", refer to the current state
-- Fetch fresh data when reporting on watchlist performance\
+- Sempre confirme mudanças na lista de observação
+- Quando perguntado sobre "minhas ações" ou "lista de observação", refira-se ao estado atual
+- Busque dados atualizados ao relatar o desempenho da lista de observação\
 """
 
 # ============================================================================
-# Create the Agent
+# Criar o Agente
 # ============================================================================
 agent_with_state_management = Agent(
     name="Agent with State Management",
@@ -128,48 +128,48 @@ agent_with_state_management = Agent(
 )
 
 # ============================================================================
-# Run the Agent
+# Executar o Agente
 # ============================================================================
 if __name__ == "__main__":
-    # Add some stocks
+    # Adicionar algumas ações
     agent_with_state_management.print_response(
-        "Add NVDA, AAPL, and GOOGL to my watchlist",
+        "Adicione NVDA, AAPL e GOOGL à minha lista de observação",
         stream=True,
     )
 
-    # Check the watchlist
+    # Verificar a lista de observação
     agent_with_state_management.print_response(
-        "How are my watched stocks doing today?",
+        "Como estão minhas ações observadas hoje?",
         stream=True,
     )
 
-    # View the state directly
+    # Ver o estado diretamente
     print("\n" + "=" * 60)
-    print("Session State:")
+    print("Estado da Sessão:")
     print(
-        f"  Watchlist: {agent_with_state_management.get_session_state().get('watchlist', [])}"
+        f"  Lista de Observação: {agent_with_state_management.get_session_state().get('watchlist', [])}"
     )
     print("=" * 60)
 
 # ============================================================================
-# More Examples
+# Mais Exemplos
 # ============================================================================
 """
-State vs Storage vs Memory:
+Estado vs Armazenamento vs Memória:
 
-- State: Structured data the agent manages (watchlist, counters, flags)
-- Storage: Conversation history ("what did we discuss?")
-- Memory: User preferences ("what do I like?")
+- Estado: Dados estruturados que o agente gerencia (lista de observação, contadores, flags)
+- Armazenamento: Histórico de conversas ("o que discutimos?")
+- Memória: Preferências do usuário ("o que eu gosto?")
 
-State is perfect for:
-- Tracking items (watchlists, todos, carts)
-- Counters and progress
-- Multi-step workflows
-- Any structured data that changes during conversation
+Estado é perfeito para:
+- Rastrear itens (listas de observação, todos, carrinhos)
+- Contadores e progresso
+- Workflows de múltiplas etapas
+- Qualquer dado estruturado que muda durante a conversa
 
-Accessing state:
+Acessando estado:
 
-1. In tools: run_context.session_state["key"]
-2. In instructions: {key} (with add_session_state_to_context=True)
-3. After run: agent.get_session_state() or response.session_state
+1. Em ferramentas: run_context.session_state["key"]
+2. Em instruções: {key} (com add_session_state_to_context=True)
+3. Após execução: agent.get_session_state() ou response.session_state
 """

@@ -1,61 +1,61 @@
-# Customer Support Workflow
+# Workflow de Suporte ao Cliente
 
-A simple customer support system that caches solutions for faster resolution of repeated queries.
+Um sistema simples de suporte ao cliente que armazena soluções em cache para resolução mais rápida de consultas repetidas.
 
-## Overview
+## Visão Geral
 
-This workflow demonstrates basic workflow session state management by building a smart customer support system. It caches solutions for customer queries and returns instant responses for exact matches, while generating new solutions for unique problems.
+Este workflow demonstra o gerenciamento básico de estado de sessão do workflow construindo um sistema inteligente de suporte ao cliente. Ele armazena soluções em cache para consultas de clientes e retorna respostas instantâneas para correspondências exatas, enquanto gera novas soluções para problemas únicos.
 
-The workflow uses session state to store resolved queries and their solutions for efficient reuse.
+O workflow usa estado de sessão para armazenar consultas resolvidas e suas soluções para reutilização eficiente.
 
-## Getting Started
+## Começando
 
-### Prerequisites
-- OpenAI API key
+### Pré-requisitos
+- Chave de API OpenAI
 
-### Setup
+### Configuração
 ```bash
 export OPENAI_API_KEY="your-openai-key"
 ```
 
-Install dependencies
+Instalar dependências
 ```
 pip install agno openai
 ```
 
-Run the workflow
+Executar o workflow
 ```
 python cookbook/examples/workflows_2/customer_support/run_workflow.py
 ```
 
-## Workflow Flow
+## Fluxo do Workflow
 
-The customer support system processes tickets through these simple steps:
+O sistema de suporte ao cliente processa tickets através destes passos simples:
 
 ```
-Customer Support Resolution Pipeline
-├── 🔍 Check Cache
-│   ├── Look for exact query match in session state
-│   └── Return cached solution if found
-└── 🔧 Generate New Solution
-    ├── Classify the customer query
-    ├── Generate step-by-step solution
-    └── Cache solution for future use
+Pipeline de Resolução de Suporte ao Cliente
+├── 🔍 Verificar Cache
+│   ├── Procurar correspondência exata de consulta no estado de sessão
+│   └── Retornar solução em cache se encontrada
+└── 🔧 Gerar Nova Solução
+    ├── Classificar a consulta do cliente
+    ├── Gerar solução passo a passo
+    └── Armazenar solução em cache para uso futuro
 ```
 
-The workflow efficiently caches solutions and learns from each ticket. Exact query matches get resolved instantly from cache, while new queries trigger solution generation and caching.
+O workflow armazena soluções em cache de forma eficiente e aprende com cada ticket. Correspondências exatas de consulta são resolvidas instantaneamente do cache, enquanto novas consultas acionam geração e cache de soluções.
 
-## Session State Features
+## Recursos de Estado de Sessão
 
-**Simple Caching**: Stores query-solution pairs for instant retrieval
+**Cache Simples**: Armazena pares consulta-solução para recuperação instantânea
 
-**Automatic Learning**: Each new solution is automatically cached for future reuse
+**Aprendizado Automático**: Cada nova solução é automaticamente armazenada em cache para reutilização futura
 
-**Intelligent Agents**: Uses triage agent for classification and support agent for solution development
+**Agentes Inteligentes**: Usa agente de triagem para classificação e agente de suporte para desenvolvimento de soluções
 
-## Agents
+## Agentes
 
-- **Triage Agent**: Classifies customer queries by category, priority, and tags
-- **Support Agent**: Develops clear, step-by-step solutions for customer issues
+- **Agente de Triagem**: Classifica consultas de clientes por categoria, prioridade e tags
+- **Agente de Suporte**: Desenvolve soluções claras, passo a passo para problemas de clientes
 
-The workflow demonstrates how session state can be used to build learning systems that improve over time through caching and reuse. 
+O workflow demonstra como o estado de sessão pode ser usado para construir sistemas de aprendizado que melhoram ao longo do tempo através de cache e reutilização. 

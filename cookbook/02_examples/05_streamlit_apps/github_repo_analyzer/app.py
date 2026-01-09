@@ -47,13 +47,13 @@ def on_model_change():
             if current_model and current_model != new_model_id:
                 try:
                     st.session_state["is_loading_session"] = False
-                    # Start new chat
+                    # Iniciar novo chat
                     restart_agent(model_id=new_model_id)
 
                 except Exception as e:
-                    st.sidebar.error(f"Error switching to {selected_model}: {str(e)}")
+                    st.sidebar.error(f"Erro ao mudar para {selected_model}: {str(e)}")
         else:
-            st.sidebar.error(f"Unknown model: {selected_model}")
+            st.sidebar.error(f"Modelo desconhecido: {selected_model}")
 
 
 def main():
@@ -61,18 +61,18 @@ def main():
     # App header
     ####################################################################
     st.markdown(
-        "<h1 class='main-title'>GitHub Repository Analyzer</h1>", unsafe_allow_html=True
+        "<h1 class='main-title'>Analisador de Repositório GitHub</h1>", unsafe_allow_html=True
     )
     st.markdown(
-        "<p class='subtitle'>Your intelligent GitHub analysis assistant powered by Agno</p>",
+        "<p class='subtitle'>Seu assistente de análise do GitHub inteligente alimentado por Agno</p>",
         unsafe_allow_html=True,
     )
 
     ####################################################################
-    # Model selector
+    # Seletor de modelo
     ####################################################################
     selected_model = st.sidebar.selectbox(
-        "Select Model",
+        "Selecionar Modelo",
         options=MODELS,
         index=0,
         key="model_selector",
@@ -80,71 +80,71 @@ def main():
     )
 
     ####################################################################
-    # Initialize Agent and Session
+    # Inicializar Agente e Sessão
     ####################################################################
     github_analyzer_agent = initialize_agent(selected_model, get_github_agent)
     reset_session_state(github_analyzer_agent)
 
-    if prompt := st.chat_input("👨‍💻 Ask me about GitHub repositories!"):
+    if prompt := st.chat_input("👨‍💻 Pergunte-me sobre repositórios do GitHub!"):
         add_message("user", prompt)
 
     ####################################################################
-    # GitHub Configuration
+    # Configuração do GitHub
     ####################################################################
-    st.sidebar.markdown("#### 🔑 Configuration")
+    st.sidebar.markdown("#### 🔑 Configuração")
 
     github_token = st.sidebar.text_input(
-        "GitHub Personal Access Token",
+        "Token de Acesso Pessoal do GitHub",
         type="password",
-        help="Optional: Provides access to private repositories and higher rate limits",
+        help="Opcional: Fornece acesso a repositórios privados e limites de taxa mais altos",
         placeholder="ghp_xxxxxxxxxxxx",
     )
 
     if github_token:
-        st.sidebar.success("✅ GitHub token configured")
+        st.sidebar.success("✅ Token do GitHub configurado")
     else:
-        st.sidebar.info("💡 Add your GitHub token for enhanced access")
+        st.sidebar.info("💡 Adicionar seu token do GitHub para acesso aprimorado")
 
     st.sidebar.markdown(
-        "[How to create a GitHub PAT?](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic)"
+        "[Como criar um PAT do GitHub?](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic)"
     )
 
     ###############################################################
-    # Sample Questions
+    # Perguntas de Exemplo
     ###############################################################
-    st.sidebar.markdown("#### ❓ Sample Questions")
+    st.sidebar.markdown("#### ❓ Perguntas de Exemplo")
 
-    if st.sidebar.button("📊 Analyze agno-agi/agno"):
+    if st.sidebar.button("📊 Analisar agno-agi/agno"):
         add_message(
             "user",
-            "Analyze the repository 'agno-agi/agno' - show me the structure, main languages, and recent activity",
+            "Analisar o repositório 'agno-agi/agno' - mostrar-me a estrutura, principais linguagens e atividade recente",
         )
 
-    if st.sidebar.button("🔍 Latest Issues"):
+    if st.sidebar.button("🔍 Issues Mais Recentes"):
         add_message(
             "user",
-            "Show me the latest issues in 'microsoft/vscode'",
+            "Mostrar-me as issues mais recentes em 'microsoft/vscode'",
         )
 
-    if st.sidebar.button("📝 Review Latest PR"):
+    if st.sidebar.button("📝 Revisar PR Mais Recente"):
         add_message(
             "user",
-            "Find and review the latest pull request in 'facebook/react'",
+            "Encontrar e revisar o pull request mais recente em 'facebook/react'",
         )
 
-    if st.sidebar.button("📚 Repository Stats"):
+    if st.sidebar.button("📚 Estatísticas do Repositório"):
         add_message(
             "user",
-            "What are the repository statistics for 'tensorflow/tensorflow'?",
+            "Quais são as estatísticas do repositório para 'tensorflow/tensorflow'?",
         )
 
     ###############################################################
-    # Utility buttons
+    # Botões de utilidade
     ###############################################################
-    st.sidebar.markdown("#### 🛠️ Utilities")
+    st.sidebar.markdown("#### 🛠️ Utilitários")
     col1, col2 = st.sidebar.columns([1, 1])
     with col1:
-        if st.sidebar.button("🔄 New Chat", use_container_width=True):
+        if st.sidebar.button("🔄 Novo Chat", use_container_width=True):
             restart_agent()
             st.rerun()
 
@@ -168,20 +168,20 @@ def main():
                 filename = "github_analyzer_chat_new.md"
 
             if st.sidebar.download_button(
-                "💾 Export Chat",
+                "💾 Exportar Chat",
                 export_chat_history("GitHub Repository Analyzer"),
                 file_name=filename,
                 mime="text/markdown",
                 use_container_width=True,
-                help=f"Export {len(st.session_state['messages'])} messages",
+                help=f"Exportar {len(st.session_state['messages'])} mensagens",
             ):
-                st.sidebar.success("Chat history exported!")
+                st.sidebar.success("Histórico de chat exportado!")
         else:
             st.sidebar.button(
-                "💾 Export Chat",
+                "💾 Exportar Chat",
                 disabled=True,
                 use_container_width=True,
-                help="No messages to export",
+                help="Nenhuma mensagem para exportar",
             )
 
     ####################################################################
@@ -203,7 +203,7 @@ def main():
     # About section
     ####################################################################
     about_section(
-        "This GitHub Repository Analyzer helps you analyze code repositories, review pull requests, and understand project structures using natural language queries."
+        "Este Analisador de Repositório GitHub ajuda você a analisar repositórios de código, revisar pull requests e entender estruturas de projeto usando consultas em linguagem natural."
     )
 
 

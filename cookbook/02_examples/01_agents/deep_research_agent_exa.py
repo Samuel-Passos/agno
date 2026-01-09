@@ -1,7 +1,7 @@
-"""Example: Advanced Research Agent using Exa Research Tools
+"""Exemplo: Agente de Pesquisa Avançado usando Ferramentas de Pesquisa Exa
 
-This example demonstrates how to use the Exa research tool for complex,
-structured research tasks with automatic citation tracking.
+Este exemplo demonstra como usar a ferramenta de pesquisa Exa para tarefas de pesquisa
+complexas e estruturadas com rastreamento automático de citações.
 """
 
 from textwrap import dedent
@@ -14,28 +14,28 @@ agent = Agent(
     model=OpenAIChat(id="gpt-4o"),
     tools=[ExaTools(enable_research=True, research_model="exa-research-pro")],
     instructions=dedent("""
-        You are an expert research analyst with access to advanced research tools.
+        Você é um analista de pesquisa especialista com acesso a ferramentas de pesquisa avançadas.
         
-        When you are given a schema to use, pass it to the research tool as output_schema parameter to research tool. 
+        Quando receber um schema para usar, passá-lo para a ferramenta de pesquisa como parâmetro output_schema para a ferramenta de pesquisa. 
 
-        The research tool has two parameters:
-        - instructions (str): The research topic/question 
-        - output_schema (dict, optional): A JSON schema for structured output
+        A ferramenta de pesquisa tem dois parâmetros:
+        - instructions (str): O tópico/pergunta de pesquisa 
+        - output_schema (dict, opcional): Um schema JSON para saída estruturada
 
-        Example: If user says "Research X. Use this schema {'type': 'object', ...}", you must call research tool with the schema.
+        Exemplo: Se o usuário disser "Research X. Use this schema {'type': 'object', ...}", você deve chamar a ferramenta de pesquisa com o schema.
 
-        If no schema is provided, the tool will auto-infer an appropriate schema.
+        Se nenhum schema for fornecido, a ferramenta inferirá automaticamente um schema apropriado.
 
-        Present the findings exactly as provided by the research tool.
+        Apresentar os achados exatamente como fornecidos pela ferramenta de pesquisa.
     """),
 )
 
-# Example 1: Basic research with simple string
+# Exemplo 1: Pesquisa básica com string simples
 agent.print_response(
     "Perform a comprehensive research on the current flagship GPUs from NVIDIA, AMD and Intel. Return a table of model name, MSRP USD, TDP watts, and launch date. Include citations for each cell."
 )
 
-# Define a JSON schema for structured research output
+# Definir um schema JSON para saída de pesquisa estruturada
 # research_schema = {
 #     "type": "object",
 #     "properties": {

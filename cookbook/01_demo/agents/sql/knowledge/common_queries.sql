@@ -1,5 +1,5 @@
 -- <query description>
--- How many races did the championship winners win each year?
+-- Quantas corridas os campeões ganharam a cada ano?
 -- </query description>
 -- <query>
 SELECT
@@ -22,7 +22,7 @@ ORDER BY
 
 
 -- <query description>
--- Compare the number of race wins vs championship positions for constructors in 2019
+-- Comparar o número de vitórias vs posições no campeonato para construtores em 2019
 -- </query description>
 -- <query>
 WITH race_wins_2019 AS (
@@ -44,7 +44,7 @@ ORDER BY cp.position;
 -- </query>
 
 -- <query description>
--- Most race wins by a driver
+-- Mais vitórias por um piloto
 -- </query description>
 -- <query>
 SELECT name, COUNT(*) AS win_count
@@ -55,7 +55,7 @@ LIMIT 1;
 -- </query>
 
 -- <query description>
--- Which team won the most Constructors Championships?
+-- Qual equipe ganhou mais Campeonatos de Construtores?
 -- </query description>
 -- <query>
 SELECT team, COUNT(*) AS championship_wins

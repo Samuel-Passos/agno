@@ -1,31 +1,31 @@
-"""🤖 Agentic RAG - Your AI Knowledge Agent!
-This advanced example shows how to build a sophisticated RAG (Retrieval Augmented Generation) system that
-leverages vector search and Language Models to provide deep insights from any knowledge base.
+"""🤖 Agentic RAG - Seu Agente de Conhecimento de IA!
+Este exemplo avançado mostra como construir um sistema RAG (Retrieval Augmented Generation) sofisticado que
+aproveita busca vetorial e Modelos de Linguagem para fornecer insights profundos de qualquer base de conhecimento.
 
-The Agent can:
-- Process and understand documents from multiple sources (PDFs, websites, text files)
-- Build a searchable knowledge base using vector embeddings
-- Maintain conversation context and memory across sessions
-- Provide relevant citations and sources for its responses
-- Generate summaries and extract key insights
-- Answer follow-up questions and clarifications
+O Agente pode:
+- Processar e entender documentos de múltiplas fontes (PDFs, sites, arquivos de texto)
+- Construir uma base de conhecimento pesquisável usando embeddings vetoriais
+- Manter contexto de conversa e memória através de sessões
+- Fornecer citações e fontes relevantes para suas respostas
+- Gerar resumos e extrair insights-chave
+- Responder perguntas de acompanhamento e esclarecimentos
 
-Example Queries to Try:
-- "What are the key points from this document?"
-- "Can you summarize the main arguments and supporting evidence?"
-- "What are the important statistics and findings?"
-- "How does this relate to [topic X]?"
-- "What are the limitations or gaps in this analysis?"
-- "Can you explain [concept X] in more detail?"
-- "What other sources support or contradict these claims?"
+Exemplos de Consultas para Tentar:
+- "Quais são os pontos-chave deste documento?"
+- "Você pode resumir os principais argumentos e evidências de apoio?"
+- "Quais são as estatísticas e descobertas importantes?"
+- "Como isso se relaciona com [tópico X]?"
+- "Quais são as limitações ou lacunas nesta análise?"
+- "Você pode explicar [conceito X] em mais detalhes?"
+- "Quais outras fontes apoiam ou contradizem essas afirmações?"
 
-The Agent uses:
-- Vector similarity search for relevant document retrieval
-- Conversation memory for contextual responses
-- Citation tracking for source attribution
-- Dynamic knowledge base updates
+O Agente usa:
+- Busca de similaridade vetorial para recuperação de documentos relevantes
+- Memória de conversa para respostas contextuais
+- Rastreamento de citações para atribuição de fontes
+- Atualizações dinâmicas da base de conhecimento
 
-View the README for instructions on how to run the application.
+Ver o README para instruções sobre como executar a aplicação.
 """
 
 from textwrap import dedent
@@ -47,7 +47,7 @@ def get_agentic_rag_agent(
     user_id: Optional[str] = None,
     session_id: Optional[str] = None,
 ) -> Agent:
-    """Get an Agentic RAG Agent with Memory"""
+    """Obter um Agente Agentic RAG com Memória"""
     contents_db = PostgresDb(
         db_url=db_url,
         knowledge_table="agentic_rag_knowledge_contents",
@@ -86,31 +86,31 @@ def get_agentic_rag_agent(
         session_id=session_id,
         tools=[DuckDuckGoTools()],
         instructions=dedent("""
-            1. Knowledge Base Search:
-               - ALWAYS start by searching the knowledge base using search_knowledge_base tool
-               - Analyze ALL returned documents thoroughly before responding
-               - If multiple documents are returned, synthesize the information coherently
-            2. External Search:
-               - If knowledge base search yields insufficient results, use duckduckgo_search
-               - Focus on reputable sources and recent information
-               - Cross-reference information from multiple sources when possible
-            3. Context Management:
-               - Use get_chat_history tool to maintain conversation continuity
-               - Reference previous interactions when relevant
-               - Keep track of user preferences and prior clarifications
-            4. Response Quality:
-               - Provide specific citations and sources for claims
-               - Structure responses with clear sections and bullet points when appropriate
-               - Include relevant quotes from source materials
-               - Avoid hedging phrases like 'based on my knowledge' or 'depending on the information'
-            5. User Interaction:
-               - Ask for clarification if the query is ambiguous
-               - Break down complex questions into manageable parts
-               - Proactively suggest related topics or follow-up questions
-            6. Error Handling:
-               - If no relevant information is found, clearly state this
-               - Suggest alternative approaches or questions
-               - Be transparent about limitations in available information
+            1. Busca na Base de Conhecimento:
+               - SEMPRE começar buscando na base de conhecimento usando a ferramenta search_knowledge_base
+               - Analisar TODOS os documentos retornados completamente antes de responder
+               - Se múltiplos documentos forem retornados, sintetizar as informações de forma coerente
+            2. Busca Externa:
+               - Se a busca na base de conhecimento produzir resultados insuficientes, usar duckduckgo_search
+               - Focar em fontes respeitáveis e informações recentes
+               - Fazer referência cruzada de informações de múltiplas fontes quando possível
+            3. Gerenciamento de Contexto:
+               - Usar a ferramenta get_chat_history para manter continuidade da conversa
+               - Referenciar interações anteriores quando relevante
+               - Manter controle das preferências do usuário e esclarecimentos anteriores
+            4. Qualidade da Resposta:
+               - Fornecer citações e fontes específicas para afirmações
+               - Estruturar respostas com seções claras e marcadores quando apropriado
+               - Incluir citações relevantes dos materiais de origem
+               - Evitar frases evasivas como 'com base no meu conhecimento' ou 'dependendo das informações'
+            5. Interação com o Usuário:
+               - Pedir esclarecimentos se a consulta for ambígua
+               - Dividir perguntas complexas em partes gerenciáveis
+               - Sugerir proativamente tópicos relacionados ou perguntas de acompanhamento
+            6. Tratamento de Erros:
+               - Se nenhuma informação relevante for encontrada, declarar isso claramente
+               - Sugerir abordagens alternativas ou perguntas
+               - Ser transparente sobre limitações nas informações disponíveis
         """),
         markdown=True,
         debug_mode=True,

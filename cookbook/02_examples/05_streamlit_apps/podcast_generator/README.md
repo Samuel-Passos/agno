@@ -1,6 +1,6 @@
-# Podcast Generator
+# Gerador de Podcast
 
-**Podcast Generator** s an AI-powered podcast agent that generates high-quality podcasts on any topic. It uses real-time search using DuckDuckGo and AI-generated narration to create professional podcast scripts with realistic voices.
+**Gerador de Podcast** é um agente de podcast alimentado por IA que gera podcasts de alta qualidade sobre qualquer tópico. Usa busca em tempo real usando DuckDuckGo e narração gerada por IA para criar roteiros de podcast profissionais com vozes realistas.
 
 > Note: Fork and clone this repository if needed
 

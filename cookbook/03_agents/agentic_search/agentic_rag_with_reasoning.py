@@ -1,7 +1,7 @@
-"""This cookbook shows how to implement Agentic RAG with Reasoning.
-1. Run: `pip install agno anthropic cohere lancedb tantivy sqlalchemy` to install the dependencies
-2. Export your ANTHROPIC_API_KEY and CO_API_KEY
-3. Run: `python cookbook/agent_concepts/agentic_search/agentic_rag_with_reasoning.py` to run the agent
+"""Este livro de receitas mostra como implementar RAG Agente com Raciocínio.
+1. Executar: `pip install agno anthropic cohere lancedb tantivy sqlalchemy` para instalar as dependências
+2. Exportar suas ANTHROPIC_API_KEY e CO_API_KEY
+3. Executar: `python cookbook/agent_concepts/agentic_search/agentic_rag_with_reasoning.py` para executar o agente
 """
 
 import asyncio
@@ -15,7 +15,7 @@ from agno.tools.reasoning import ReasoningTools
 from agno.vectordb.lancedb import LanceDb, SearchType
 
 knowledge = Knowledge(
-    # Use LanceDB as the vector database, store embeddings in the `agno_docs` table
+    # Usar LanceDB como banco de dados vetorial, armazenar embeddings na tabela `agno_docs`
     vector_db=LanceDb(
         uri="tmp/lancedb",
         table_name="agno_docs",
@@ -33,22 +33,22 @@ asyncio.run(
 
 agent = Agent(
     model=Claude(id="claude-sonnet-4-20250514"),
-    # Agentic RAG is enabled by default when `knowledge` is provided to the Agent.
+    # RAG Agente é habilitado por padrão quando `knowledge` é fornecido ao Agent.
     knowledge=knowledge,
-    # search_knowledge=True gives the Agent the ability to search on demand
-    # search_knowledge is True by default
+    # search_knowledge=True dá ao Agent a capacidade de buscar sob demanda
+    # search_knowledge é True por padrão
     search_knowledge=True,
     tools=[ReasoningTools(add_instructions=True)],
     instructions=[
-        "Include sources in your response.",
-        "Always search your knowledge before answering the question.",
+        "Incluir fontes em sua resposta.",
+        "Sempre buscar seu conhecimento antes de responder a pergunta.",
     ],
     markdown=True,
 )
 
 if __name__ == "__main__":
     agent.print_response(
-        "What are Agents?",
+        "O que são Agentes?",
         stream=True,
         show_full_reasoning=True,
     )

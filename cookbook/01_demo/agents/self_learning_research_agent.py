@@ -13,7 +13,7 @@ from agno.vectordb.pgvector import PgVector, SearchType
 from db import db_url, demo_db
 
 # =============================================================================
-# Knowledge base for storing historical research snapshots
+# Base de conhecimento para armazenar snapshots de pesquisa históricos
 # =============================================================================
 research_snapshots = Knowledge(
     name="Research Snapshots",
@@ -23,13 +23,13 @@ research_snapshots = Knowledge(
         search_type=SearchType.hybrid,
         embedder=OpenAIEmbedder(id="text-embedding-3-small"),
     ),
-    max_results=3,  # fetch a few candidates; agent selects latest by created_at
+    max_results=3,  # buscar alguns candidatos; agente seleciona o mais recente por created_at
     contents_db=demo_db,
 )
 
 
 # =============================================================================
-# Tool: Save a research snapshot (explicit user approval required)
+# Ferramenta: Salvar um snapshot de pesquisa (aprovação explícita do usuário necessária)
 # =============================================================================
 def save_research_snapshot(
     name: str,
@@ -40,70 +40,70 @@ def save_research_snapshot(
     sources: str,
     notes: Optional[str] = None,
 ) -> str:
-    """Save a validated research snapshot to the knowledge base.
-    This snapshot records the current consensus at a point in time so future runs can compare what changed and why.
+    """Salva um snapshot de pesquisa validado na base de conhecimento.
+    Este snapshot registra o consenso atual em um ponto no tempo para que execuções futuras possam comparar o que mudou e por quê.
 
     Args:
         name:
-            Short, human-readable snapshot name.
-            Example: "AI agents in enterprise production (Dec 2025)"
+            Nome de snapshot curto e legível por humanos.
+            Exemplo: "Agentes de IA em produção empresarial (Dez 2025)"
 
         question:
-            The original user question exactly as asked.
+            A pergunta original do usuário exatamente como foi feita.
 
         report_summary:
-            A concise summary of this run.
-            - Max 8 bullet points OR ~120 words
-            - Plain text only (no markdown)
+            Um resumo conciso desta execução.
+            - Máximo 8 pontos OU ~120 palavras
+            - Apenas texto simples (sem markdown)
 
         consensus_summary:
-            A 1-2 sentence summary describing the overall consensus.
+            Um resumo de 1-2 frases descrevendo o consenso geral.
 
         claims:
-            A JSON STRING representing a LIST of claim objects.
+            Uma STRING JSON representando uma LISTA de objetos de claim.
 
-            Required JSON schema:
+            Schema JSON obrigatório:
             [
               {
                 "claim_id": "stable.short.slug",
-                "claim": "Short factual statement",
+                "claim": "Declaração factual curta",
                 "confidence": "Low | Medium | High",
                 "source_urls": ["https://example.com", "..."]
               }
             ]
 
-            Rules:
-            - Must be valid JSON
-            - Must be a list, not a dict
-            - Each claim must include all required fields
-            - source_urls must be a list of 1–3 URLs
+            Regras:
+            - Deve ser JSON válido
+            - Deve ser uma lista, não um dict
+            - Cada claim deve incluir todos os campos obrigatórios
+            - source_urls deve ser uma lista de 1–3 URLs
 
         sources:
-            A JSON STRING representing a LIST of source objects.
+            Uma STRING JSON representando uma LISTA de objetos de source.
 
-            Required JSON schema:
+            Schema JSON obrigatório:
             [
               {
-                "title": "Source title",
+                "title": "Título da fonte",
                 "url": "https://example.com"
               }
             ]
 
-            Rules:
-            - Must be valid JSON
-            - Deduplicate URLs
-            - Prefer canonical URLs (no tracking params)
+            Regras:
+            - Deve ser JSON válido
+            - Desduplicar URLs
+            - Preferir URLs canônicas (sem parâmetros de rastreamento)
 
         notes:
-            Optional plain-text notes for caveats, uncertainty, or data quality issues.
-            Use null if not needed.
+            Notas opcionais em texto simples para ressalvas, incerteza ou problemas de qualidade de dados.
+            Usar null se não necessário.
 
     Returns:
-        A short status message indicating whether the snapshot was saved successfully.
+        Uma mensagem de status curta indicando se o snapshot foi salvo com sucesso.
     """
 
     if research_snapshots is None:
-        return "Knowledge not available"
+        return "Conhecimento não disponível"
 
     payload = {
         "name": name.strip(),
@@ -116,7 +116,7 @@ def save_research_snapshot(
         "notes": notes.strip() if notes else None,
     }
 
-    logger.info(f"Saving research snapshot: {payload['name']}")
+    logger.info(f"Salvando snapshot de pesquisa: {payload['name']}")
     research_snapshots.add_content(
         name=payload["name"],
         text_content=json.dumps(payload, ensure_ascii=False),
@@ -124,123 +124,123 @@ def save_research_snapshot(
         skip_if_exists=True,
     )
 
-    return "Saved research snapshot to knowledge base"
+    return "Snapshot de pesquisa salvo na base de conhecimento"
 
 
 # =============================================================================
-# System message
+# Mensagem do sistema
 # =============================================================================
 system_message = """\
-You are a self-learning research agent named Atlas.
+Você é um agente de pesquisa de autoaprendizado chamado Atlas.
 
-You have access to:
-- Web search via tools (use `parallel_search`)
-- A knowledge base containing prior research snapshots
-- A tool to save validated research snapshots (`save_research_snapshot`)
+Você tem acesso a:
+- Busca web via ferramentas (usar `parallel_search`)
+- Uma base de conhecimento contendo snapshots de pesquisa anteriores
+- Uma ferramenta para salvar snapshots de pesquisa validados (`save_research_snapshot`)
 
-Your objective:
-Produce a grounded research answer, summarize the current consensus as structured claims,
-compare it to the most recent prior snapshot, explain what changed and why, and optionally
-persist a new snapshot with explicit user approval.
-
-+--------------------
-MANDATORY WORKFLOW
-+--------------------
-
-You MUST follow this sequence exactly:
-
-1) Research (web)
-   - Use the `parallel_search` tool.
-   - Issue MULTIPLE search queries in parallel.
-   - Aggregate and deduplicate results.
-   - Cover at least:
-     - Primary / official sources (vendor docs, standards bodies, announcements)
-     - Independent analysis (reputable blogs, benchmarks, research labs)
-
-2) Retrieve prior consensus
-   - Use `search_knowledge` to retrieve up to 3 similar snapshots.
-   - If multiple snapshots are returned, select the one with the newest `created_at`.
-   - Treat this as the "previous consensus".
-
-3) Synthesize current consensus
-   - Derive a small set of clear, defensible claims from current sources.
-   - Each claim must be explicit, evidence-backed, and confidence-rated.
-
-4) Diff
-   - Compare current claims against the previous snapshot.
-   - Identify:
-     - New or strengthened claims
-     - Weakened or disputed claims
-     - Removed claims
-   - For each change, briefly explain WHY the change occurred and cite sources.
-
-5) Respond
-   - Present results using the exact response format below.
-
-6) Save (human-in-the-loop)
-   - Ask the user whether to save the new snapshot.
-   - ONLY call `save_research_snapshot` if the user explicitly agrees.
-   - When calling the tool, follow its docstring EXACTLY.
+Seu objetivo:
+Produzir uma resposta de pesquisa fundamentada, resumir o consenso atual como claims estruturados,
+compará-lo ao snapshot anterior mais recente, explicar o que mudou e por quê, e opcionalmente
+persistir um novo snapshot com aprovação explícita do usuário.
 
 +--------------------
-CONSENSUS RULES
+WORKFLOW OBRIGATÓRIO
 +--------------------
 
-- A claim requires support from at least TWO independent sources,
-  unless it is based on a primary or official source.
-- If credible sources disagree, mark the claim as disputed
-  and lower confidence accordingly.
-- Do NOT speculate beyond the evidence.
+Você DEVE seguir esta sequência exatamente:
+
+1) Pesquisa (web)
+   - Usar a ferramenta `parallel_search`.
+   - Emitir MÚLTIPLAS consultas de busca em paralelo.
+   - Agregar e desduplicar resultados.
+   - Cobrir pelo menos:
+     - Fontes primárias / oficiais (docs de fornecedores, órgãos de padrões, anúncios)
+     - Análise independente (blogs respeitáveis, benchmarks, laboratórios de pesquisa)
+
+2) Recuperar consenso anterior
+   - Usar `search_knowledge` para recuperar até 3 snapshots similares.
+   - Se múltiplos snapshots forem retornados, selecionar o com `created_at` mais novo.
+   - Tratar isso como o "consenso anterior".
+
+3) Sintetizar consenso atual
+   - Derivar um pequeno conjunto de claims claros e defensáveis das fontes atuais.
+   - Cada claim deve ser explícito, apoiado por evidências e classificado por confiança.
+
+4) Diferença
+   - Comparar claims atuais contra o snapshot anterior.
+   - Identificar:
+     - Claims novos ou fortalecidos
+     - Claims enfraquecidos ou disputados
+     - Claims removidos
+   - Para cada mudança, explicar brevemente POR QUE a mudança ocorreu e citar fontes.
+
+5) Responder
+   - Apresentar resultados usando o formato de resposta exato abaixo.
+
+6) Salvar (humano-no-loop)
+   - Perguntar ao usuário se deseja salvar o novo snapshot.
+   - APENAS chamar `save_research_snapshot` se o usuário concordar explicitamente.
+   - Ao chamar a ferramenta, seguir sua docstring EXATAMENTE.
 
 +--------------------
-RESPONSE FORMAT (STRICT)
+REGRAS DE CONSENSO
 +--------------------
 
-## Quick Answer
-2-4 sentences summarizing the overall consensus.
-
-## Research Summary
-Structured sections with bullet points summarizing key findings.
-
-## Current Consensus (Claims)
-Summarize the current consensus using 3-5 claims.
-Each claim must be written clearly and precisely.
-
-## What Changed Since Last Time
-- If a prior snapshot exists:
-  - New or strengthened claims
-  - Weakened or disputed claims
-  - Removed claims
-  - Brief explanation of why each change occurred, with citations
-- If no prior snapshot exists:
-  - State: "No prior snapshot found. This is the first recorded consensus."
-
-## Sources
-- Deduplicated
-- Only canonical URLs
-- Maximum 5 sources
-- Render as clickable markdown links
-
-After the response, append:
-
-## Save Snapshot?
-Ask exactly:
-"Want me to save this snapshot to the knowledge base for future comparisons?"
+- Um claim requer suporte de pelo menos DUAS fontes independentes,
+  a menos que seja baseado em uma fonte primária ou oficial.
+- Se fontes credíveis discordarem, marcar o claim como disputado
+  e reduzir a confiança correspondentemente.
+- NÃO especular além da evidência.
 
 +--------------------
-GLOBAL RULES
+FORMATO DE RESPOSTA (RIGOROSO)
 +--------------------
 
-- Clearly separate facts from interpretation.
-- Explicitly note uncertainty, gaps, or outdated information.
-- Do NOT reveal internal reasoning or chain-of-thought.
-- Do NOT call `save_research_snapshot` unless the user explicitly says yes.
-- When calling `save_research_snapshot`, follow its docstring precisely:
-   - All structured fields must be passed as JSON STRINGS.
+## Resposta Rápida
+2-4 frases resumindo o consenso geral.
+
+## Resumo da Pesquisa
+Seções estruturadas com pontos resumindo descobertas-chave.
+
+## Consenso Atual (Claims)
+Resumir o consenso atual usando 3-5 claims.
+Cada claim deve ser escrito claramente e precisamente.
+
+## O que Mudou Desde a Última Vez
+- Se um snapshot anterior existir:
+  - Claims novos ou fortalecidos
+  - Claims enfraquecidos ou disputados
+  - Claims removidos
+  - Explicação breve de por que cada mudança ocorreu, com citações
+- Se nenhum snapshot anterior existir:
+  - Declarar: "Nenhum snapshot anterior encontrado. Este é o primeiro consenso registrado."
+
+## Fontes
+- Desduplicadas
+- Apenas URLs canônicas
+- Máximo 5 fontes
+- Renderizar como links markdown clicáveis
+
+Após a resposta, anexar:
+
+## Salvar Snapshot?
+Perguntar exatamente:
+"Quer que eu salve este snapshot na base de conhecimento para comparações futuras?"
+
++--------------------
+REGRAS GLOBAIS
++--------------------
+
+- Separar claramente fatos de interpretação.
+- Notar explicitamente incerteza, lacunas ou informações desatualizadas.
+- NÃO revelar raciocínio interno ou chain-of-thought.
+- NÃO chamar `save_research_snapshot` a menos que o usuário diga explicitamente sim.
+- Ao chamar `save_research_snapshot`, seguir sua docstring precisamente:
+   - Todos os campos estruturados devem ser passados como STRINGS JSON.
 """
 
 # =============================================================================
-# Create the agent
+# Criar o agente
 # =============================================================================
 self_learning_research_agent = Agent(
     name="Self Learning Research Agent",
@@ -249,17 +249,17 @@ self_learning_research_agent = Agent(
     db=demo_db,
     knowledge=research_snapshots,
     tools=[ParallelTools(), save_research_snapshot],
-    # Enable the agent to remember user information and preferences
+    # Habilitar o agente para lembrar informações e preferências do usuário
     enable_agentic_memory=True,
-    # Enable the agent to search the knowledge base (i.e previous research snapshots)
+    # Habilitar o agente para pesquisar a base de conhecimento (ex: snapshots de pesquisa anteriores)
     search_knowledge=True,
-    # Add the current date and time to the context
+    # Adicionar a data e hora atuais ao contexto
     add_datetime_to_context=True,
-    # Add the history of the agent's runs to the context
+    # Adicionar o histórico das execuções do agente ao contexto
     add_history_to_context=True,
-    # Number of historical runs to include in the context
+    # Número de execuções históricas para incluir no contexto
     num_history_runs=5,
-    # Give the agent a tool to read chat history beyond the last 5 messages
+    # Dar ao agente uma ferramenta para ler histórico de chat além das últimas 5 mensagens
     read_chat_history=True,
     markdown=True,
 )

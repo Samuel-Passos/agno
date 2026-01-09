@@ -1,7 +1,7 @@
-"""Example of a Team using the `coordinate` mode to play the role of a HackerNews Researcher.
+"""Exemplo de uma Equipe usando o modo `coordinate` para desempenhar o papel de um Pesquisador HackerNews.
 
-1. Run: `pip install openai ddgs newspaper4k lxml_html_clean agno` to install the dependencies
-2. Run: `python cookbook/examples/teams/coordinate_mode/hackernews_team.py` to run the agent
+1. Executar: `pip install openai ddgs newspaper4k lxml_html_clean agno` para instalar as dependências
+2. Executar: `python cookbook/examples/teams/coordinate_mode/hackernews_team.py` para executar o agente
 """
 
 from typing import List
@@ -24,21 +24,21 @@ class Article(BaseModel):
 hn_researcher = Agent(
     name="HackerNews Researcher",
     model=OpenAIChat("gpt-4o"),
-    role="Gets top stories from hackernews.",
+    role="Obtém as principais histórias do hackernews.",
     tools=[HackerNewsTools()],
 )
 
 web_searcher = Agent(
     name="Web Searcher",
     model=OpenAIChat("gpt-4o"),
-    role="Searches the web for information on a topic",
+    role="Busca informações na web sobre um tópico",
     tools=[DuckDuckGoTools()],
     add_datetime_to_context=True,
 )
 
 article_reader = Agent(
     name="Article Reader",
-    role="Reads articles from URLs.",
+    role="Lê artigos de URLs.",
     tools=[Newspaper4kTools()],
 )
 
@@ -48,11 +48,11 @@ hn_team = Team(
     model=OpenAIChat("gpt-4o"),
     members=[hn_researcher, web_searcher, article_reader],
     instructions=[
-        "First, search hackernews for what the user is asking about.",
-        "Then, ask the article reader to read the links for the stories to get more information.",
-        "Important: you must provide the article reader with the links to read.",
-        "Then, ask the web searcher to search for each story to get more information.",
-        "Finally, provide a thoughtful and engaging summary.",
+        "Primeiro, pesquisar no hackernews sobre o que o usuário está perguntando.",
+        "Depois, pedir ao leitor de artigos para ler os links das histórias para obter mais informações.",
+        "Importante: você deve fornecer ao leitor de artigos os links para ler.",
+        "Depois, pedir ao buscador web para pesquisar cada história para obter mais informações.",
+        "Finalmente, fornecer um resumo reflexivo e envolvente.",
     ],
     output_schema=Article,
     share_member_interactions=True,

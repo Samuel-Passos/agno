@@ -3,7 +3,7 @@ from agno.models.anthropic import Claude
 
 agent = Agent(
     model=Claude(id="claude-3-7-sonnet-latest"),
-    instructions="You are an agent focused on responding in one line. All your responses must be super concise and focused.",
+    instructions="Você é um agente focado em responder em uma linha. Todas as suas respostas devem ser super concisas e focadas.",
     markdown=True,
 )
 runx = agent.run("What is the stock price of Apple?")

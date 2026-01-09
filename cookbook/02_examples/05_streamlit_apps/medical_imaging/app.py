@@ -56,13 +56,13 @@ def on_model_change():
             if current_model and current_model != new_model_id:
                 try:
                     st.session_state["is_loading_session"] = False
-                    # Start new chat
+                    # Iniciar novo chat
                     restart_agent(model_id=new_model_id)
 
                 except Exception as e:
-                    st.sidebar.error(f"Error switching to {selected_model}: {str(e)}")
+                    st.sidebar.error(f"Erro ao mudar para {selected_model}: {str(e)}")
         else:
-            st.sidebar.error(f"Unknown model: {selected_model}")
+            st.sidebar.error(f"Modelo desconhecido: {selected_model}")
 
 
 def main():
@@ -70,27 +70,27 @@ def main():
     # App header
     ####################################################################
     st.markdown(
-        "<h1 class='main-title'>Medical Imaging Analysis</h1>", unsafe_allow_html=True
+        "<h1 class='main-title'>Análise de Imagens Médicas</h1>", unsafe_allow_html=True
     )
     st.markdown(
-        "<p class='subtitle'>AI-powered medical imaging analysis with professional insights</p>",
+        "<p class='subtitle'>Análise de imagens médicas alimentada por IA com insights profissionais</p>",
         unsafe_allow_html=True,
     )
 
     ####################################################################
-    # Medical Disclaimer
+    # Aviso Médico
     ####################################################################
     st.warning(
-        "⚠️ **MEDICAL DISCLAIMER**: This tool is for educational and informational purposes only. "
-        "All analyses should be reviewed by qualified healthcare professionals. "
-        "Do not make medical decisions based solely on this analysis."
+        "⚠️ **AVISO MÉDICO**: Esta ferramenta é apenas para fins educacionais e informativos. "
+        "Todas as análises devem ser revisadas por profissionais de saúde qualificados. "
+        "Não tome decisões médicas baseadas apenas nesta análise."
     )
 
     ####################################################################
-    # Model selector
+    # Seletor de modelo
     ####################################################################
     selected_model = st.sidebar.selectbox(
-        "Select Model",
+        "Selecionar Modelo",
         options=MODELS,
         index=0,
         key="model_selector",
@@ -98,29 +98,29 @@ def main():
     )
 
     ####################################################################
-    # Initialize Agent and Session
+    # Inicializar Agente e Sessão
     ####################################################################
     medical_agent = initialize_agent(selected_model, get_medical_imaging_agent)
     reset_session_state(medical_agent)
 
-    if prompt := st.chat_input("👋 Upload an image or ask me about medical imaging!"):
+    if prompt := st.chat_input("👋 Envie uma imagem ou pergunte-me sobre imagens médicas!"):
         add_message("user", prompt)
 
     ####################################################################
-    # Image Upload and Analysis
+    # Upload e Análise de Imagem
     ####################################################################
-    st.sidebar.markdown("#### 🖼️ Image Upload")
+    st.sidebar.markdown("#### 🖼️ Upload de Imagem")
     uploaded_file = st.sidebar.file_uploader(
-        "Upload Medical Image",
+        "Enviar Imagem Médica",
         type=["jpg", "jpeg", "png", "dicom", "dcm"],
-        help="Supported formats: JPG, JPEG, PNG, DICOM",
+        help="Formatos suportados: JPG, JPEG, PNG, DICOM",
         key="medical_image_upload",
     )
 
     additional_context = st.sidebar.text_area(
-        "Additional Context",
-        placeholder="Patient history, symptoms, specific areas of concern...",
-        help="Provide any relevant clinical information to enhance the analysis",
+        "Contexto Adicional",
+        placeholder="Histórico do paciente, sintomas, áreas específicas de preocupação...",
+        help="Fornecer qualquer informação clínica relevante para melhorar a análise",
     )
 
     if uploaded_file and not prompt:
@@ -141,26 +141,26 @@ def main():
                 content=image_bytes, format=uploaded_file.name.split(".")[-1]
             )
 
-            # Create analysis prompt
+            # Criar prompt de análise
             base_prompt = (
-                "Please analyze this medical image and provide comprehensive findings."
+                "Por favor, analise esta imagem médica e forneça achados abrangentes."
             )
             if additional_context.strip():
                 analysis_prompt = (
-                    f"{base_prompt}\n\nAdditional context: {additional_context.strip()}"
+                    f"{base_prompt}\n\nContexto adicional: {additional_context.strip()}"
                 )
             else:
                 analysis_prompt = base_prompt
 
-            # Add message and trigger analysis
-            add_message("user", f"🖼️ Medical Image Analysis: {uploaded_file.name}")
+            # Adicionar mensagem e acionar análise
+            add_message("user", f"🖼️ Análise de Imagem Médica: {uploaded_file.name}")
 
-            # Store image for analysis
+            # Armazenar imagem para análise
             st.session_state["pending_image"] = agno_image
             st.session_state["pending_prompt"] = analysis_prompt
 
             unlink(tmp_path)
-            st.sidebar.success(f"Image {uploaded_file.name} ready for analysis")
+            st.sidebar.success(f"Imagem {uploaded_file.name} pronta para análise")
 
         except Exception as e:
             st.sidebar.error(f"Error processing image: {str(e)}")
@@ -168,28 +168,28 @@ def main():
             alert.empty()
 
     ###############################################################
-    # Sample Questions
+    # Perguntas de Exemplo
     ###############################################################
-    st.sidebar.markdown("#### ❓ Sample Questions")
-    if st.sidebar.button("🩻 What can you analyze?"):
+    st.sidebar.markdown("#### ❓ Perguntas de Exemplo")
+    if st.sidebar.button("🩻 O que você pode analisar?"):
         add_message(
             "user",
-            "What types of medical images can you analyze and what insights can you provide?",
+            "Quais tipos de imagens médicas você pode analisar e que insights pode fornecer?",
         )
-    if st.sidebar.button("🫁 Chest X-ray Guide"):
+    if st.sidebar.button("🫁 Guia de Raio-X de Tórax"):
         add_message(
             "user",
-            "What should I look for when reviewing a chest X-ray?",
+            "O que devo procurar ao revisar um raio-X de tórax?",
         )
-    if st.sidebar.button("🦴 Bone Fracture Analysis"):
+    if st.sidebar.button("🦴 Análise de Fratura Óssea"):
         add_message(
             "user",
-            "How do you identify and classify bone fractures in medical imaging?",
+            "Como você identifica e classifica fraturas ósseas em imagens médicas?",
         )
-    if st.sidebar.button("🧠 Neuroimaging Basics"):
+    if st.sidebar.button("🧠 Fundamentos de Neuroimagem"):
         add_message(
             "user",
-            "What are the key structures and findings to evaluate in brain imaging?",
+            "Quais são as estruturas-chave e achados a avaliar em imagens do cérebro?",
         )
 
     ###############################################################
@@ -252,14 +252,14 @@ def main():
     if last_message and last_message.get("role") == "user":
         question = last_message["content"]
 
-        # Check if we have a pending image to analyze
+        # Verificar se temos uma imagem pendente para analisar
         pending_image = st.session_state.get("pending_image")
         pending_prompt = st.session_state.get("pending_prompt")
 
         if pending_image and pending_prompt:
-            # Display image analysis response
+            # Exibir resposta de análise de imagem
             with st.chat_message("assistant"):
-                with st.spinner("🔄 Analyzing medical image... Please wait."):
+                with st.spinner("🔄 Analisando imagem médica... Por favor, aguarde."):
                     try:
                         response = medical_agent.run(
                             pending_prompt, images=[pending_image]
@@ -278,11 +278,11 @@ def main():
                         add_message("assistant", content)
 
                     except Exception as e:
-                        error_msg = f"Error analyzing image: {str(e)}"
+                        error_msg = f"Erro ao analisar imagem: {str(e)}"
                         st.error(error_msg)
                         add_message("assistant", error_msg)
 
-            # Clear pending image data
+            # Limpar dados de imagem pendente
             st.session_state.pop("pending_image", None)
             st.session_state.pop("pending_prompt", None)
 
@@ -299,8 +299,8 @@ def main():
     # About section
     ####################################################################
     about_section(
-        "This Medical Imaging Analysis Assistant helps healthcare professionals and students "
-        "analyze medical images using AI-powered insights while maintaining professional medical standards."
+        "Este Assistente de Análise de Imagens Médicas ajuda profissionais de saúde e estudantes "
+        "a analisar imagens médicas usando insights alimentados por IA, mantendo padrões médicos profissionais."
     )
 
 

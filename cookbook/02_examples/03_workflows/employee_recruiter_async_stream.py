@@ -14,7 +14,7 @@ from pydantic import BaseModel
 from pypdf import PdfReader
 
 
-# --- Response models ---
+# --- Modelos de Resposta ---
 class ScreeningResult(BaseModel):
     name: str
     email: str
@@ -34,7 +34,7 @@ class EmailContent(BaseModel):
     body: str
 
 
-# --- PDF utility ---
+# --- Utilitário PDF ---
 def extract_text_from_pdf(url: str) -> str:
     try:
         resp = requests.get(url)
@@ -42,52 +42,52 @@ def extract_text_from_pdf(url: str) -> str:
         reader = PdfReader(io.BytesIO(resp.content))
         return "\n".join(page.extract_text() or "" for page in reader.pages)
     except Exception as e:
-        print(f"Error extracting PDF from {url}: {e}")
+        print(f"Erro ao extrair PDF de {url}: {e}")
         return ""
 
 
-# --- Simulation tools ---
+# --- Ferramentas de Simulação ---
 def simulate_zoom_scheduling(
     agent: Agent, candidate_name: str, candidate_email: str
 ) -> str:
-    """Simulate Zoom call scheduling"""
-    # Generate a future time slot (1-7 days from now, between 10am-6pm IST)
+    """Simular agendamento de chamada Zoom"""
+    # Gerar um horário futuro (1-7 dias a partir de agora, entre 10h-18h IST)
     base_time = datetime.now() + timedelta(days=random.randint(1, 7))
-    hour = random.randint(10, 17)  # 10am to 5pm
+    hour = random.randint(10, 17)  # 10h às 17h
     scheduled_time = base_time.replace(hour=hour, minute=0, second=0, microsecond=0)
 
-    # Generate fake Zoom URL
+    # Gerar URL Zoom falsa
     meeting_id = random.randint(100000000, 999999999)
     zoom_url = f"https://zoom.us/j/{meeting_id}"
 
-    result = "✅ Zoom call scheduled successfully!\n"
-    result += f"📅 Time: {scheduled_time.strftime('%Y-%m-%d %H:%M')} IST\n"
-    result += f"🔗 Meeting URL: {zoom_url}\n"
-    result += f"👤 Participant: {candidate_name} ({candidate_email})"
+    result = "✅ Chamada Zoom agendada com sucesso!\n"
+    result += f"📅 Horário: {scheduled_time.strftime('%Y-%m-%d %H:%M')} IST\n"
+    result += f"🔗 URL da Reunião: {zoom_url}\n"
+    result += f"👤 Participante: {candidate_name} ({candidate_email})"
 
     return result
 
 
 def simulate_email_sending(agent: Agent, to_email: str, subject: str, body: str) -> str:
-    """Simulate email sending"""
-    result = "📧 Email sent successfully!\n"
-    result += f"📮 To: {to_email}\n"
-    result += f"📝 Subject: {subject}\n"
-    result += f"✉️ Body length: {len(body)} characters\n"
-    result += f"🕐 Sent at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+    """Simular envio de e-mail"""
+    result = "📧 E-mail enviado com sucesso!\n"
+    result += f"📮 Para: {to_email}\n"
+    result += f"📝 Assunto: {subject}\n"
+    result += f"✉️ Comprimento do corpo: {len(body)} caracteres\n"
+    result += f"🕐 Enviado em: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
 
     return result
 
 
-# --- Agents ---
+# --- Agentes ---
 screening_agent = Agent(
     name="Screening Agent",
     model=OpenAIChat(id="gpt-4o"),
     instructions=[
-        "Screen candidate given resume text and job description.",
-        "Provide a score from 0-10 based on how well they match the job requirements.",
-        "Give specific feedback on strengths and areas of concern.",
-        "Extract the candidate's name and email from the resume if available.",
+        "Triar candidato dado texto do currículo e descrição do trabalho.",
+        "Fornecer uma pontuação de 0-10 com base em quão bem eles correspondem aos requisitos do trabalho.",
+        "Dar feedback específico sobre pontos fortes e áreas de preocupação.",
+        "Extrair o nome e e-mail do candidato do currículo se disponível.",
     ],
     output_schema=ScreeningResult,
 )
@@ -96,10 +96,10 @@ scheduler_agent = Agent(
     name="Scheduler Agent",
     model=OpenAIChat(id="gpt-4o"),
     instructions=[
-        f"You are scheduling interview calls. Current time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} IST",
-        "Schedule calls between 10am-6pm IST on weekdays.",
-        "Use the simulate_zoom_scheduling tool to create the meeting.",
-        "Provide realistic future dates and times.",
+        f"Você está agendando chamadas de entrevista. Hora atual: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} IST",
+        "Agendar chamadas entre 10h-18h IST em dias úteis.",
+        "Usar a ferramenta simulate_zoom_scheduling para criar a reunião.",
+        "Fornecer datas e horários futuros realistas.",
     ],
     tools=[simulate_zoom_scheduling],
     output_schema=ScheduledCall,
@@ -109,10 +109,10 @@ email_writer_agent = Agent(
     name="Email Writer Agent",
     model=OpenAIChat(id="gpt-4o"),
     instructions=[
-        "Write professional, friendly interview invitation emails.",
-        "Include congratulations, interview details, and next steps.",
-        "Keep emails concise but warm and welcoming.",
-        "Sign emails as 'John Doe, Senior Software Engineer' with email john@agno.com",
+        "Escrever e-mails de convite para entrevista profissionais e amigáveis.",
+        "Incluir parabéns, detalhes da entrevista e próximos passos.",
+        "Manter e-mails concisos mas calorosos e acolhedores.",
+        "Assinar e-mails como 'John Doe, Senior Software Engineer' com e-mail john@agno.com",
     ],
     output_schema=EmailContent,
 )
@@ -121,70 +121,70 @@ email_sender_agent = Agent(
     name="Email Sender Agent",
     model=OpenAIChat(id="gpt-4o"),
     instructions=[
-        "You send emails using the simulate_email_sending tool.",
-        "Always confirm successful delivery with details.",
+        "Você envia e-mails usando a ferramenta simulate_email_sending.",
+        "Sempre confirmar entrega bem-sucedida com detalhes.",
     ],
     tools=[simulate_email_sending],
 )
 
 
-# --- Execution function ---
+# --- Função de Execução ---
 async def recruitment_execution(
     session_state,
     execution_input: WorkflowExecutionInput,
     job_description: str,
     **kwargs: Any,
 ):
-    """Execute the complete recruitment workflow"""
+    """Executar o workflow completo de recrutamento"""
 
-    # Get inputs
+    # Obter entradas
     message: str = execution_input.input
     jd: str = job_description
     resumes: List[str] = kwargs.get("candidate_resume_urls", [])
 
     if not resumes:
-        yield "❌ No candidate resume URLs provided"
+        yield "❌ Nenhuma URL de currículo de candidato fornecida"
 
     if not jd:
-        yield "❌ No job description provided"
+        yield "❌ Nenhuma descrição do trabalho fornecida"
 
-    print(f"🚀 Starting recruitment process for {len(resumes)} candidates")
-    print(f"📋 Job Description: {jd[:100]}{'...' if len(jd) > 100 else ''}")
+    print(f"🚀 Iniciando processo de recrutamento para {len(resumes)} candidatos")
+    print(f"📋 Descrição do Trabalho: {jd[:100]}{'...' if len(jd) > 100 else ''}")
 
     selected_candidates: List[ScreeningResult] = []
 
-    # Phase 1: Screening
-    print("\n📊 PHASE 1: CANDIDATE SCREENING")
+    # Fase 1: Triagem
+    print("\n📊 FASE 1: TRIAGEM DE CANDIDATOS")
     print("=" * 50)
 
     for i, url in enumerate(resumes, 1):
-        print(f"\n🔍 Processing candidate {i}/{len(resumes)}")
+        print(f"\n🔍 Processando candidato {i}/{len(resumes)}")
 
-        # Extract resume text (with caching)
+        # Extrair texto do currículo (com cache)
         if url not in session_state:
-            print(f"📄 Extracting text from: {url}")
+            print(f"📄 Extraindo texto de: {url}")
             session_state[url] = extract_text_from_pdf(url)
         else:
-            print("📋 Using cached resume content")
+            print("📋 Usando conteúdo de currículo em cache")
 
         resume_text = session_state[url]
 
         if not resume_text:
-            print("❌ Could not extract text from resume")
+            print("❌ Não foi possível extrair texto do currículo")
             continue
 
-        # Screen the candidate
+        # Triar o candidato
         screening_prompt = f"""
         {message}
-        Please screen this candidate for the job position.
+        Por favor, trie este candidato para a posição de trabalho.
 
-        RESUME:
+        CURRÍCULO:
         {resume_text}
 
-        JOB DESCRIPTION:
+        DESCRIÇÃO DO TRABALHO:
         {jd}
 
-        Evaluate how well this candidate matches the job requirements and provide a score from 0-10.
+        Avaliar quão bem este candidato corresponde aos requisitos do trabalho e fornecer uma pontuação de 0-10.
         """
 
         async for response in screening_agent.arun(
@@ -193,36 +193,36 @@ async def recruitment_execution(
             if hasattr(response, "content") and response.content:
                 candidate = response.content
 
-        print(f"👤 Candidate: {candidate.name}")
-        print(f"📧 Email: {candidate.email}")
-        print(f"⭐ Score: {candidate.score}/10")
+        print(f"👤 Candidato: {candidate.name}")
+        print(f"📧 E-mail: {candidate.email}")
+        print(f"⭐ Pontuação: {candidate.score}/10")
         print(
             f"💭 Feedback: {candidate.feedback[:150]}{'...' if len(candidate.feedback) > 150 else ''}"
         )
 
         if candidate.score >= 5.0:
             selected_candidates.append(candidate)
-            print("✅ SELECTED for interview!")
+            print("✅ SELECIONADO para entrevista!")
         else:
-            print("❌ Not selected (score below 5.0)")
+            print("❌ Não selecionado (pontuação abaixo de 5.0)")
 
-    # Phase 2: Interview Scheduling & Email Communication
+    # Fase 2: Agendamento de Entrevista e Comunicação por E-mail
     if selected_candidates:
-        print("\n📅 PHASE 2: INTERVIEW SCHEDULING")
+        print("\n📅 FASE 2: AGENDAMENTO DE ENTREVISTA")
         print("=" * 50)
 
         for i, candidate in enumerate(selected_candidates, 1):
             print(
-                f"\n🗓️ Scheduling interview {i}/{len(selected_candidates)} for {candidate.name}"
+                f"\n🗓️ Agendando entrevista {i}/{len(selected_candidates)} para {candidate.name}"
             )
 
-            # Schedule interview
+            # Agendar entrevista
             schedule_prompt = f"""
-            Schedule a 1-hour interview call for:
-            - Candidate: {candidate.name}
-            - Email: {candidate.email}
-            - Interviewer: Dirk Brand (dirk@phidata.com)
-            Use the simulate_zoom_scheduling tool to create the meeting.
+            Agendar uma chamada de entrevista de 1 hora para:
+            - Candidato: {candidate.name}
+            - E-mail: {candidate.email}
+            - Entrevistador: Dirk Brand (dirk@phidata.com)
+            Usar a ferramenta simulate_zoom_scheduling para criar a reunião.
             """
 
             async for response in scheduler_agent.arun(
@@ -231,17 +231,17 @@ async def recruitment_execution(
                 if hasattr(response, "content") and response.content:
                     scheduled_call = response.content
 
-            print(f"📅 Scheduled for: {scheduled_call.call_time}")
-            print(f"🔗 Meeting URL: {scheduled_call.url}")
+            print(f"📅 Agendado para: {scheduled_call.call_time}")
+            print(f"🔗 URL da Reunião: {scheduled_call.url}")
 
-            # Write congratulatory email
+            # Escrever e-mail de parabéns
             email_prompt = f"""
-            Write a professional interview invitation email for:
-            - Candidate: {candidate.name} ({candidate.email})
-            - Interview time: {scheduled_call.call_time}
-            - Meeting URL: {scheduled_call.url}
-            - Congratulate them on being selected
-            - Include next steps and what to expect
+            Escrever um e-mail profissional de convite para entrevista para:
+            - Candidato: {candidate.name} ({candidate.email})
+            - Horário da entrevista: {scheduled_call.call_time}
+            - URL da Reunião: {scheduled_call.url}
+            - Parabenizá-los por serem selecionados
+            - Incluir próximos passos e o que esperar
             """
 
             async for response in email_writer_agent.arun(
@@ -250,15 +250,15 @@ async def recruitment_execution(
                 if hasattr(response, "content") and response.content:
                     email_content = response.content
 
-            print(f"✏️ Email subject: {email_content.subject}")
+            print(f"✏️ Assunto do e-mail: {email_content.subject}")
 
-            # Send email
+            # Enviar e-mail
             send_prompt = f"""
-            Send the interview invitation email:
-            - To: {candidate.email}
-            - Subject: {email_content.subject}
-            - Body: {email_content.body}
-            Use the simulate_email_sending tool.
+            Enviar o e-mail de convite para entrevista:
+            - Para: {candidate.email}
+            - Assunto: {email_content.subject}
+            - Corpo: {email_content.body}
+            Usar a ferramenta simulate_email_sending.
             """
 
             async for response in email_sender_agent.arun(
@@ -267,10 +267,10 @@ async def recruitment_execution(
                 yield response
 
 
-# --- Workflow definition ---
+# --- Definição do Workflow ---
 recruitment_workflow = Workflow(
     name="Employee Recruitment Workflow (Simulated)",
-    description="Automated candidate screening with simulated scheduling and email",
+    description="Triagem automatizada de candidatos com agendamento e e-mail simulados",
     db=SqliteDb(
         session_table="workflow_session",
         db_file="tmp/workflows.db",
@@ -281,8 +281,8 @@ recruitment_workflow = Workflow(
 
 
 if __name__ == "__main__":
-    # Test with sample data
-    print("🧪 Testing Employee Recruitment Workflow with Simulated Tools")
+    # Testar com dados de exemplo
+    print("🧪 Testando Workflow de Recrutamento de Funcionários com Ferramentas Simuladas")
     print("=" * 60)
 
     asyncio.run(

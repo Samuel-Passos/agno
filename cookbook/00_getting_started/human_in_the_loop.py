@@ -1,27 +1,27 @@
 """
-Human in the Loop - Confirm Before Taking Action
-================================================
-This example shows how to require user confirmation before executing
-certain tools. Critical for actions that are irreversible or sensitive.
+Humano no Loop - Confirmar Antes de Tomar Ação
+===============================================
+Este exemplo mostra como exigir confirmação do usuário antes de executar
+certas ferramentas. Crítico para ações que são irreversíveis ou sensíveis.
 
-We'll build on our self-learning agent, and ask for user confirmation before saving a learning.
+Vamos construir sobre nosso agente de autoaprendizado e pedir confirmação do usuário antes de salvar um aprendizado.
 
-Key concepts:
-- @tool(requires_confirmation=True): Mark tools that need approval
-- run_response.active_requirements: Check for pending confirmations
-- requirement.confirm() / requirement.reject(): Approve or deny
-- agent.continue_run(): Resume execution after decision
+Conceitos-chave:
+- @tool(requires_confirmation=True): Marcar ferramentas que precisam de aprovação
+- run_response.active_requirements: Verificar confirmações pendentes
+- requirement.confirm() / requirement.reject(): Aprovar ou negar
+- agent.continue_run(): Retomar execução após decisão
 
-Some practical applications:
-- Confirming sensitive operations before execution
-- Reviewing API calls before they're made
-- Validating data transformations
-- Approving automated actions in critical systems
+Algumas aplicações práticas:
+- Confirmar operações sensíveis antes da execução
+- Revisar chamadas de API antes de serem feitas
+- Validar transformações de dados
+- Aprovar ações automatizadas em sistemas críticos
 
-Example prompts to try:
-- "What's a good P/E ratio for tech stocks? Save that insight."
-- "Analyze NVDA and save any insights"
-- "What learnings do we have saved?"
+Exemplos de prompts para testar:
+- "Qual é uma boa relação P/E para ações de tecnologia? Salve esse insight."
+- "Analise NVDA e salve quaisquer insights"
+- "Quais aprendizados temos salvos?"
 """
 
 import json
@@ -42,12 +42,12 @@ from rich.console import Console
 from rich.prompt import Prompt
 
 # ============================================================================
-# Storage Configuration
+# Configuração de Armazenamento
 # ============================================================================
 agent_db = SqliteDb(db_file="tmp/agents.db")
 
 # ============================================================================
-# Knowledge Base for Learnings
+# Base de Conhecimento para Aprendizados
 # ============================================================================
 learnings_kb = Knowledge(
     name="Agent Learnings",
@@ -65,25 +65,25 @@ learnings_kb = Knowledge(
 
 
 # ============================================================================
-# Custom Tool: Save Learning (requires confirmation)
+# Ferramenta Personalizada: Salvar Aprendizado (requer confirmação)
 # ============================================================================
 @tool(requires_confirmation=True)
 def save_learning(title: str, learning: str) -> str:
     """
-    Save a reusable insight to the knowledge base for future reference.
-    This action requires user confirmation before executing.
+    Salva um insight reutilizável na base de conhecimento para referência futura.
+    Esta ação requer confirmação do usuário antes de executar.
 
     Args:
-        title: Short descriptive title (e.g., "Tech stock P/E benchmarks")
-        learning: The insight to save — be specific and actionable
+        title: Título descritivo curto (ex: "Benchmarks P/E de ações de tecnologia")
+        learning: O insight a salvar — seja específico e acionável
 
     Returns:
-        Confirmation message
+        Mensagem de confirmação
     """
     if not title or not title.strip():
-        return "Cannot save: title is required"
+        return "Não é possível salvar: título é obrigatório"
     if not learning or not learning.strip():
-        return "Cannot save: learning content is required"
+        return "Não é possível salvar: conteúdo do aprendizado é obrigatório"
 
     payload = {
         "title": title.strip(),
@@ -98,45 +98,45 @@ def save_learning(title: str, learning: str) -> str:
         skip_if_exists=True,
     )
 
-    return f"Saved: '{title}'"
+    return f"Salvo: '{title}'"
 
 
 # ============================================================================
-# Agent Instructions
+# Instruções do Agente
 # ============================================================================
 instructions = """\
-You are a Finance Agent that learns and improves over time.
+Você é um Agente Financeiro que aprende e melhora com o tempo.
 
-You have two special abilities:
-1. Search your knowledge base for previously saved learnings
-2. Save new insights using the save_learning tool
+Você tem duas habilidades especiais:
+1. Pesquisar sua base de conhecimento por aprendizados previamente salvos
+2. Salvar novos insights usando a ferramenta save_learning
 
-## Workflow
+## Fluxo de Trabalho
 
-1. Check Knowledge First
-   - Before answering, search for relevant prior learnings
-   - Apply any relevant insights to your response
+1. Verificar Conhecimento Primeiro
+   - Antes de responder, pesquisar aprendizados anteriores relevantes
+   - Aplicar quaisquer insights relevantes à sua resposta
 
-2. Gather Information
-   - Use YFinance tools for market data
-   - Combine with your knowledge base insights
+2. Coletar Informações
+   - Usar ferramentas YFinance para dados de mercado
+   - Combinar com insights da sua base de conhecimento
 
-3. Save Valuable Insights
-   - If you discover something reusable, save it with save_learning
-   - The user will be asked to confirm before it's saved
-   - Good learnings are specific, actionable, and generalizable
+3. Salvar Insights Valiosos
+   - Se descobrir algo reutilizável, salve com save_learning
+   - O usuário será solicitado a confirmar antes de ser salvo
+   - Bons aprendizados são específicos, acionáveis e generalizáveis
 
-## What Makes a Good Learning
+## O que Faz um Bom Aprendizado
 
-- Specific: "Tech P/E ratios typically range 20-35x" not "P/E varies"
-- Actionable: Can be applied to future questions
-- Reusable: Useful beyond this one conversation
+- Específico: "Relações P/E de tecnologia geralmente variam 20-35x" não "P/E varia"
+- Acionável: Pode ser aplicado a perguntas futuras
+- Reutilizável: Útil além desta conversa
 
-Don't save: Raw data, one-off facts, or obvious information.\
+Não salvar: Dados brutos, fatos únicos ou informações óbvias.\
 """
 
 # ============================================================================
-# Create the Agent
+# Criar o Agente
 # ============================================================================
 human_in_the_loop_agent = Agent(
     name="Agent with Human in the Loop",
@@ -156,28 +156,28 @@ human_in_the_loop_agent = Agent(
 )
 
 # ============================================================================
-# Run the Agent
+# Executar o Agente
 # ============================================================================
 if __name__ == "__main__":
     console = Console()
 
-    # Ask a question that might trigger a save
+    # Fazer uma pergunta que pode acionar um salvamento
     run_response = human_in_the_loop_agent.run(
-        "What's a healthy P/E ratio for tech stocks? Save that insight."
+        "Qual é uma relação P/E saudável para ações de tecnologia? Salve esse insight."
     )
 
-    # Handle any confirmation requirements
+    # Lidar com quaisquer requisitos de confirmação
     for requirement in run_response.active_requirements:
         if requirement.needs_confirmation:
             console.print(
-                f"\n[bold yellow]🛑 Confirmation Required[/bold yellow]\n"
-                f"Tool: [bold blue]{requirement.tool_execution.tool_name}[/bold blue]\n"
+                f"\n[bold yellow]🛑 Confirmação Necessária[/bold yellow]\n"
+                f"Ferramenta: [bold blue]{requirement.tool_execution.tool_name}[/bold blue]\n"
                 f"Args: {requirement.tool_execution.tool_args}"
             )
 
             choice = (
                 Prompt.ask(
-                    "Do you want to continue?",
+                    "Você deseja continuar?",
                     choices=["y", "n"],
                     default="y",
                 )
@@ -187,12 +187,12 @@ if __name__ == "__main__":
 
             if choice == "n":
                 requirement.reject()
-                console.print("[red]❌ Rejected[/red]")
+                console.print("[red]❌ Rejeitado[/red]")
             else:
                 requirement.confirm()
-                console.print("[green]✅ Approved[/green]")
+                console.print("[green]✅ Aprovado[/green]")
 
-    # Continue the run with the user's decisions
+    # Continuar a execução com as decisões do usuário
     run_response = human_in_the_loop_agent.continue_run(
         run_id=run_response.run_id,
         requirements=run_response.requirements,
@@ -201,33 +201,33 @@ if __name__ == "__main__":
     pprint.pprint_run_response(run_response)
 
 # ============================================================================
-# More Examples
+# Mais Exemplos
 # ============================================================================
 """
-Human-in-the-loop patterns:
+Padrões de humano-no-loop:
 
-1. Confirmation for sensitive actions
+1. Confirmação para ações sensíveis
    @tool(requires_confirmation=True)
    def delete_file(path: str) -> str:
        ...
 
-2. Confirmation for external calls
+2. Confirmação para chamadas externas
    @tool(requires_confirmation=True)
    def send_email(to: str, subject: str, body: str) -> str:
        ...
 
-3. Confirmation for financial transactions
+3. Confirmação para transações financeiras
    @tool(requires_confirmation=True)
    def place_order(ticker: str, quantity: int, side: str) -> str:
        ...
 
-The pattern:
-1. Mark tool with @tool(requires_confirmation=True)
-2. Run agent with agent.run()
-3. Loop through run_response.active_requirements
-4. Check requirement.needs_confirmation
-5. Call requirement.confirm() or requirement.reject()
-6. Call agent.continue_run() with requirements
+O padrão:
+1. Marcar ferramenta com @tool(requires_confirmation=True)
+2. Executar agente com agent.run()
+3. Iterar por run_response.active_requirements
+4. Verificar requirement.needs_confirmation
+5. Chamar requirement.confirm() ou requirement.reject()
+6. Chamar agent.continue_run() com requirements
 
-This gives you full control over which actions execute.
+Isso dá a você controle total sobre quais ações executar.
 """

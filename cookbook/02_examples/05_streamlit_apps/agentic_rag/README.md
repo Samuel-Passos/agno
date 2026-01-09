@@ -1,32 +1,32 @@
-# Agentic RAG Agent
+# Agente Agentic RAG
 
-**Agentic RAG** is a chat application that combines retrieval-augmented generation with agentic workflows.
-It allows users to ask questions based on custom knowledge bases, documents, and web data, retrieve context-aware answers, and maintain chat history across sessions.
+**Agentic RAG** é uma aplicação de chat que combina geração aumentada por recuperação com workflows agenticos.
+Permite que os usuários façam perguntas com base em bases de conhecimento personalizadas, documentos e dados web, recuperem respostas conscientes do contexto e mantenham histórico de chat através de sessões.
 
-> Note: Fork and clone this repository if needed
+> Nota: Fazer fork e clonar este repositório se necessário
 
-### 1. Create a virtual environment
+### 1. Criar um ambiente virtual
 
 ```shell
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-### 2. Install dependencies
+### 2. Instalar dependências
 
 ```shell
 pip install -r cookbook/examples/streamlit_apps/agentic_rag/requirements.txt
 ```
 
-### 3. Configure API Keys
+### 3. Configurar Chaves de API
 
-Required:
+Necessário:
 
 ```bash
 export OPENAI_API_KEY=your_openai_key_here
 ```
 
-Optional (for additional models):
+Opcional (para modelos adicionais):
 
 ```bash
 export ANTHROPIC_API_KEY=your_anthropic_key_here
@@ -34,17 +34,17 @@ export GOOGLE_API_KEY=your_google_key_here
 export GROQ_API_KEY=your_groq_key_here
 ```
 
-### 4. Run PgVector
+### 4. Executar PgVector
 
-> Install [docker desktop](https://docs.docker.com/desktop/install/mac-install/) first.
+> Instalar [docker desktop](https://docs.docker.com/desktop/install/mac-install/) primeiro.
 
-- Run using a helper script
+- Executar usando um script auxiliar
 
 ```shell
 ./cookbook/scripts/run_pgvector.sh
 ```
 
-- OR run using the docker run command
+- OU executar usando o comando docker run
 
 ```shell
 docker run -d \
@@ -58,42 +58,42 @@ docker run -d \
   agnohq/pgvector:16
 ```
 
-### 5. Run Agentic RAG App
+### 5. Executar Aplicativo Agentic RAG
 
 ```shell
 streamlit run cookbook/examples/streamlit_apps/agentic_rag/app.py
 ```
 
-## 🔧 Customization
+## 🔧 Personalização
 
-### Model Selection
+### Seleção de Modelo
 
-The application supports multiple model providers:
+A aplicação suporta múltiplos provedores de modelos:
 
 - OpenAI (o3-mini, gpt-4o)
 - Anthropic (claude-3-5-sonnet)
 - Google (gemini-2.0-flash-exp)
 - Groq (llama-3.3-70b-versatile)
 
-### How to Use
+### Como Usar
 
-- Open [localhost:8501](http://localhost:8501) in your browser.
-- Upload documents or provide URLs (websites, csv, txt, and PDFs) to build a knowledge base.
-- Enter questions in the chat interface and get context-aware answers.
-- The app can also answer question using duckduckgo search without any external documents added.
+- Abrir [localhost:8501](http://localhost:8501) no seu navegador.
+- Enviar documentos ou fornecer URLs (sites, csv, txt e PDFs) para construir uma base de conhecimento.
+- Inserir perguntas na interface de chat e obter respostas conscientes do contexto.
+- O aplicativo também pode responder perguntas usando busca duckduckgo sem nenhum documento externo adicionado.
 
-### Troubleshooting
+### Solução de Problemas
 
-- **Docker Connection Refused**: Ensure `pgvector` containers are running (`docker ps`).
-- **OpenAI API Errors**: Verify that the `OPENAI_API_KEY` is set and valid.
+- **Conexão Docker Recusada**: Certificar-se de que os containers `pgvector` estão em execução (`docker ps`).
+- **Erros de API OpenAI**: Verificar se `OPENAI_API_KEY` está definida e é válida.
 
-## 📚 Documentation
+## 📚 Documentação
 
-For more detailed information:
+Para informações mais detalhadas:
 
-- [Agno Documentation](https://docs.agno.com)
-- [Streamlit Documentation](https://docs.streamlit.io)
+- [Documentação Agno](https://docs.agno.com)
+- [Documentação Streamlit](https://docs.streamlit.io)
 
-## 🤝 Support
+## 🤝 Suporte
 
-Need help? Join our [Discord community](https://agno.link/discord)
+Precisa de ajuda? Junte-se à nossa [comunidade Discord](https://agno.link/discord)

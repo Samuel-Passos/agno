@@ -1,15 +1,15 @@
-"""🤖 Agno Support Agent - Your AI Assistant for Agno Framework!
+"""🤖 Agno Support Agent - Seu Assistente de IA para o Framework Agno!
 
-This example shows how to create an AI support assistant that combines iterative knowledge searching
-with Agno's documentation to provide comprehensive, well-researched answers about the Agno framework.
+Este exemplo mostra como criar um assistente de suporte de IA que combina busca iterativa de conhecimento
+com a documentação do Agno para fornecer respostas abrangentes e bem pesquisadas sobre o framework Agno.
 
-Key Features:
-- Iterative knowledge base searching
-- Deep reasoning and comprehensive answers
-- Source attribution and citations
-- Interactive session management
+Características Principais:
+- Busca iterativa na base de conhecimento
+- Raciocínio profundo e respostas abrangentes
+- Atribuição de fontes e citações
+- Gerenciamento interativo de sessões
 
-Example prompts to try:
+Exemplos de prompts para tentar:
 - "What is Agno and what are its key features?"
 - "How do I create my first agent with Agno?"
 - "What's the difference between Level 0 and Level 1 agents?"
@@ -17,7 +17,7 @@ Example prompts to try:
 - "What models does Agno support?"
 - "How do I implement RAG with Agno?"
 
-Run `pip install openai lancedb tantivy pypdf ddgs inquirer agno` to install dependencies.
+Execute `pip install openai lancedb tantivy pypdf ddgs inquirer agno` para instalar as dependências.
 """
 
 from pathlib import Path
@@ -38,20 +38,20 @@ from rich import print
 from rich.console import Console
 from rich.table import Table
 
-# ************* Setup Paths *************
-# Define the current working directory and output directory for saving files
+# ************* Configurar Caminhos *************
+# Definir o diretório de trabalho atual e o diretório de saída para salvar arquivos
 cwd = Path(__file__).parent
-# Create tmp directory if it doesn't exist
+# Criar diretório tmp se não existir
 tmp_dir = cwd.joinpath("tmp")
 tmp_dir.mkdir(parents=True, exist_ok=True)
 # *************************************
 
 
 def initialize_knowledge(load_knowledge: bool = False):
-    """Initialize the knowledge base with Agno documentation
+    """Inicializar a base de conhecimento com a documentação do Agno
 
     Args:
-        load_knowledge (bool): Whether to load the knowledge base. Defaults to False.
+        load_knowledge (bool): Se deve carregar a base de conhecimento. Padrão: False.
     """
     agent_knowledge = Knowledge(
         vector_db=LanceDb(
@@ -62,28 +62,28 @@ def initialize_knowledge(load_knowledge: bool = False):
         ),
     )
 
-    # Load the knowledge
+    # Carregar o conhecimento
     if load_knowledge:
-        print("[bold blue]📚 Initializing Knowledge...[/bold blue]")
-        print("   • Loading Agno documentation")
-        print("   • Building vector embeddings")
-        print("   • Optimizing for hybrid search")
+        print("[bold blue]📚 Inicializando Conhecimento...[/bold blue]")
+        print("   • Carregando documentação do Agno")
+        print("   • Construindo embeddings vetoriais")
+        print("   • Otimizando para busca híbrida")
         agent_knowledge.add_content(
             name="Agno Docs", url="https://docs.agno.com/llms-full.txt"
         )
-        print("[bold green]✨ Knowledge ready![/bold green]\n")
+        print("[bold green]✨ Conhecimento pronto![/bold green]\n")
     return agent_knowledge
 
 
 def get_agent_db():
-    """Return agent storage for session management"""
+    """Retornar armazenamento do agente para gerenciamento de sessões"""
     return SqliteDb(session_table="agno_assist_sessions", db_file="tmp/agents.db")
 
 
 def create_agent(
     session_id: Optional[str] = None, load_knowledge: bool = False
 ) -> Agent:
-    """Create and return a configured Agno Support agent."""
+    """Criar e retornar um agente de Suporte do Agno configurado."""
     agent_knowledge = initialize_knowledge(load_knowledge)
     agent_db = get_agent_db()
 
@@ -92,17 +92,17 @@ def create_agent(
         session_id=session_id,
         model=OpenAIChat(id="gpt-4o"),
         description=dedent("""\
-        You are AgnoAssist, an advanced AI Agent specialized in the Agno framework.
-        Your goal is to help developers understand and effectively use Agno by providing
-        both explanations and working code examples. You can create, save, and run Python
-        code to demonstrate Agno's capabilities in real-time.
+        Você é AgnoAssist, um Agente de IA avançado especializado no framework Agno.
+        Seu objetivo é ajudar desenvolvedores a entender e usar efetivamente o Agno fornecendo
+        tanto explicações quanto exemplos de código funcionais. Você pode criar, salvar e executar código Python
+        para demonstrar as capacidades do Agno em tempo real.
 
-        Your strengths include:
-        - Deep understanding of Agno's architecture and capabilities
-        - Access to Agno documentation and API reference, search it for relevant information
-        - Creating and testing working Agno Agents
-        - Building practical, runnable code examples that demonstrate concepts
-        - Ability to save code to files and execute them to verify functionality\
+        Seus pontos fortes incluem:
+        - Compreensão profunda da arquitetura e capacidades do Agno
+        - Acesso à documentação e referência de API do Agno, pesquisar por informações relevantes
+        - Criar e testar Agentes Agno funcionais
+        - Construir exemplos de código práticos e executáveis que demonstram conceitos
+        - Capacidade de salvar código em arquivos e executá-los para verificar funcionalidade\
         """),
         instructions=dedent("""\
         Your mission is to provide comprehensive, hands-on support for Agno developers

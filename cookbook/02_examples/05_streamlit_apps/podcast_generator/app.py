@@ -45,10 +45,10 @@ def on_model_change():
         if current_model and current_model != new_model_id:
             try:
                 st.session_state["is_loading_session"] = False
-                # Start new chat
+                # Iniciar novo chat
                 restart_agent(model_id=new_model_id)
             except Exception as e:
-                st.sidebar.error(f"Error switching to {selected_model}: {str(e)}")
+                st.sidebar.error(f"Erro ao mudar para {selected_model}: {str(e)}")
 
 
 def main():
@@ -56,15 +56,15 @@ def main():
     # App header
     ####################################################################
     st.markdown(
-        "<h1 class='main-title'>🎙️ Podcast Generator</h1>", unsafe_allow_html=True
+        "<h1 class='main-title'>🎙️ Gerador de Podcast</h1>", unsafe_allow_html=True
     )
     st.markdown(
-        "<p class='subtitle'>Create engaging AI podcasts on any topic</p>",
+        "<p class='subtitle'>Criar podcasts de IA envolventes sobre qualquer tópico</p>",
         unsafe_allow_html=True,
     )
 
     ####################################################################
-    # Model selector (filter for OpenAI models only)
+    # Seletor de modelo (filtrar apenas modelos OpenAI)
     ####################################################################
     openai_models = [
         model
@@ -72,39 +72,39 @@ def main():
         if model in ["gpt-4o", "o3-mini", "gpt-5", "gemini-2.5-pro"]
     ]
     selected_model = st.sidebar.selectbox(
-        "Select Model",
+        "Selecionar Modelo",
         options=openai_models,
         index=0,
         key="model_selector",
         on_change=on_model_change,
-        help="Only OpenAI models support audio generation",
+        help="Apenas modelos OpenAI suportam geração de áudio",
     )
 
     ####################################################################
-    # Initialize Agent and Session
+    # Inicializar Agente e Sessão
     ####################################################################
     podcast_agent = initialize_agent(selected_model, generate_podcast_agent)
     reset_session_state(podcast_agent)
 
-    if prompt := st.chat_input("💬 Ask about podcasts or request a specific topic!"):
+    if prompt := st.chat_input("💬 Pergunte sobre podcasts ou solicite um tópico específico!"):
         add_message("user", prompt)
 
     ####################################################################
-    # Voice Selection
+    # Seleção de Voz
     ####################################################################
-    st.sidebar.markdown("#### 🎤 Voice Settings")
+    st.sidebar.markdown("#### 🎤 Configurações de Voz")
     voice_options = ["alloy", "echo", "fable", "onyx", "nova", "shimmer"]
     selected_voice = st.sidebar.selectbox(
-        "Choose Voice",
+        "Escolher Voz",
         options=voice_options,
         index=0,
-        help="Select the AI voice for your podcast",
+        help="Selecionar a voz de IA para seu podcast",
     )
 
     ####################################################################
-    # Sample Topics
+    # Tópicos de Exemplo
     ####################################################################
-    st.sidebar.markdown("#### 🔥 Suggested Topics")
+    st.sidebar.markdown("#### 🔥 Tópicos Sugeridos")
     sample_topics = [
         "🎭 Impact of AI on Creativity",
         "💡 Future of Renewable Energy",
@@ -123,12 +123,12 @@ def main():
             st.rerun()
 
     ####################################################################
-    # Utility buttons
+    # Botões de utilidade
     ####################################################################
-    st.sidebar.markdown("#### 🛠️ Utilities")
+    st.sidebar.markdown("#### 🛠️ Utilitários")
     col1, col2 = st.sidebar.columns([1, 1])
     with col1:
-        if st.sidebar.button("🔄 New Chat", use_container_width=True):
+        if st.sidebar.button("🔄 Novo Chat", use_container_width=True):
             restart_agent()
             st.rerun()
 
@@ -152,29 +152,29 @@ def main():
                 filename = "podcast_chat_new.md"
 
             if st.sidebar.download_button(
-                "💾 Export Chat",
+                "💾 Exportar Chat",
                 export_chat_history("Podcast Generator"),
                 file_name=filename,
                 mime="text/markdown",
                 use_container_width=True,
-                help=f"Export {len(st.session_state['messages'])} messages",
+                help=f"Exportar {len(st.session_state['messages'])} mensagens",
             ):
-                st.sidebar.success("Chat history exported!")
+                st.sidebar.success("Histórico de chat exportado!")
         else:
             st.sidebar.button(
-                "💾 Export Chat",
+                "💾 Exportar Chat",
                 disabled=True,
                 use_container_width=True,
-                help="No messages to export",
+                help="Nenhuma mensagem para exportar",
             )
 
     ####################################################################
-    # Generate Podcast
+    # Gerar Podcast
     ####################################################################
-    st.sidebar.markdown("#### 🎬 Generate")
+    st.sidebar.markdown("#### 🎬 Gerar")
 
-    if st.sidebar.button("🎙️ Create Podcast", type="primary", use_container_width=True):
-        # Get the latest user message as the topic
+    if st.sidebar.button("🎙️ Criar Podcast", type="primary", use_container_width=True):
+        # Obter a última mensagem do usuário como tópico
         user_messages = [
             msg
             for msg in st.session_state.get("messages", [])
@@ -183,7 +183,7 @@ def main():
         if user_messages:
             latest_topic = user_messages[-1]["content"]
             with st.spinner(
-                "⏳ Generating podcast... This may take up to 2 minutes..."
+                "⏳ Gerando podcast... Isso pode levar até 2 minutos..."
             ):
                 try:
                     audio_path = generate_podcast(
@@ -191,38 +191,38 @@ def main():
                     )
 
                     if audio_path:
-                        st.success("✅ Podcast generated successfully!")
+                        st.success("✅ Podcast gerado com sucesso!")
 
-                        st.subheader("🎧 Your AI Podcast")
+                        st.subheader("🎧 Seu Podcast de IA")
                         st.audio(audio_path, format="audio/wav")
 
-                        # Download button
+                        # Botão de download
                         with open(audio_path, "rb") as audio_file:
                             st.download_button(
-                                "⬇️ Download Podcast",
+                                "⬇️ Baixar Podcast",
                                 audio_file,
                                 file_name=f"podcast_{latest_topic[:30].replace(' ', '_')}.wav",
                                 mime="audio/wav",
                                 use_container_width=True,
                             )
                     else:
-                        st.error("❌ Failed to generate podcast. Please try again.")
+                        st.error("❌ Falha ao gerar podcast. Por favor, tente novamente.")
 
                 except Exception as e:
-                    st.error(f"❌ Error generating podcast: {str(e)}")
+                    st.error(f"❌ Erro ao gerar podcast: {str(e)}")
         else:
-            st.sidebar.warning("⚠️ Please enter a topic in the chat first.")
+            st.sidebar.warning("⚠️ Por favor, digite um tópico no chat primeiro.")
 
     ####################################################################
-    # Getting Started Guide
+    # Guia de Introdução
     ####################################################################
     if not st.session_state.get("messages"):
-        st.markdown("### 🎯 How to Get Started")
+        st.markdown("### 🎯 Como Começar")
         st.markdown("""
-        1. **Choose a Model** - Select your preferred AI model
-        2. **Pick a Voice** - Choose from 6 realistic AI voices  
-        3. **Enter a Topic** - Type your podcast topic in the chat below or click a suggested topic
-        4. **Generate** - Click 'Create Podcast' and wait for the magic!
+        1. **Escolher um Modelo** - Selecione seu modelo de IA preferido
+        2. **Escolher uma Voz** - Escolha entre 6 vozes de IA realistas  
+        3. **Digitar um Tópico** - Digite o tópico do podcast no chat abaixo ou clique em um tópico sugerido
+        4. **Gerar** - Clique em 'Criar Podcast' e aguarde a mágica!
         """)
 
     ####################################################################
@@ -246,43 +246,43 @@ def main():
     session_selector_widget(podcast_agent, selected_model, generate_podcast_agent)
 
     ####################################################################
-    # Features Section
+    # Seção de Recursos
     ####################################################################
     st.markdown("---")
-    st.markdown("### 🌟 Features")
+    st.markdown("### 🌟 Recursos")
 
     col1, col2, col3 = st.columns(3)
 
     with col1:
         st.markdown("""
-        **🔬 AI Research**
-        - Real-time topic research
-        - Credible source analysis
-        - Latest information gathering
+        **🔬 Pesquisa de IA**
+        - Pesquisa de tópico em tempo real
+        - Análise de fontes credíveis
+        - Coleta de informações mais recentes
         """)
 
     with col2:
         st.markdown("""
-        **📝 Script Generation**
-        - Engaging narratives
-        - Professional structure
-        - Conversational tone
+        **📝 Geração de Roteiro**
+        - Narrativas envolventes
+        - Estrutura profissional
+        - Tom conversacional
         """)
 
     with col3:
         st.markdown("""
-        **🎵 Audio Creation**
-        - 6 realistic AI voices
-        - High-quality audio
-        - Instant download
+        **🎵 Criação de Áudio**
+        - 6 vozes de IA realistas
+        - Áudio de alta qualidade
+        - Download instantâneo
         """)
 
     ####################################################################
-    # About section
+    # Seção sobre
     ####################################################################
     about_section(
-        "This Podcast Generator creates professional podcasts on any topic using AI research, "
-        "script writing, and text-to-speech technology."
+        "Este Gerador de Podcast cria podcasts profissionais sobre qualquer tópico usando pesquisa de IA, "
+        "escrita de roteiro e tecnologia de texto para fala."
     )
 
 

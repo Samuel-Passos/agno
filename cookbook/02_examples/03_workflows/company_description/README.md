@@ -1,51 +1,51 @@
-# Company Description Workflow
+# Workflow de Descrição de Empresa
 
-A workflow that generates comprehensive supplier profiles by gathering information from multiple sources and delivers them via email.
+Um workflow que gera perfis abrangentes de fornecedores coletando informações de múltiplas fontes e entregando-os por e-mail.
 
-## Overview
+## Visão Geral
 
-This workflow combines web crawling, search engines, Wikipedia, and competitor analysis to create detailed supplier profiles. It processes company information through 4 specialized agents running in parallel, then generates a structured markdown report and sends it via email.
+Este workflow combina rastreamento web, mecanismos de busca, Wikipedia e análise de concorrentes para criar perfis detalhados de fornecedores. Ele processa informações da empresa através de 4 agentes especializados executando em paralelo, depois gera um relatório markdown estruturado e o envia por e-mail.
 
-The workflow uses workflow session state management to cache analysis results. If the same supplier is analyzed again, it returns cached results instead of re-running the expensive analysis pipeline.
+O workflow usa gerenciamento de estado de sessão do workflow para armazenar resultados de análise em cache. Se o mesmo fornecedor for analisado novamente, ele retorna resultados em cache em vez de re-executar o pipeline de análise caro.
 
-## Getting Started
+## Começando
 
-### Prerequisites
-- OpenAI API key
-- Resend API key for emails [https://resend.com/api-keys]
-- Firecrawl API key for web crawling [https://www.firecrawl.dev/app/api-keys]
+### Pré-requisitos
+- Chave de API OpenAI
+- Chave de API Resend para e-mails [https://resend.com/api-keys]
+- Chave de API Firecrawl para rastreamento web [https://www.firecrawl.dev/app/api-keys]
 
-### Quick Setup
+### Configuração Rápida
 ```bash
 export OPENAI_API_KEY="your-openai-key"
 export RESEND_API_KEY="your-resend-key"
 export FIRECRAWL_API_KEY="your-firecrawl-key"
 ```
 
-Install dependencies
+Instalar dependências
 ```
 pip install agno openai firecrawl-py resend
 ```
 
-## Analysis Flow
+## Fluxo de Análise
 
-The workflow processes supplier information through these steps:
+O workflow processa informações do fornecedor através destes passos:
 
 ```
-Company Description Workflow
-├── 🔍 Check for Cached Analysis
-│   └── If exists → Return Cached Results
-├── 🔍 New Analysis Required
-│   └── If needed → 
-│       ├── 🔄 Parallel Information Gathering
-│       │   ├── Web Crawler (Firecrawl)
-│       │   ├── Search Engine (DuckDuckGo)
-│       │   ├── Wikipedia Research
-│       │   └── Competitor Analysis
-│       └── 📄 Supplier Profile Generation
-│           └── Creates structured markdown report & caches results
-└── 📧 Email Delivery
-    └── Sends report to specified email
+Workflow de Descrição de Empresa
+├── 🔍 Verificar Análise em Cache
+│   └── Se existir → Retornar Resultados em Cache
+├── 🔍 Nova Análise Necessária
+│   └── Se necessário → 
+│       ├── 🔄 Coleta Paralela de Informações
+│       │   ├── Rastreador Web (Firecrawl)
+│       │   ├── Mecanismo de Busca (DuckDuckGo)
+│       │   ├── Pesquisa na Wikipedia
+│       │   └── Análise de Concorrentes
+│       └── 📄 Geração de Perfil de Fornecedor
+│           └── Cria relatório markdown estruturado e armazena resultados em cache
+└── 📧 Entrega por E-mail
+    └── Envia relatório para e-mail especificado
 ```
 
-The workflow uses workflow session state to intelligently cache analysis results. If the same supplier is analyzed again, it returns cached results instead of re-running the entire analysis pipeline, saving time and API costs. 
+O workflow usa estado de sessão do workflow para armazenar resultados de análise de forma inteligente. Se o mesmo fornecedor for analisado novamente, ele retorna resultados em cache em vez de re-executar todo o pipeline de análise, economizando tempo e custos de API. 

@@ -1,95 +1,95 @@
-# Spotify Agent
+# Agente Spotify
 
-An Agent that can search for songs, manage playlists, get personalized recommendations, and control playback on Spotify.
+Um Agente que pode pesquisar músicas, gerenciar playlists, obter recomendações personalizadas e controlar a reprodução no Spotify.
 
-## Authentication
+## Autenticação
 
-Set the `SPOTIFY_TOKEN` environment variable with your Spotify access token.
+Definir a variável de ambiente `SPOTIFY_TOKEN` com seu token de acesso do Spotify.
 
-**Quick start:**
-Go to https://developer.spotify.com/ and click "See it in action" to get a token. This works for searching, creating playlists, and getting your top tracks.
+**Início rápido:**
+Ir para https://developer.spotify.com/ e clicar em "See it in action" para obter um token. Isso funciona para pesquisar, criar playlists e obter suas faixas principais.
 
-**Full access (with playback):**
-Run `python spotify_auth.py` to get a token with all scopes, including playback control.
+**Acesso completo (com reprodução):**
+Executar `python spotify_auth.py` para obter um token com todos os escopos, incluindo controle de reprodução.
 
-## Features
+## Recursos
 
-- **Top tracks & artists** - Get your most played songs and artists (last 4 weeks, 6 months, or all time)
-- **Search** - Search for tracks, artists, albums, and playlists
-- **Playlist management** - Create, update, and manage playlists
-- **Recommendations** - Get personalized track recommendations based on seeds and mood (energy, happiness, danceability)
-- **Artist top tracks** - Get any artist's most popular songs
-- **Album tracks** - Add entire albums to playlists
-- **Control playback** - Play, pause, skip, and seek tracks
+- **Faixas e artistas principais** - Obter suas músicas e artistas mais tocados (últimas 4 semanas, 6 meses ou de todos os tempos)
+- **Pesquisa** - Pesquisar faixas, artistas, álbuns e playlists
+- **Gerenciamento de playlists** - Criar, atualizar e gerenciar playlists
+- **Recomendações** - Obter recomendações personalizadas de faixas com base em seeds e humor (energia, felicidade, dançabilidade)
+- **Faixas principais do artista** - Obter as músicas mais populares de qualquer artista
+- **Faixas do álbum** - Adicionar álbuns inteiros a playlists
+- **Controle de reprodução** - Reproduzir, pausar, pular e buscar faixas
 
-## Getting Started
+## Começando
 
-### 1. Clone the repository
+### 1. Clonar o repositório
 
 ```shell
 git clone https://github.com/agno-ai/agno.git
 cd agno/cookbook/examples/spotify_agent
 ```
 
-### 2. Create and activate a virtual environment
+### 2. Criar e ativar um ambiente virtual
 
 ```shell
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-### 3. Login to Spotify Dev Console and create a new application
+### 3. Fazer login no Console de Desenvolvedor do Spotify e criar uma nova aplicação
 
-- Go to https://developer.spotify.com/ and click "See it in action".
-- Click "Create an app".
-- Enter a name for your app and click "Create".
-- Copy the Client ID and Client Secret.
-- Set the Redirect URI to `http://127.0.0.1:8888/callback`. You can use any value you want for the callback URL. But make sure to use the same value in the `REDIRECT_URI` variable in the `spotify_auth.py` file.
+- Ir para https://developer.spotify.com/ e clicar em "See it in action".
+- Clicar em "Create an app".
+- Inserir um nome para sua aplicação e clicar em "Create".
+- Copiar o Client ID e Client Secret.
+- Definir o Redirect URI como `http://127.0.0.1:8888/callback`. Você pode usar qualquer valor que quiser para a URL de callback. Mas certifique-se de usar o mesmo valor na variável `REDIRECT_URI` no arquivo `spotify_auth.py`.
 
-### 4. Get a Spotify access token
+### 4. Obter um token de acesso do Spotify
 
-Enter the Client ID and Client Secret you copied from the Spotify Dev Console and run the script.
+Inserir o Client ID e Client Secret que você copiou do Console de Desenvolvedor do Spotify e executar o script.
 
 ```shell
 python spotify_auth.py
 ```
 
-Follow the instructions to get a Spotify access token. Make sure to copy the access token and set it in the `SPOTIFY_TOKEN` environment variable.
+Seguir as instruções para obter um token de acesso do Spotify. Certificar-se de copiar o token de acesso e defini-lo na variável de ambiente `SPOTIFY_TOKEN`.
 
-### 5. Set environment variables
+### 5. Definir variáveis de ambiente
 
 ```shell
 export ANTHROPIC_API_KEY=xxx
 export SPOTIFY_TOKEN=xxx
 ```
 
-### 6. Install dependencies
+### 6. Instalar dependências
 
 ```shell
 pip install -U anthropic agno sqlalchemy
 ```
 
-### 7. Run the agent
+### 7. Executar o agente
 
 ```shell
 python spotify_agent.py
 ```
 
-### 8. Connect via AgentOS
+### 8. Conectar via AgentOS
 
-- Open [os.agno.com](https://os.agno.com/)
-- Add your local AgentOS running on http://localhost:7777
-- Start chatting with the Spotify Agent
+- Abrir [os.agno.com](https://os.agno.com/)
+- Adicionar seu AgentOS local executando em http://localhost:7777
+- Começar a conversar com o Agente Spotify
 
-## Example Prompts
+## Exemplos de Prompts
 
-- "What are my most played songs from the last 4 weeks?"
-- "Who are my top artists of all time?"
-- "Create a playlist of happy Eminem and Coldplay songs"
-- "Add the entire Abbey Road album to my playlist"
-- "Find me upbeat songs similar to Blinding Lights"
-- "Update my Good Vibes playlist with more chill tracks"
+- "Quais são minhas músicas mais tocadas das últimas 4 semanas?"
+- "Quem são meus artistas principais de todos os tempos?"
+- "Criar uma playlist de músicas felizes do Eminem e Coldplay"
+- "Adicionar o álbum inteiro Abbey Road à minha playlist"
+- "Encontrar músicas animadas semelhantes a Blinding Lights"
+- "Atualizar minha playlist Good Vibes com mais faixas relaxantes"
 
-## Note on Playback Control
+## Nota sobre Controle de Reprodução
 
-To control playback via the API, you need an active Spotify session. If you get a "No active device" error, play and pause any song in Spotify first - this registers your device with Spotify's servers and enables remote commands.
+Para controlar a reprodução via API, você precisa de uma sessão ativa do Spotify. Se receber um erro "No active device", reproduzir e pausar qualquer música no Spotify primeiro - isso registra seu dispositivo nos servidores do Spotify e habilita comandos remotos.

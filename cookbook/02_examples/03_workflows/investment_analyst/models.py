@@ -22,34 +22,34 @@ class RiskLevel(str, Enum):
 
 class InvestmentAnalysisRequest(BaseModel):
     companies: List[str] = Field(
-        ..., min_length=1, max_length=3, description="List of 1-3 companies to analyze"
+        ..., min_length=1, max_length=3, description="Lista de 1-3 empresas para analisar"
     )
     investment_type: InvestmentType = Field(
-        ..., description="Type of investment being considered"
+        ..., description="Tipo de investimento sendo considerado"
     )
     investment_amount: Optional[float] = Field(
-        default=None, description="Investment amount in USD"
+        default=None, description="Valor do investimento em USD"
     )
     investment_horizon: Optional[str] = Field(
-        default=None, description="Investment time horizon (e.g., '3-5 years')"
+        default=None, description="Horizonte de tempo do investimento (ex: '3-5 anos')"
     )
     target_return: Optional[float] = Field(
-        default=None, description="Target return percentage"
+        default=None, description="Porcentagem de retorno alvo"
     )
     risk_tolerance: Optional[RiskLevel] = Field(
-        default=None, description="Risk tolerance level"
+        default=None, description="Nível de tolerância ao risco"
     )
     sectors: List[str] = Field(
-        default_factory=list, description="Target sectors for analysis"
+        default_factory=list, description="Setores-alvo para análise"
     )
     analyses_requested: List[str] = Field(
-        ..., min_length=1, description="List of analysis types to perform"
+        ..., min_length=1, description="Lista de tipos de análise para realizar"
     )
     benchmark_indices: List[str] = Field(
-        default_factory=list, description="Benchmark indices for comparison"
+        default_factory=list, description="Índices de referência para comparação"
     )
     comparable_companies: List[str] = Field(
-        default_factory=list, description="Comparable companies for analysis"
+        default_factory=list, description="Empresas comparáveis para análise"
     )
 
 

@@ -6,7 +6,7 @@ from agno.tools.calculator import CalculatorTools
 
 
 def get_fibonacci_series(count: int = 5) -> str:
-    """Generate a Fibonacci series up to the specified count."""
+    """Gerar uma série de Fibonacci até a contagem especificada."""
     if count <= 0:
         return "Count must be a positive integer."
 

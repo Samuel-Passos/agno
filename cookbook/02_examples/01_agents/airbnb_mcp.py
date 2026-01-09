@@ -1,10 +1,10 @@
-"""🏠 MCP Airbnb Agent - Search for Airbnb listings!
+"""🏠 MCP Airbnb Agent - Buscar listagens do Airbnb!
 
-This example shows how to create an agent that uses MCP and Llama 4 to search for Airbnb listings.
+Este exemplo mostra como criar um agente que usa MCP e Llama 4 para buscar listagens do Airbnb.
 
-1. Run: `pip install groq mcp agno` to install the dependencies
-2. Export your GROQ_API_KEY
-3. Run: `python cookbook/examples/agents/airbnb_mcp.py` to run the agent
+1. Executar: `pip install groq mcp agno` para instalar as dependências
+2. Exportar sua GROQ_API_KEY
+3. Executar: `python cookbook/examples/agents/airbnb_mcp.py` para executar o agente
 """
 
 import asyncio
@@ -24,20 +24,20 @@ async def run_agent(message: str) -> None:
             model=Groq(id="meta-llama/llama-4-scout-17b-16e-instruct"),
             tools=[ReasoningTools(add_instructions=True), mcp_tools],
             instructions=dedent("""\
-            ## General Instructions
-            - Always start by using the think tool to map out the steps needed to complete the task.
-            - After receiving tool results, use the think tool as a scratchpad to validate the results for correctness
-            - Before responding to the user, use the think tool to jot down final thoughts and ideas.
-            - Present final outputs in well-organized tables whenever possible.
-            - Always provide links to the listings in your response.
-            - Show your top 10 recommendations in a table and make a case for why each is the best choice.
+            ## Instruções Gerais
+            - Sempre começar usando a ferramenta think para mapear os passos necessários para completar a tarefa.
+            - Após receber resultados de ferramentas, usar a ferramenta think como um rascunho para validar os resultados quanto à correção
+            - Antes de responder ao usuário, usar a ferramenta think para anotar pensamentos e ideias finais.
+            - Apresentar saídas finais em tabelas bem organizadas sempre que possível.
+            - Sempre fornecer links para as listagens em sua resposta.
+            - Mostrar suas 10 principais recomendações em uma tabela e fazer um caso para por que cada uma é a melhor escolha.
 
-            ## Using the think tool
-            At every step, use the think tool as a scratchpad to:
-            - Restate the object in your own words to ensure full comprehension.
-            - List the  specific rules that apply to the current request
-            - Check if all required information is collected and is valid
-            - Verify that the planned action completes the task\
+            ## Usando a ferramenta think
+            Em cada passo, usar a ferramenta think como um rascunho para:
+            - Reformular o objeto em suas próprias palavras para garantir compreensão completa.
+            - Listar as regras específicas que se aplicam à solicitação atual
+            - Verificar se todas as informações necessárias foram coletadas e são válidas
+            - Verificar se a ação planejada completa a tarefa\
             """),
             add_datetime_to_context=True,
             markdown=True,

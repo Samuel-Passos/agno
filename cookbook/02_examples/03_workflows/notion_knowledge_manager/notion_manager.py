@@ -10,14 +10,14 @@ from agno.workflow.workflow import Workflow
 from pydantic import BaseModel
 
 
-# Pydantic model for classification output
+# Modelo Pydantic para saída de classificação
 class ClassificationResult(BaseModel):
     query: str
     tag: str
     message: str
 
 
-# Agents
+# Agentes
 notion_agent = Agent(
     name="Notion Manager",
     model=OpenAIChat(id="gpt-4o"),
@@ -28,86 +28,86 @@ notion_agent = Agent(
         )
     ],
     instructions=[
-        "You are a Notion page manager.",
-        "You will receive instructions with a query and a pre-classified tag.",
-        "CRITICAL: Use ONLY the exact tag provided in the instructions. Do NOT create new tags or modify the tag name.",
-        "The valid tags are: travel, tech, general-blogs, fashion, documents",
+        "Você é um gerenciador de páginas Notion.",
+        "Você receberá instruções com uma consulta e uma tag pré-classificada.",
+        "CRÍTICO: Usar APENAS a tag exata fornecida nas instruções. NÃO criar novas tags ou modificar o nome da tag.",
+        "As tags válidas são: travel, tech, general-blogs, fashion, documents",
         "Workflow:",
-        "1. Search for existing pages with the EXACT tag provided",
-        "2. If a page exists: Update that page with the new query content",
-        "3. If no page exists: Create a new page using the EXACT tag provided",
-        "Always preserve the exact tag name as given in the instructions.",
+        "1. Pesquisar páginas existentes com a tag EXATA fornecida",
+        "2. Se uma página existir: Atualizar essa página com o novo conteúdo da consulta",
+        "3. Se nenhuma página existir: Criar uma nova página usando a tag EXATA fornecida",
+        "Sempre preservar o nome exato da tag conforme dado nas instruções.",
     ],
 )
 
 
-# Executor functions
-# Step 1: Custom classifier function to assign tags
+# Funções executoras
+# Passo 1: Função classificadora personalizada para atribuir tags
 def classify_query(step_input: StepInput) -> StepOutput:
     """
-    Classify the user query into one of the predefined tags.
+    Classificar a consulta do usuário em uma das tags predefinidas.
 
-    Available tags: travel, tech, general-blogs, fashion, documents
+    Tags disponíveis: travel, tech, general-blogs, fashion, documents
     """
-    # Get the user query from step_input
+    # Obter a consulta do usuário de step_input
     query = step_input.input
 
-    # Create an agent to classify the query
+    # Criar um agente para classificar a consulta
     classifier_agent = Agent(
         model=OpenAIChat(id="gpt-4o-mini"),
         instructions=[
-            "You are a query classifier.",
-            "Classify the given query into ONE of these tags: travel, tech, general-blogs, fashion, documents",
-            "Only respond with the tag name, nothing else.",
-            "Classification rules:",
-            "- travel: Anything related to destinations, tours, trips, locations, hotels, travel guides, places to visit",
-            "- tech: Programming, software, AI, machine learning, coding, development, technology topics",
-            "- fashion: Clothing, style, trends, outfits, fashion industry",
-            "- documents: Resumes, CVs, reports, official documents, contracts",
-            "- general-blogs: Personal thoughts, opinions, life advice, miscellaneous content",
+            "Você é um classificador de consultas.",
+            "Classificar a consulta fornecida em UMA destas tags: travel, tech, general-blogs, fashion, documents",
+            "Apenas responder com o nome da tag, nada mais.",
+            "Regras de classificação:",
+            "- travel: Qualquer coisa relacionada a destinos, passeios, viagens, locais, hotéis, guias de viagem, lugares para visitar",
+            "- tech: Programação, software, IA, aprendizado de máquina, codificação, desenvolvimento, tópicos de tecnologia",
+            "- fashion: Roupas, estilo, tendências, looks, indústria da moda",
+            "- documents: Currículos, CVs, relatórios, documentos oficiais, contratos",
+            "- general-blogs: Pensamentos pessoais, opiniões, conselhos de vida, conteúdo diverso",
             "",
-            "Examples:",
-            "- 'Best places to visit in Italy' -> travel",
-            "- 'Ha Giang loop tour Vietnam guide' -> travel",
-            "- 'Add travel guide website link' -> travel",
-            "- 'How to build a React app' -> tech",
-            "- 'The rise of AI and machine learning' -> tech",
-            "- 'Fashion trends 2025' -> fashion",
-            "- 'My resume and CV' -> documents",
-            "- 'Random thoughts about life' -> general-blogs",
+            "Exemplos:",
+            "- 'Melhores lugares para visitar na Itália' -> travel",
+            "- 'Guia do tour Ha Giang Vietnã' -> travel",
+            "- 'Adicionar link do site de guia de viagem' -> travel",
+            "- 'Como construir um app React' -> tech",
+            "- 'A ascensão da IA e aprendizado de máquina' -> tech",
+            "- 'Tendências de moda 2025' -> fashion",
+            "- 'Meu currículo e CV' -> documents",
+            "- 'Pensamentos aleatórios sobre a vida' -> general-blogs",
         ],
     )
 
-    # Get classification
+    # Obter classificação
     response = classifier_agent.run(query)
     tag = response.content.strip().lower()
 
-    # Validate the tag
+    # Validar a tag
     valid_tags = ["travel", "tech", "general-blogs", "fashion", "documents"]
     if tag not in valid_tags:
-        tag = "general-blogs"  # Default fallback
+        tag = "general-blogs"  # Fallback padrão
 
-    # Return structured data using Pydantic model
+    # Retornar dados estruturados usando modelo Pydantic
     result = ClassificationResult(
-        query=str(query), tag=tag, message=f"Query classified as: {tag}"
+        query=str(query), tag=tag, message=f"Consulta classificada como: {tag}"
     )
 
     return StepOutput(content=result)
 
 
-# Custom function to prepare input for Notion agent
+# Função personalizada para preparar entrada para o agente Notion
 def prepare_notion_input(step_input: StepInput) -> StepOutput:
     """
-    Extract the classification result and format it for the Notion agent.
+    Extrair o resultado da classificação e formatá-lo para o agente Notion.
     """
-    # Get the classification result from the previous step (Classify Query)
+    # Obter o resultado da classificação do passo anterior (Classify Query)
     previous_output = step_input.previous_step_content
 
-    # Parse it into our Pydantic model if it's a dict
+    # Analisá-lo em nosso modelo Pydantic se for um dict
     if isinstance(previous_output, dict):
         classification = ClassificationResult(**previous_output)
     elif isinstance(previous_output, str):
-        # If it's a string, try to parse it or use the original input
+        # Se for uma string, tentar analisá-la ou usar a entrada original
         import json
 
         try:
@@ -116,54 +116,54 @@ def prepare_notion_input(step_input: StepInput) -> StepOutput:
             classification = ClassificationResult(
                 query=str(step_input.input),
                 tag="general-blogs",
-                message="Failed to parse classification",
+                message="Falha ao analisar classificação",
             )
     else:
         classification = previous_output
 
-    # Create a clear instruction for the Notion agent with EXPLICIT tag requirement
-    instruction = f"""Process this classified query:
+    # Criar uma instrução clara para o agente Notion com requisito de tag EXPLÍCITO
+    instruction = f"""Processar esta consulta classificada:
 
-        Query: {classification.query}
+        Consulta: {classification.query}
         Tag: {classification.tag}
 
-        IMPORTANT: You MUST use the tag "{classification.tag}" (one of: travel, tech, general-blogs, fashion, documents).
-        Do NOT create a new tag. Use EXACTLY "{classification.tag}".
+        IMPORTANTE: Você DEVE usar a tag "{classification.tag}" (uma de: travel, tech, general-blogs, fashion, documents).
+        NÃO criar uma nova tag. Usar EXATAMENTE "{classification.tag}".
 
-        Instructions:
-        1. Use search_pages tool to find pages with tag "{classification.tag}"
-        2. If page exists: Use update_page to add the query content
-        3. If no page exists: Use create_page with title "My {classification.tag.title()} Collection", tag "{classification.tag}", and the query as content
+        Instruções:
+        1. Usar ferramenta search_pages para encontrar páginas com tag "{classification.tag}"
+        2. Se página existir: Usar update_page para adicionar o conteúdo da consulta
+        3. Se nenhuma página existir: Usar create_page com título "Minha Coleção {classification.tag.title()}", tag "{classification.tag}", e a consulta como conteúdo
 
-        The tag MUST be exactly: {classification.tag}
+        A tag DEVE ser exatamente: {classification.tag}
     """
 
     return StepOutput(content=instruction)
 
 
-# Steps
+# Passos
 classify_step = Step(
     name="Classify Query",
     executor=classify_query,
-    description="Classify the user query into a tag category",
+    description="Classificar a consulta do usuário em uma categoria de tag",
 )
 
 notion_prep_step = Step(
     name="Prepare Notion Input",
     executor=prepare_notion_input,
-    description="Format the classification result for the Notion agent",
+    description="Formatar o resultado da classificação para o agente Notion",
 )
 
 notion_step = Step(
     name="Manage Notion Page",
     agent=notion_agent,
-    description="Create or update Notion page based on query and tag",
+    description="Criar ou atualizar página Notion com base na consulta e tag",
 )
 
-# Create the workflow
+# Criar o workflow
 query_to_notion_workflow = Workflow(
     name="query-to-notion-workflow",
-    description="Classify user queries and organize them in Notion",
+    description="Classificar consultas de usuários e organizá-las no Notion",
     db=SqliteDb(
         session_table="workflow_session",
         db_file="tmp/workflow.db",
@@ -171,9 +171,9 @@ query_to_notion_workflow = Workflow(
     steps=[classify_step, notion_prep_step, notion_step],
 )
 
-# Initialize the AgentOS
+# Inicializar o AgentOS
 agent_os = AgentOS(
-    description="Query classification and Notion organization system",
+    description="Sistema de classificação de consultas e organização Notion",
     workflows=[query_to_notion_workflow],
 )
 app = agent_os.get_app()

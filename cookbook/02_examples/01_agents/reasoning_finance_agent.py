@@ -10,9 +10,9 @@ agent = Agent(
         YFinanceTools(),
     ],
     instructions=[
-        "Use tables to display data.",
-        "Include sources in your response.",
-        "Only include the report in your response. No other text.",
+        "Usar tabelas para exibir dados.",
+        "Incluir fontes em sua resposta.",
+        "Incluir apenas o relatório em sua resposta. Nenhum outro texto.",
     ],
     markdown=True,
 )

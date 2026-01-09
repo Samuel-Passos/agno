@@ -1,9 +1,9 @@
 """
-This cookbook demonstrates how to use an Agno Workflow with AgentOS to transcribe audio files. There are four steps in the workflow:
-1. Echo the input file
-2. Get the audio content
-3. Transcribe the audio content
-4. Convert the transcription to structured output
+Este cookbook demonstra como usar um Workflow Agno com AgentOS para transcrever arquivos de áudio. Há quatro passos no workflow:
+1. Ecoar o arquivo de entrada
+2. Obter o conteúdo de áudio
+3. Transcrever o conteúdo de áudio
+4. Converter a transcrição para saída estruturada
 """
 
 import io
@@ -36,11 +36,11 @@ db = PostgresDb(
 class Transcription(BaseModel):
     transcript: list[str] = Field(
         ...,
-        description="The transcript of the audio conversation. Formatted as a list of strings with speaker labels and logical paragraphs and newlines.",
+        description="A transcrição da conversa de áudio. Formatada como uma lista de strings com rótulos de falantes e parágrafos lógicos e quebras de linha.",
     )
-    description: str = Field(..., description="A description of the audio conversation")
+    description: str = Field(..., description="Uma descrição da conversa de áudio")
     speakers: list[str] = Field(
-        ..., description="The speakers in the audio conversation"
+        ..., description="Os falantes na conversa de áudio"
     )
 
 
@@ -48,12 +48,12 @@ def get_transcription_agent(additional_instructions: Optional[str] = None):
     transcription_agent = Agent(
         model=Gemini(id="gemini-3-flash-preview"),
         markdown=True,
-        description="Audio file transcription agent",
-        instructions=dedent(f"""Your task is to accurately transcribe the audio into text. You will be given an audio file and you need to transcribe it into text. 
-            In the transcript, make sure to identify the speakers. If a name is mentioned, use the name in the transcript. If a name is not mentioned, use a placeholder like 'Speaker 1', 'Speaker 2', etc.
-            Make sure to include all the content of the audio in the transcript.
-            For any audio that is not speech, use the placeholder 'background noise' or 'silence' or 'music' or 'other'.
-            Only return the transcript, no other text or formatting.
+        description="Agente de transcrição de arquivo de áudio",
+        instructions=dedent(f"""Sua tarefa é transcrever com precisão o áudio em texto. Você receberá um arquivo de áudio e precisa transcrevê-lo em texto. 
+            Na transcrição, certifique-se de identificar os falantes. Se um nome for mencionado, usar o nome na transcrição. Se um nome não for mencionado, usar um placeholder como 'Falante 1', 'Falante 2', etc.
+            Certificar-se de incluir todo o conteúdo do áudio na transcrição.
+            Para qualquer áudio que não seja fala, usar o placeholder 'ruído de fundo' ou 'silêncio' ou 'música' ou 'outro'.
+            Apenas retornar a transcrição, nenhum outro texto ou formatação.
             {additional_instructions if additional_instructions else ""}"""),
     )
     return transcription_agent
@@ -79,7 +79,7 @@ def echo_input_file(step_input: StepInput) -> StepOutput:
     )
 
 
-# TODO: Find a cleaner way to create wav files
+# TODO: Encontrar uma maneira mais limpa de criar arquivos wav
 def get_audio_content(step_input: StepInput, session_state) -> StepOutput:
     request = step_input.input
     url = request.audio_file
@@ -96,19 +96,19 @@ def get_audio_content(step_input: StepInput, session_state) -> StepOutput:
         response.raise_for_status()
         mp3_audio = io.BytesIO(response.content)
         audio_segment = AudioSegment.from_file(mp3_audio, format="mp3")
-        # Ensure mono and standard sample rate for OpenAI compatibility
+        # Garantir mono e taxa de amostragem padrão para compatibilidade com OpenAI
         if audio_segment.channels > 1:
             audio_segment = audio_segment.set_channels(1)
         if audio_segment.frame_rate != 16000:
             audio_segment = audio_segment.set_frame_rate(16000)
         wav_io = io.BytesIO()
         audio_segment.export(wav_io, format="wav")
-        wav_io.seek(0)  # Reset to beginning before reading
+        wav_io.seek(0)  # Redefinir para o início antes de ler
         audio_content = wav_io.read()
         session_state["audio_content"] = audio_content
         return StepOutput(success=True)
     else:
-        log_error(f"Unsupported file type: {url}")
+        log_error(f"Tipo de arquivo não suportado: {url}")
         return StepOutput(success=False)
 
 
@@ -120,7 +120,7 @@ async def transcription_agent_executor(
         additional_instructions=step_input.input.additional_instructions
     )
     response = await transcription_agent.arun(
-        input="Give a transcript of the audio conversation",
+        input="Fornecer uma transcrição da conversa de áudio",
         audio=[Audio(content=audio_content, format="wav")],
     )
     print(response.content)
@@ -136,7 +136,7 @@ async def convert_transcription_to_output(
     transcription = session_state["transcription"]
     agent = Agent(
         model=OpenAIChat(id="gpt-5-mini"),
-        instructions="""You are a helpful assistant that converts a transcription of an audio conversation into a structured output.""",
+        instructions="""Você é um assistente útil que converte uma transcrição de uma conversa de áudio em uma saída estruturada.""",
         output_schema=Transcription,
     )
 
@@ -145,17 +145,17 @@ async def convert_transcription_to_output(
     return StepOutput(content=response.content, success=True)
 
 
-# Define workflow steps
+# Definir passos do workflow
 echo_input_step = Step(name="Echo Input", executor=echo_input_file)
 get_audio_content_step = Step(name="Get Audio Content", executor=get_audio_content)
 transcription_step = Step(name="Transcription", executor=transcription_agent_executor)
 conversion_step = Step(name="Conversion", executor=convert_transcription_to_output)
 
-# Workflow definition
+# Definição do workflow
 speech_to_text_workflow = Workflow(
     name="Speech to text workflow",
     description="""
-        Transcribe audio file using transcription agent
+        Transcrever arquivo de áudio usando agente de transcrição
         """,
     input_schema=TranscriptionRequest,
     steps=[
@@ -174,5 +174,5 @@ agent_os = AgentOS(
 
 app = agent_os.get_app()
 if __name__ == "__main__":
-    # Serves a FastAPI app exposed by AgentOS. Use reload=True for local dev.
+    # Serve um aplicativo FastAPI exposto pelo AgentOS. Usar reload=True para desenvolvimento local.
     agent_os.serve(app="stt_workflow:app", reload=True)

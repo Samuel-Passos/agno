@@ -1,13 +1,13 @@
 """
-This example demonstrates how to use the MCP protocol to coordinate a team of agents.
+Este exemplo demonstra como usar o protocolo MCP para coordenar uma equipe de agentes.
 
-Prerequisites:
+Pré-requisitos:
 - Google Maps:
-    - Set the environment variable `GOOGLE_MAPS_API_KEY` with your Google Maps API key.
-    You can obtain the API key from the Google Cloud Console:
+    - Definir a variável de ambiente `GOOGLE_MAPS_API_KEY` com sua chave de API do Google Maps.
+    Você pode obter a chave de API do Google Cloud Console:
     https://console.cloud.google.com/projectselector2/google/maps-apis/credentials
 
-    - You also need to activate the Address Validation API for your .
+    - Você também precisa ativar a API de Validação de Endereços para seu.
     https://console.developers.google.com/apis/api/addressvalidation.googleapis.com
 
 """
@@ -26,7 +26,7 @@ from mcp import StdioServerParameters
 from pydantic import BaseModel
 
 
-# Define response models
+# Definir modelos de resposta
 class AirbnbListing(BaseModel):
     name: str
     description: str
@@ -63,7 +63,7 @@ async def run_team():
         **os.environ,
         "GOOGLE_MAPS_API_KEY": os.getenv("GOOGLE_MAPS_API_KEY"),
     }
-    # Define server parameters
+    # Definir parâmetros do servidor
     airbnb_server_params = StdioServerParameters(
         command="npx",
         args=["-y", "@openbnb/mcp-server-airbnb", "--ignore-robots-txt"],
@@ -79,56 +79,56 @@ async def run_team():
         MCPTools(server_params=airbnb_server_params) as airbnb_tools,
         MCPTools(server_params=maps_server_params) as maps_tools,
     ):
-        # Create all agents
+        # Criar todos os agentes
         airbnb_agent = Agent(
             name="Airbnb",
             role="Airbnb Agent",
             model=OpenAIChat("gpt-4o"),
             tools=[airbnb_tools],
             instructions=dedent("""\
-                You are an agent that can find Airbnb listings for a given location.
+                Você é um agente que pode encontrar listagens do Airbnb para um local fornecido.
             """),
             add_datetime_to_context=True,
         )
 
         maps_agent = Agent(
             name="Google Maps",
-            role="Location Services Agent",
+            role="Agente de Serviços de Localização",
             model=OpenAIChat("gpt-4o"),
             tools=[maps_tools],
             instructions=dedent("""\
-                You are an agent that helps find attractions, points of interest,
-                and provides directions in travel destinations. Help plan travel
-                routes and find interesting places to visit for a given location and date.
+                Você é um agente que ajuda a encontrar atrações, pontos de interesse,
+                e fornece direções em destinos de viagem. Ajudar a planejar rotas
+                de viagem e encontrar lugares interessantes para visitar para um local e data fornecidos.
             """),
             add_datetime_to_context=True,
         )
 
         web_search_agent = Agent(
             name="Web Search",
-            role="Web Search Agent",
+            role="Agente de Busca Web",
             model=OpenAIChat("gpt-4o"),
             tools=[DuckDuckGoTools(cache_results=True)],
             instructions=dedent("""\
-                You are an agent that can search the web for information.
-                Search for information about a given location.
+                Você é um agente que pode pesquisar na web por informações.
+                Pesquisar informações sobre um local fornecido.
             """),
             add_datetime_to_context=True,
         )
 
         weather_search_agent = Agent(
             name="Weather Search",
-            role="Weather Search Agent",
+            role="Agente de Busca de Clima",
             model=OpenAIChat("gpt-4o"),
             tools=[DuckDuckGoTools()],
             instructions=dedent("""\
-                You are an agent that can search the web for information.
-                Search for the weather forecast for a given location and date.
+                Você é um agente que pode pesquisar na web por informações.
+                Pesquisar a previsão do tempo para um local e data fornecidos.
             """),
             add_datetime_to_context=True,
         )
 
-        # Create and run the team
+        # Criar e executar a equipe
         team = Team(
             name="SkyPlanner",
             model=OpenAIChat("gpt-4o"),
@@ -139,12 +139,12 @@ async def run_team():
                 weather_search_agent,
             ],
             instructions=[
-                "First, find the best Airbnb listings for the given location.",
-                "Use the Google Maps agent to identify key neighborhoods and attractions.",
-                "Use the Attractions agent to find highly-rated places to visit and restaurants.",
-                "Get weather information to help with packing and planning outdoor activities.",
-                "Finally, plan an itinerary for the trip.",
-                "Continue asking individual team members until you have ALL the information you need.",
+                "Primeiro, encontrar as melhores listagens do Airbnb para o local fornecido.",
+                "Usar o agente Google Maps para identificar bairros e atrações-chave.",
+                "Usar o agente Attractions para encontrar lugares altamente avaliados para visitar e restaurantes.",
+                "Obter informações do clima para ajudar com a bagagem e planejamento de atividades ao ar livre.",
+                "Finalmente, planejar um itinerário para a viagem.",
+                "Continuar perguntando aos membros individuais da equipe até ter TODAS as informações necessárias.",
             ],
             output_schema=TravelPlan,
             markdown=True,
@@ -152,7 +152,7 @@ async def run_team():
             add_datetime_to_context=True,
         )
 
-        # Execute the team's task
+        # Executar a tarefa da equipe
         await team.aprint_response(
             dedent("""\
             I want to travel to San Francisco from New York sometime in May.

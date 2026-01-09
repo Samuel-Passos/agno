@@ -1,7 +1,7 @@
-# Deep Researcher
+# Pesquisador Profundo
 
-**Deep Researcher** is an AI-powered research assistant that uses a multi-agent workflow to conduct comprehensive research, analysis, and report generation.
-The system automates the entire research process from web scraping to final report creation using specialized AI agents.
+**Pesquisador Profundo** é um assistente de pesquisa alimentado por IA que usa um workflow multi-agente para conduzir pesquisa abrangente, análise e geração de relatórios.
+O sistema automatiza todo o processo de pesquisa desde web scraping até a criação do relatório final usando agentes de IA especializados.
 
 > Note: Fork and clone this repository if needed
 

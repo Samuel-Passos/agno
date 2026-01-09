@@ -18,25 +18,25 @@ from prompts import SUPPLIER_PROFILE_DICT, SUPPLIER_PROFILE_INSTRUCTIONS_GENERAL
 crawler_step = Step(
     name="Crawler",
     agent=crawl_agent,
-    description="Crawl the supplier homepage for the supplier profile url",
+    description="Rastrear a homepage do fornecedor para a URL do perfil do fornecedor",
 )
 
 search_step = Step(
     name="Search",
     agent=search_agent,
-    description="Search for the supplier profile for the supplier name",
+    description="Pesquisar o perfil do fornecedor para o nome do fornecedor",
 )
 
 wikipedia_step = Step(
     name="Wikipedia",
     agent=wikipedia_agent,
-    description="Search Wikipedia for the supplier profile for the supplier name",
+    description="Pesquisar na Wikipedia o perfil do fornecedor para o nome do fornecedor",
 )
 
 competitor_step = Step(
     name="Competitor",
     agent=competitor_agent,
-    description="Find competitors of the supplier name",
+    description="Encontrar concorrentes do nome do fornecedor",
 )
 
 
@@ -93,7 +93,7 @@ def generate_supplier_profile(step_input: StepInput) -> StepOutput:
 generate_supplier_profile_step = Step(
     name="Generate Supplier Profile",
     executor=generate_supplier_profile,
-    description="Generate the supplier profile for the supplier name",
+    description="Gerar o perfil do fornecedor para o nome do fornecedor",
 )
 
 
@@ -125,12 +125,12 @@ def send_email(step_input: StepInput):
 send_email_step = Step(
     name="Send Email",
     executor=send_email,
-    description="Send the email to the user",
+    description="Enviar o e-mail para o usuário",
 )
 
 company_description_workflow = Workflow(
     name="Company Description Workflow",
-    description="A workflow to generate a company description for a supplier",
+    description="Um workflow para gerar uma descrição de empresa para um fornecedor",
     steps=[
         Parallel(
             crawler_step,

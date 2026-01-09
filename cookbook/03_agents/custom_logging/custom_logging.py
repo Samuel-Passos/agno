@@ -1,4 +1,4 @@
-"""Example showing how to use a custom logger with Agno."""
+"""Exemplo mostrando como usar um logger personalizado com Agno."""
 
 import logging
 
@@ -7,27 +7,27 @@ from agno.utils.log import configure_agno_logging, log_info
 
 
 def get_custom_logger():
-    """Return an example custom logger."""
+    """Retornar um exemplo de logger personalizado."""
     custom_logger = logging.getLogger("custom_logger")
     handler = logging.StreamHandler()
     formatter = logging.Formatter("[CUSTOM_LOGGER] %(levelname)s: %(message)s")
     handler.setFormatter(formatter)
     custom_logger.addHandler(handler)
-    custom_logger.setLevel(logging.INFO)  # Set level to INFO to show info messages
+    custom_logger.setLevel(logging.INFO)  # Definir nível para INFO para mostrar mensagens de info
     custom_logger.propagate = False
     return custom_logger
 
 
-# Get the custom logger we will use for the example.
+# Obter o logger personalizado que usaremos para o exemplo.
 custom_logger = get_custom_logger()
 
-# Configure Agno to use our custom logger. It will be used for all logging.
+# Configurar Agno para usar nosso logger personalizado. Ele será usado para todo o logging.
 configure_agno_logging(custom_default_logger=custom_logger)
 
-# Every use of the logging function in agno.utils.log will now use our custom logger.
-log_info("This is using our custom logger!")
+# Cada uso da função de logging em agno.utils.log agora usará nosso logger personalizado.
+log_info("Isso está usando nosso logger personalizado!")
 
-# Now let's setup an Agent and run it.
-# All logging coming from the Agent will use our custom logger.
+# Agora vamos configurar um Agent e executá-lo.
+# Todo o logging vindo do Agent usará nosso logger personalizado.
 agent = Agent()
-agent.print_response("What can I do to improve my sleep?")
+agent.print_response("O que posso fazer para melhorar meu sono?")

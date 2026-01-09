@@ -1,19 +1,19 @@
-"""🎨 Blog Post Generator v2.0 - Your AI Content Creation Studio!
+"""🎨 Gerador de Post de Blog v2.0 - Seu Estúdio de Criação de Conteúdo de IA!
 
-This advanced example demonstrates how to build a sophisticated blog post generator using
-the new workflow v2.0 architecture. The workflow combines web research capabilities with
-professional writing expertise using a multi-stage approach:
+Este exemplo avançado demonstra como construir um gerador sofisticado de posts de blog usando
+a nova arquitetura de workflow v2.0. O workflow combina capacidades de pesquisa web com
+expertise profissional de escrita usando uma abordagem multi-estágio:
 
-1. Intelligent web research and source gathering
-2. Content extraction and processing
-3. Professional blog post writing with proper citations
+1. Pesquisa web inteligente e coleta de fontes
+2. Extração e processamento de conteúdo
+3. Escrita profissional de post de blog com citações adequadas
 
-Key capabilities:
-- Advanced web research and source evaluation
-- Content scraping and processing
-- Professional writing with SEO optimization
-- Automatic content caching for efficiency
-- Source attribution and fact verification
+Capacidades principais:
+- Pesquisa web avançada e avaliação de fontes
+- Raspagem e processamento de conteúdo
+- Escrita profissional com otimização SEO
+- Cache automático de conteúdo para eficiência
+- Atribuição de fontes e verificação de fatos
 """
 
 import asyncio
@@ -32,12 +32,12 @@ from agno.workflow.workflow import Workflow
 from pydantic import BaseModel, Field
 
 
-# --- Response Models ---
+# --- Modelos de Resposta ---
 class NewsArticle(BaseModel):
-    title: str = Field(..., description="Title of the article.")
-    url: str = Field(..., description="Link to the article.")
+    title: str = Field(..., description="Título do artigo.")
+    url: str = Field(..., description="Link para o artigo.")
     summary: Optional[str] = Field(
-        ..., description="Summary of the article if available."
+        ..., description="Resumo do artigo se disponível."
     )
 
 
@@ -46,45 +46,45 @@ class SearchResults(BaseModel):
 
 
 class ScrapedArticle(BaseModel):
-    title: str = Field(..., description="Title of the article.")
-    url: str = Field(..., description="Link to the article.")
+    title: str = Field(..., description="Título do artigo.")
+    url: str = Field(..., description="Link para o artigo.")
     summary: Optional[str] = Field(
-        ..., description="Summary of the article if available."
+        ..., description="Resumo do artigo se disponível."
     )
     content: Optional[str] = Field(
         ...,
-        description="Full article content in markdown format. None if content is unavailable.",
+        description="Conteúdo completo do artigo em formato markdown. None se o conteúdo não estiver disponível.",
     )
 
 
-# --- Agents ---
+# --- Agentes ---
 research_agent = Agent(
     name="Blog Research Agent",
     model=OpenAIChat(id="gpt-4o-mini"),
     tools=[DuckDuckGoTools()],
     description=dedent("""\
-    You are BlogResearch-X, an elite research assistant specializing in discovering
-    high-quality sources for compelling blog content. Your expertise includes:
+    Você é BlogResearch-X, um assistente de pesquisa de elite especializado em descobrir
+    fontes de alta qualidade para conteúdo de blog convincente. Sua expertise inclui:
 
-    - Finding authoritative and trending sources
-    - Evaluating content credibility and relevance
-    - Identifying diverse perspectives and expert opinions
-    - Discovering unique angles and insights
-    - Ensuring comprehensive topic coverage
+    - Encontrar fontes autorizadas e em tendência
+    - Avaliar credibilidade e relevância do conteúdo
+    - Identificar perspectivas diversas e opiniões de especialistas
+    - Descobrir ângulos únicos e insights
+    - Garantir cobertura abrangente do tópico
     """),
     instructions=dedent("""\
-    1. Search Strategy 🔍
-       - Find 10-15 relevant sources and select the 5-7 best ones
-       - Prioritize recent, authoritative content
-       - Look for unique angles and expert insights
-    2. Source Evaluation 📊
-       - Verify source credibility and expertise
-       - Check publication dates for timeliness
-       - Assess content depth and uniqueness
-    3. Diversity of Perspectives 🌐
-       - Include different viewpoints
-       - Gather both mainstream and expert opinions
-       - Find supporting data and statistics
+    1. Estratégia de Busca 🔍
+       - Encontrar 10-15 fontes relevantes e selecionar as 5-7 melhores
+       - Priorizar conteúdo recente e autorizado
+       - Procurar ângulos únicos e insights de especialistas
+    2. Avaliação de Fontes 📊
+       - Verificar credibilidade e expertise da fonte
+       - Verificar datas de publicação para atualidade
+       - Avaliar profundidade e singularidade do conteúdo
+    3. Diversidade de Perspectivas 🌐
+       - Incluir diferentes pontos de vista
+       - Coletar opiniões tanto mainstream quanto de especialistas
+       - Encontrar dados e estatísticas de apoio
     """),
     output_schema=SearchResults,
 )
@@ -94,29 +94,29 @@ content_scraper_agent = Agent(
     model=OpenAIChat(id="gpt-4o-mini"),
     tools=[Newspaper4kTools()],
     description=dedent("""\
-    You are ContentBot-X, a specialist in extracting and processing digital content
-    for blog creation. Your expertise includes:
+    Você é ContentBot-X, um especialista em extrair e processar conteúdo digital
+    para criação de blog. Sua expertise inclui:
 
-    - Efficient content extraction
-    - Smart formatting and structuring
-    - Key information identification
-    - Quote and statistic preservation
-    - Maintaining source attribution
+    - Extração eficiente de conteúdo
+    - Formatação e estruturação inteligente
+    - Identificação de informações-chave
+    - Preservação de citações e estatísticas
+    - Manutenção de atribuição de fontes
     """),
     instructions=dedent("""\
-    1. Content Extraction 📑
-       - Extract content from the article
-       - Preserve important quotes and statistics
-       - Maintain proper attribution
-       - Handle paywalls gracefully
-    2. Content Processing 🔄
-       - Format text in clean markdown
-       - Preserve key information
-       - Structure content logically
-    3. Quality Control ✅
-       - Verify content relevance
-       - Ensure accurate extraction
-       - Maintain readability
+    1. Extração de Conteúdo 📑
+       - Extrair conteúdo do artigo
+       - Preservar citações e estatísticas importantes
+       - Manter atribuição adequada
+       - Lidar com paywalls graciosamente
+    2. Processamento de Conteúdo 🔄
+       - Formatar texto em markdown limpo
+       - Preservar informações-chave
+       - Estruturar conteúdo logicamente
+    3. Controle de Qualidade ✅
+       - Verificar relevância do conteúdo
+       - Garantir extração precisa
+       - Manter legibilidade
     """),
     output_schema=ScrapedArticle,
 )
@@ -125,97 +125,97 @@ blog_writer_agent = Agent(
     name="Blog Writer Agent",
     model=OpenAIChat(id="gpt-4o"),
     description=dedent("""\
-    You are BlogMaster-X, an elite content creator combining journalistic excellence
-    with digital marketing expertise. Your strengths include:
+    Você é BlogMaster-X, um criador de conteúdo de elite combinando excelência jornalística
+    com expertise em marketing digital. Seus pontos fortes incluem:
 
-    - Crafting viral-worthy headlines
-    - Writing engaging introductions
-    - Structuring content for digital consumption
-    - Incorporating research seamlessly
-    - Optimizing for SEO while maintaining quality
-    - Creating shareable conclusions
+    - Criar manchetes dignas de viral
+    - Escrever introduções envolventes
+    - Estruturar conteúdo para consumo digital
+    - Incorporar pesquisa perfeitamente
+    - Otimizar para SEO mantendo qualidade
+    - Criar conclusões compartilháveis
     """),
     instructions=dedent("""\
-    1. Content Strategy 📝
-       - Craft attention-grabbing headlines
-       - Write compelling introductions
-       - Structure content for engagement
-       - Include relevant subheadings
-    2. Writing Excellence ✍️
-       - Balance expertise with accessibility
-       - Use clear, engaging language
-       - Include relevant examples
-       - Incorporate statistics naturally
-    3. Source Integration 🔍
-       - Cite sources properly
-       - Include expert quotes
-       - Maintain factual accuracy
-    4. Digital Optimization 💻
-       - Structure for scanability
-       - Include shareable takeaways
-       - Optimize for SEO
-       - Add engaging subheadings
+    1. Estratégia de Conteúdo 📝
+       - Criar manchetes que chamam atenção
+       - Escrever introduções convincentes
+       - Estruturar conteúdo para engajamento
+       - Incluir subtítulos relevantes
+    2. Excelência na Escrita ✍️
+       - Equilibrar expertise com acessibilidade
+       - Usar linguagem clara e envolvente
+       - Incluir exemplos relevantes
+       - Incorporar estatísticas naturalmente
+    3. Integração de Fontes 🔍
+       - Citar fontes adequadamente
+       - Incluir citações de especialistas
+       - Manter precisão factual
+    4. Otimização Digital 💻
+       - Estruturar para escaneabilidade
+       - Incluir takeaways compartilháveis
+       - Otimizar para SEO
+       - Adicionar subtítulos envolventes
 
-    Format your blog post with this structure:
-    # {Viral-Worthy Headline}
+    Formatar seu post de blog com esta estrutura:
+    # {Manchete Digna de Viral}
 
-    ## Introduction
-    {Engaging hook and context}
+    ## Introdução
+    {Gancho envolvente e contexto}
 
-    ## {Compelling Section 1}
-    {Key insights and analysis}
-    {Expert quotes and statistics}
+    ## {Seção Convincente 1}
+    {Insights-chave e análise}
+    {Citações de especialistas e estatísticas}
 
-    ## {Engaging Section 2}
-    {Deeper exploration}
-    {Real-world examples}
+    ## {Seção Envolvente 2}
+    {Exploração mais profunda}
+    {Exemplos do mundo real}
 
-    ## {Practical Section 3}
-    {Actionable insights}
-    {Expert recommendations}
+    ## {Seção Prática 3}
+    {Insights acionáveis}
+    {Recomendações de especialistas}
 
-    ## Key Takeaways
-    - {Shareable insight 1}
-    - {Practical takeaway 2}
-    - {Notable finding 3}
+    ## Principais Takeaways
+    - {Insight compartilhável 1}
+    - {Takeaway prático 2}
+    - {Achado notável 3}
 
-    ## Sources
-    {Properly attributed sources with links}
+    ## Fontes
+    {Fontes adequadamente atribuídas com links}
     """),
     markdown=True,
 )
 
 
-# --- Helper Functions ---
+# --- Funções Auxiliares ---
 def get_cached_blog_post(session_state, topic: str) -> Optional[str]:
-    """Get cached blog post from workflow session state"""
-    logger.info("Checking if cached blog post exists")
+    """Obter post de blog em cache do estado da sessão do workflow"""
+    logger.info("Verificando se existe post de blog em cache")
     return session_state.get("blog_posts", {}).get(topic)
 
 
 def cache_blog_post(session_state, topic: str, blog_post: str):
-    """Cache blog post in workflow session state"""
-    logger.info(f"Saving blog post for topic: {topic}")
+    """Armazenar post de blog em cache no estado da sessão do workflow"""
+    logger.info(f"Salvando post de blog para tópico: {topic}")
     if "blog_posts" not in session_state:
         session_state["blog_posts"] = {}
     session_state["blog_posts"][topic] = blog_post
 
 
 def get_cached_search_results(session_state, topic: str) -> Optional[SearchResults]:
-    """Get cached search results from workflow session state"""
-    logger.info("Checking if cached search results exist")
+    """Obter resultados de busca em cache do estado da sessão do workflow"""
+    logger.info("Verificando se existem resultados de busca em cache")
     search_results = session_state.get("search_results", {}).get(topic)
     if search_results and isinstance(search_results, dict):
         try:
             return SearchResults.model_validate(search_results)
         except Exception as e:
-            logger.warning(f"Could not validate cached search results: {e}")
+            logger.warning(f"Não foi possível validar resultados de busca em cache: {e}")
     return search_results if isinstance(search_results, SearchResults) else None
 
 
 def cache_search_results(session_state, topic: str, search_results: SearchResults):
-    """Cache search results in workflow session state"""
-    logger.info(f"Saving search results for topic: {topic}")
+    """Armazenar resultados de busca em cache no estado da sessão do workflow"""
+    logger.info(f"Salvando resultados de busca para tópico: {topic}")
     if "search_results" not in session_state:
         session_state["search_results"] = {}
     session_state["search_results"][topic] = search_results.model_dump()
@@ -224,8 +224,8 @@ def cache_search_results(session_state, topic: str, search_results: SearchResult
 def get_cached_scraped_articles(
     session_state, topic: str
 ) -> Optional[Dict[str, ScrapedArticle]]:
-    """Get cached scraped articles from workflow session state"""
-    logger.info("Checking if cached scraped articles exist")
+    """Obter artigos raspados em cache do estado da sessão do workflow"""
+    logger.info("Verificando se existem artigos raspados em cache")
     scraped_articles = session_state.get("scraped_articles", {}).get(topic)
     if scraped_articles and isinstance(scraped_articles, dict):
         try:
@@ -234,15 +234,15 @@ def get_cached_scraped_articles(
                 for url, article in scraped_articles.items()
             }
         except Exception as e:
-            logger.warning(f"Could not validate cached scraped articles: {e}")
+            logger.warning(f"Não foi possível validar artigos raspados em cache: {e}")
     return scraped_articles if isinstance(scraped_articles, dict) else None
 
 
 def cache_scraped_articles(
     session_state, topic: str, scraped_articles: Dict[str, ScrapedArticle]
 ):
-    """Cache scraped articles in workflow session state"""
-    logger.info(f"Saving scraped articles for topic: {topic}")
+    """Armazenar artigos raspados em cache no estado da sessão do workflow"""
+    logger.info(f"Salvando artigos raspados para tópico: {topic}")
     if "scraped_articles" not in session_state:
         session_state["scraped_articles"] = {}
     session_state["scraped_articles"][topic] = {
@@ -253,20 +253,20 @@ def cache_scraped_articles(
 async def get_search_results(
     session_state, topic: str, use_cache: bool = True, num_attempts: int = 3
 ) -> Optional[SearchResults]:
-    """Get search results with caching support"""
+    """Obter resultados de busca com suporte a cache"""
 
-    # Check cache first
+    # Verificar cache primeiro
     if use_cache:
         cached_results = get_cached_search_results(session_state, topic)
         if cached_results:
-            logger.info(f"Found {len(cached_results.articles)} articles in cache.")
+            logger.info(f"Encontrados {len(cached_results.articles)} artigos em cache.")
             return cached_results
 
-    # Search for new results
+    # Buscar novos resultados
     for attempt in range(num_attempts):
         try:
             print(
-                f"🔍 Searching for articles about: {topic} (attempt {attempt + 1}/{num_attempts})"
+                f"🔍 Pesquisando artigos sobre: {topic} (tentativa {attempt + 1}/{num_attempts})"
             )
             response = await research_agent.arun(topic)
 
@@ -276,21 +276,21 @@ async def get_search_results(
                 and isinstance(response.content, SearchResults)
             ):
                 article_count = len(response.content.articles)
-                logger.info(f"Found {article_count} articles on attempt {attempt + 1}")
-                print(f"✅ Found {article_count} relevant articles")
+                logger.info(f"Encontrados {article_count} artigos na tentativa {attempt + 1}")
+                print(f"✅ Encontrados {article_count} artigos relevantes")
 
-                # Cache the results
+                # Armazenar resultados em cache
                 cache_search_results(session_state, topic, response.content)
                 return response.content
             else:
                 logger.warning(
-                    f"Attempt {attempt + 1}/{num_attempts} failed: Invalid response type"
+                    f"Tentativa {attempt + 1}/{num_attempts} falhou: Tipo de resposta inválido"
                 )
 
         except Exception as e:
-            logger.warning(f"Attempt {attempt + 1}/{num_attempts} failed: {str(e)}")
+            logger.warning(f"Tentativa {attempt + 1}/{num_attempts} falhou: {str(e)}")
 
-    logger.error(f"Failed to get search results after {num_attempts} attempts")
+    logger.error(f"Falha ao obter resultados de busca após {num_attempts} tentativas")
     return None
 
 
@@ -300,23 +300,23 @@ async def scrape_articles(
     search_results: SearchResults,
     use_cache: bool = True,
 ) -> Dict[str, ScrapedArticle]:
-    """Scrape articles with caching support"""
+    """Raspar artigos com suporte a cache"""
 
-    # Check cache first
+    # Verificar cache primeiro
     if use_cache:
         cached_articles = get_cached_scraped_articles(session_state, topic)
         if cached_articles:
-            logger.info(f"Found {len(cached_articles)} scraped articles in cache.")
+            logger.info(f"Encontrados {len(cached_articles)} artigos raspados em cache.")
             return cached_articles
 
     scraped_articles: Dict[str, ScrapedArticle] = {}
 
-    print(f"📄 Scraping {len(search_results.articles)} articles...")
+    print(f"📄 Raspando {len(search_results.articles)} artigos...")
 
     for i, article in enumerate(search_results.articles, 1):
         try:
             print(
-                f"📖 Scraping article {i}/{len(search_results.articles)}: {article.title[:50]}..."
+                f"📖 Raspando artigo {i}/{len(search_results.articles)}: {article.title[:50]}..."
             )
             response = await content_scraper_agent.arun(article.url)
 
@@ -326,21 +326,21 @@ async def scrape_articles(
                 and isinstance(response.content, ScrapedArticle)
             ):
                 scraped_articles[response.content.url] = response.content
-                logger.info(f"Scraped article: {response.content.url}")
-                print(f"✅ Successfully scraped: {response.content.title[:50]}...")
+                logger.info(f"Artigo raspado: {response.content.url}")
+                print(f"✅ Raspado com sucesso: {response.content.title[:50]}...")
             else:
-                print(f"❌ Failed to scrape: {article.title[:50]}...")
+                print(f"❌ Falha ao raspar: {article.title[:50]}...")
 
         except Exception as e:
-            logger.warning(f"Failed to scrape {article.url}: {str(e)}")
-            print(f"❌ Error scraping: {article.title[:50]}...")
+            logger.warning(f"Falha ao raspar {article.url}: {str(e)}")
+            print(f"❌ Erro ao raspar: {article.title[:50]}...")
 
-    # Cache the scraped articles
+    # Armazenar artigos raspados em cache
     cache_scraped_articles(session_state, topic, scraped_articles)
     return scraped_articles
 
 
-# --- Main Execution Function ---
+# --- Função Principal de Execução ---
 async def blog_generation_execution(
     session_state,
     topic: str = None,
@@ -349,33 +349,33 @@ async def blog_generation_execution(
     use_blog_cache: bool = True,
 ) -> str:
     """
-    Blog post generation workflow execution function.
+    Função de execução do workflow de geração de post de blog.
 
     Args:
-        session_state: The shared session state
-        topic: Blog post topic (if not provided, uses execution_input.input)
-        use_search_cache: Whether to use cached search results
-        use_scrape_cache: Whether to use cached scraped articles
-        use_blog_cache: Whether to use cached blog posts
+        session_state: O estado compartilhado da sessão
+        topic: Tópico do post de blog (se não fornecido, usa execution_input.input)
+        use_search_cache: Se deve usar resultados de busca em cache
+        use_scrape_cache: Se deve usar artigos raspados em cache
+        use_blog_cache: Se deve usar posts de blog em cache
     """
 
     blog_topic = topic
 
     if not blog_topic:
-        return "❌ No blog topic provided. Please specify a topic."
+        return "❌ Nenhum tópico de blog fornecido. Por favor, especifique um tópico."
 
-    print(f"🎨 Generating blog post about: {blog_topic}")
+    print(f"🎨 Gerando post de blog sobre: {blog_topic}")
     print("=" * 60)
 
-    # Check for cached blog post first
+    # Verificar post de blog em cache primeiro
     if use_blog_cache:
         cached_blog = get_cached_blog_post(session_state, blog_topic)
         if cached_blog:
-            print("📋 Found cached blog post!")
+            print("📋 Post de blog em cache encontrado!")
             return cached_blog
 
-    # Phase 1: Research and gather sources
-    print("\n🔍 PHASE 1: RESEARCH & SOURCE GATHERING")
+    # Fase 1: Pesquisa e coleta de fontes
+    print("\n🔍 FASE 1: PESQUISA E COLETA DE FONTES")
     print("=" * 50)
 
     search_results = await get_search_results(
@@ -383,14 +383,14 @@ async def blog_generation_execution(
     )
 
     if not search_results or len(search_results.articles) == 0:
-        return f"❌ Sorry, could not find any articles on the topic: {blog_topic}"
+        return f"❌ Desculpe, não foi possível encontrar artigos sobre o tópico: {blog_topic}"
 
-    print(f"📊 Found {len(search_results.articles)} relevant sources:")
+    print(f"📊 Encontradas {len(search_results.articles)} fontes relevantes:")
     for i, article in enumerate(search_results.articles, 1):
         print(f"   {i}. {article.title[:60]}...")
 
-    # Phase 2: Content extraction
-    print("\n📄 PHASE 2: CONTENT EXTRACTION")
+    # Fase 2: Extração de conteúdo
+    print("\n📄 FASE 2: EXTRAÇÃO DE CONTEÚDO")
     print("=" * 50)
 
     scraped_articles = await scrape_articles(
@@ -398,48 +398,48 @@ async def blog_generation_execution(
     )
 
     if not scraped_articles:
-        return f"❌ Could not extract content from any articles for topic: {blog_topic}"
+        return f"❌ Não foi possível extrair conteúdo de nenhum artigo para o tópico: {blog_topic}"
 
-    print(f"📖 Successfully extracted content from {len(scraped_articles)} articles")
+    print(f"📖 Conteúdo extraído com sucesso de {len(scraped_articles)} artigos")
 
-    # Phase 3: Blog post writing
-    print("\n✍️ PHASE 3: BLOG POST CREATION")
+    # Fase 3: Escrita do post de blog
+    print("\n✍️ FASE 3: CRIAÇÃO DO POST DE BLOG")
     print("=" * 50)
 
-    # Prepare input for the writer
+    # Preparar entrada para o escritor
     writer_input = {
         "topic": blog_topic,
         "articles": [article.model_dump() for article in scraped_articles.values()],
     }
 
-    print("🤖 AI is crafting your blog post...")
+    print("🤖 IA está criando seu post de blog...")
     writer_response = await blog_writer_agent.arun(json.dumps(writer_input, indent=2))
 
     if not writer_response or not writer_response.content:
-        return f"❌ Failed to generate blog post for topic: {blog_topic}"
+        return f"❌ Falha ao gerar post de blog para o tópico: {blog_topic}"
 
     blog_post = writer_response.content
 
-    # Cache the blog post
+    # Armazenar post de blog em cache
     cache_blog_post(session_state, blog_topic, blog_post)
 
-    print("✅ Blog post generated successfully!")
-    print(f"📝 Length: {len(blog_post)} characters")
-    print(f"📚 Sources: {len(scraped_articles)} articles")
+    print("✅ Post de blog gerado com sucesso!")
+    print(f"📝 Comprimento: {len(blog_post)} caracteres")
+    print(f"📚 Fontes: {len(scraped_articles)} artigos")
 
     return blog_post
 
 
-# --- Workflow Definition ---
+# --- Definição do Workflow ---
 blog_generator_workflow = Workflow(
     name="Blog Post Generator",
-    description="Advanced blog post generator with research and content creation capabilities",
+    description="Gerador avançado de posts de blog com capacidades de pesquisa e criação de conteúdo",
     db=SqliteDb(
         session_table="workflow_session",
         db_file="tmp/blog_generator.db",
     ),
     steps=blog_generation_execution,
-    session_state={},  # Initialize empty session state for caching
+    session_state={},  # Inicializar estado de sessão vazio para cache
 )
 
 
@@ -447,7 +447,7 @@ if __name__ == "__main__":
     import random
 
     async def main():
-        # Fun example topics to showcase the generator's versatility
+        # Tópicos de exemplo divertidos para mostrar a versatilidade do gerador
         example_topics = [
             "The Rise of Artificial General Intelligence: Latest Breakthroughs",
             "How Quantum Computing is Revolutionizing Cybersecurity",
@@ -461,12 +461,12 @@ if __name__ == "__main__":
             "How Rubber Ducks Revolutionized Software Development",
         ]
 
-        # Test with a random topic
+        # Testar com um tópico aleatório
         topic = random.choice(example_topics)
 
-        print("🧪 Testing Blog Post Generator v2.0")
+        print("🧪 Testando Gerador de Post de Blog v2.0")
         print("=" * 60)
-        print(f"📝 Topic: {topic}")
+        print(f"📝 Tópico: {topic}")
         print()
 
         # Generate the blog post

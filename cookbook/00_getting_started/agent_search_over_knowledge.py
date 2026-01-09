@@ -1,17 +1,17 @@
 """
-Agentic Search over Knowledge - Agent with a Knowledge Base
-============================================================
-This example shows how to give an agent a searchable knowledge base.
-The agent can search through documents (PDFs, text, URLs) to answer questions.
+Busca Agente sobre Conhecimento - Agente com Base de Conhecimento
+==================================================================
+Este exemplo mostra como dar a um agente uma base de conhecimento pesquisável.
+O agente pode pesquisar em documentos (PDFs, texto, URLs) para responder perguntas.
 
-Key concepts:
-- Knowledge: A searchable collection of documents (PDFs, text, URLs)
-- Agentic search: The agent decides when to search the knowledge base
-- Hybrid search: Combines semantic similarity with keyword matching.
+Conceitos-chave:
+- Conhecimento: Uma coleção pesquisável de documentos (PDFs, texto, URLs)
+- Busca agente: O agente decide quando pesquisar a base de conhecimento
+- Busca híbrida: Combina similaridade semântica com correspondência de palavras-chave.
 
-Example prompts to try:
-- "What is Agno?"
-- "What is the AgentOS?"
+Exemplos de prompts para testar:
+- "O que é Agno?"
+- "O que é o AgentOS?"
 """
 
 from agno.agent import Agent
@@ -23,12 +23,12 @@ from agno.vectordb.chroma import ChromaDb
 from agno.vectordb.search import SearchType
 
 # ============================================================================
-# Storage Configuration
+# Configuração de Armazenamento
 # ============================================================================
 agent_db = SqliteDb(db_file="tmp/agents.db")
 
 # ============================================================================
-# Knowledge Configuration
+# Configuração de Conhecimento
 # ============================================================================
 knowledge = Knowledge(
     name="Agno Documentation",
@@ -37,51 +37,51 @@ knowledge = Knowledge(
         collection="agno_docs",
         path="tmp/chromadb",
         persistent_client=True,
-        # Enable hybrid search - combines vector similarity with keyword matching using RRF
+        # Habilita busca híbrida - combina similaridade vetorial com correspondência de palavras-chave usando RRF
         search_type=SearchType.hybrid,
-        # RRF (Reciprocal Rank Fusion) constant - controls ranking smoothness.
-        # Higher values (e.g., 60) give more weight to lower-ranked results,
-        # Lower values make top results more dominant. Default is 60 (per original RRF paper).
+        # Constante RRF (Reciprocal Rank Fusion) - controla a suavidade do ranqueamento.
+        # Valores maiores (ex: 60) dão mais peso a resultados de menor classificação,
+        # Valores menores tornam os principais resultados mais dominantes. Padrão é 60 (conforme artigo original RRF).
         hybrid_rrf_k=60,
         embedder=GeminiEmbedder(id="gemini-embedding-001"),
     ),
-    # Return 5 results on query
+    # Retorna 5 resultados na consulta
     max_results=5,
-    # Store metadata about the contents in the agent database, table_name="agno_knowledge"
+    # Armazena metadados sobre o conteúdo no banco de dados do agente, table_name="agno_knowledge"
     contents_db=agent_db,
 )
 
 # ============================================================================
-# Agent Instructions
+# Instruções do Agente
 # ============================================================================
 instructions = """\
-You are an expert on the Agno framework and building AI agents.
+Você é um especialista no framework Agno e na construção de agentes de IA.
 
-## Workflow
+## Fluxo de Trabalho
 
-1. Search
-   - For questions about Agno, always search your knowledge base first
-   - Extract key concepts from the query to search effectively
+1. Pesquisar
+   - Para perguntas sobre Agno, sempre pesquise sua base de conhecimento primeiro
+   - Extraia conceitos-chave da consulta para pesquisar efetivamente
 
-2. Synthesize
-   - Combine information from multiple search results
-   - Prioritize official documentation over general knowledge
+2. Sintetizar
+   - Combine informações de múltiplos resultados de busca
+   - Priorize documentação oficial sobre conhecimento geral
 
-3. Present
-   - Lead with a direct answer
-   - Include code examples when helpful
-   - Keep it practical and actionable
+3. Apresentar
+   - Comece com uma resposta direta
+   - Inclua exemplos de código quando útil
+   - Mantenha prático e acionável
 
-## Rules
+## Regras
 
-- Always search knowledge before answering Agno questions
-- If the answer isn't in the knowledge base, say so
-- Include code snippets for implementation questions
-- Be concise — developers want answers, not essays\
+- Sempre pesquise o conhecimento antes de responder perguntas sobre Agno
+- Se a resposta não estiver na base de conhecimento, diga isso
+- Inclua trechos de código para perguntas de implementação
+- Seja conciso — desenvolvedores querem respostas, não ensaios\
 """
 
 # ============================================================================
-# Create the Agent
+# Criar o Agente
 # ============================================================================
 agent_with_knowledge = Agent(
     name="Agent with Knowledge",
@@ -97,39 +97,39 @@ agent_with_knowledge = Agent(
 )
 
 # ============================================================================
-# Load Knowledge and Run the Agent
+# Carregar Conhecimento e Executar o Agente
 # ============================================================================
 if __name__ == "__main__":
-    # Load the introduction from the Agno documentation into the knowledge base
-    # We're only loading 1 file to keep this example simple.
+    # Carrega a introdução da documentação Agno na base de conhecimento
+    # Estamos carregando apenas 1 arquivo para manter este exemplo simples.
     knowledge.add_content(
         name="Agno Introduction", url="https://docs.agno.com/introduction.md"
     )
 
     agent_with_knowledge.print_response(
-        "What is Agno?",
+        "O que é Agno?",
         stream=True,
     )
 
 # ============================================================================
-# More Examples
+# Mais Exemplos
 # ============================================================================
 """
-Load your own knowledge:
+Carregue seu próprio conhecimento:
 
-1. From a URL
+1. De uma URL
    knowledge.add_content(url="https://example.com/docs.pdf")
 
-2. From a local file
+2. De um arquivo local
    knowledge.add_content(path="path/to/document.pdf")
 
-3. From text directly
-   knowledge.add_content(text_content="Your content here...")
+3. De texto diretamente
+   knowledge.add_content(text_content="Seu conteúdo aqui...")
 
-Hybrid search combines:
-- Semantic search: Finds conceptually similar content
-- Keyword search: Finds exact term matches
-- Results fused using Reciprocal Rank Fusion (RRF)
+A busca híbrida combina:
+- Busca semântica: Encontra conteúdo conceitualmente similar
+- Busca por palavras-chave: Encontra correspondências exatas de termos
+- Resultados fundidos usando Reciprocal Rank Fusion (RRF)
 
-The agent automatically searches when relevant (agentic search).
+O agente pesquisa automaticamente quando relevante (busca agente).
 """

@@ -1,27 +1,27 @@
-"""♟️ Chess Team Battle
+"""♟️ Batalha de Equipe de Xadrez
 
-This example demonstrates how to build a sophisticated multi-agent chess game where different AI models
-compete against each other. The system coordinates multiple specialized agents working together to play chess.
+Este exemplo demonstra como construir um jogo de xadrez multi-agente sofisticado onde diferentes modelos de IA
+competem entre si. O sistema coordena múltiplos agentes especializados trabalhando juntos para jogar xadrez.
 
-The Chess Team includes:
-- White Player Agent: Strategizes and makes moves for white pieces
-- Black Player Agent: Strategizes and makes moves for black pieces
-- Game Master Agent: Coordinates gameplay and provides position analysis
+A Equipe de Xadrez inclui:
+- Agente Jogador Branco: Estratégia e faz jogadas para peças brancas
+- Agente Jogador Preto: Estratégia e faz jogadas para peças pretas
+- Agente Mestre do Jogo: Coordena a jogabilidade e fornece análise de posição
 
-Example Gameplay Flow:
-- Game Master coordinates between White and Black agents
-- Each agent analyzes the current position and legal moves
-- Agents make strategic decisions based on chess principles
-- python-chess validates all moves and maintains game state
-- Game continues until checkmate, stalemate, or draw conditions
+Fluxo de Jogabilidade de Exemplo:
+- Mestre do Jogo coordena entre agentes Branco e Preto
+- Cada agente analisa a posição atual e jogadas legais
+- Agentes tomam decisões estratégicas baseadas em princípios de xadrez
+- python-chess valida todas as jogadas e mantém o estado do jogo
+- Jogo continua até xeque-mate, empate ou condições de empate
 
-The Chess Team uses:
-- Specialized agent roles for different game aspects
-- Turn-based coordination for sequential gameplay
-- Real-time move validation and board updates
-- Strategic analysis and position evaluation
+A Equipe de Xadrez usa:
+- Funções de agente especializadas para diferentes aspectos do jogo
+- Coordenação baseada em turnos para jogabilidade sequencial
+- Validação de jogadas em tempo real e atualizações do tabuleiro
+- Análise estratégica e avaliação de posição
 
-View the README for instructions on how to run the application.
+Ver o README para instruções sobre como executar a aplicação.
 """
 
 from typing import Optional
@@ -41,20 +41,20 @@ def get_chess_team(
     user_id: Optional[str] = None,
     session_id: Optional[str] = None,
 ) -> Team:
-    """Get a Chess Team with specialized player agents.
+    """Obter uma Equipe de Xadrez com agentes jogadores especializados.
 
     Args:
-        white_model: Model ID for the white player agent
-        black_model: Model ID for the black player agent
-        master_model: Model ID for the game master agent
-        user_id: Optional user ID for session tracking
-        session_id: Optional session ID for game continuity
+        white_model: ID do modelo para o agente jogador branco
+        black_model: ID do modelo para o agente jogador preto
+        master_model: ID do modelo para o agente mestre do jogo
+        user_id: ID de usuário opcional para rastreamento de sessão
+        session_id: ID de sessão opcional para continuidade do jogo
 
     Returns:
-        Team instance configured for chess gameplay
+        Instância de Team configurada para jogabilidade de xadrez
     """
 
-    # Get model instances with correct provider auto-detection
+    # Obter instâncias de modelo com detecção automática de provedor correta
     white_model_instance = get_model_with_provider(white_model)
     black_model_instance = get_model_with_provider(black_model)
     master_model_instance = get_model_with_provider(master_model)
@@ -65,7 +65,7 @@ def get_chess_team(
         db_schema="ai",
     )
 
-    # Create specialized chess agents
+    # Criar agentes de xadrez especializados
     white_player_agent = Agent(
         name="White Player",
         model=white_model_instance,
@@ -75,26 +75,26 @@ def get_chess_team(
         session_id=session_id,
         role="White Chess Strategist",
         instructions="""
-            You are a chess strategist playing as WHITE pieces.
+            Você é um estrategista de xadrez jogando como peças BRANCAS.
             
-            Your responsibilities:
-            1. Analyze the current board position and legal moves
-            2. Apply chess principles: piece development, center control, king safety
-            3. Consider tactical opportunities: pins, forks, skewers, discovered attacks
-            4. Plan strategic goals: pawn structure, piece coordination, endgame preparation
-            5. Choose the best move from the provided legal options
+            Suas responsabilidades:
+            1. Analisar a posição atual do tabuleiro e jogadas legais
+            2. Aplicar princípios de xadrez: desenvolvimento de peças, controle do centro, segurança do rei
+            3. Considerar oportunidades táticas: espetos, garfos, descobertas, ataques descobertos
+            4. Planejar objetivos estratégicos: estrutura de peões, coordenação de peças, preparação de fim de jogo
+            5. Escolher a melhor jogada das opções legais fornecidas
             
-            Response format:
-            - Respond ONLY with your chosen move in UCI notation (e.g., 'e2e4')
-            - Do not include any explanation or additional text
-            - Ensure your move is from the provided legal moves list
+            Formato de resposta:
+            - Responder APENAS com sua jogada escolhida em notação UCI (ex: 'e2e4')
+            - Não incluir nenhuma explicação ou texto adicional
+            - Garantir que sua jogada está na lista de jogadas legais fornecida
             
-            Chess principles to follow:
-            - Control the center (e4, d4, e5, d5 squares)
-            - Develop pieces before moving them twice
-            - Castle early for king safety
-            - Don't bring queen out too early
-            - Consider piece activity and coordination
+            Princípios de xadrez a seguir:
+            - Controlar o centro (casas e4, d4, e5, d5)
+            - Desenvolver peças antes de movê-las duas vezes
+            - Fazer roque cedo para segurança do rei
+            - Não trazer a dama muito cedo
+            - Considerar atividade e coordenação de peças
         """,
         markdown=True,
         debug_mode=True,
@@ -109,33 +109,33 @@ def get_chess_team(
         session_id=session_id,
         role="Black Chess Strategist",
         instructions="""
-            You are a chess strategist playing as BLACK pieces.
+            Você é um estrategista de xadrez jogando como peças PRETAS.
             
-            Your responsibilities:
-            1. Analyze the current board position and legal moves
-            2. Apply chess principles: piece development, center control, king safety
-            3. Consider tactical opportunities: pins, forks, skewers, discovered attacks  
-            4. Plan strategic goals: pawn structure, piece coordination, endgame preparation
-            5. Choose the best move from the provided legal options
+            Suas responsabilidades:
+            1. Analisar a posição atual do tabuleiro e jogadas legais
+            2. Aplicar princípios de xadrez: desenvolvimento de peças, controle do centro, segurança do rei
+            3. Considerar oportunidades táticas: espetos, garfos, descobertas, ataques descobertos
+            4. Planejar objetivos estratégicos: estrutura de peões, coordenação de peças, preparação de fim de jogo
+            5. Escolher a melhor jogada das opções legais fornecidas
             
-            Response format:
-            - Respond ONLY with your chosen move in UCI notation (e.g., 'e7e5')
-            - Do not include any explanation or additional text
-            - Ensure your move is from the provided legal moves list
+            Formato de resposta:
+            - Responder APENAS com sua jogada escolhida em notação UCI (ex: 'e7e5')
+            - Não incluir nenhuma explicação ou texto adicional
+            - Garantir que sua jogada está na lista de jogadas legais fornecida
             
-            Chess principles to follow:
-            - Control the center (e4, d4, e5, d5 squares)
-            - Develop pieces before moving them twice
-            - Castle early for king safety
-            - Don't bring queen out too early
-            - Consider piece activity and coordination
-            - React to white's opening strategy appropriately
+            Princípios de xadrez a seguir:
+            - Controlar o centro (casas e4, d4, e5, d5)
+            - Desenvolver peças antes de movê-las duas vezes
+            - Fazer roque cedo para segurança do rei
+            - Não trazer a dama muito cedo
+            - Considerar atividade e coordenação de peças
+            - Reagir à estratégia de abertura das brancas apropriadamente
         """,
         markdown=True,
         debug_mode=True,
     )
 
-    # Create the chess team with game master coordination
+    # Criar a equipe de xadrez com coordenação do mestre do jogo
     chess_team = Team(
         name="Chess Team",
         model=master_model_instance,
@@ -146,32 +146,32 @@ def get_chess_team(
         members=[white_player_agent, black_player_agent],
         mode="route",
         instructions="""
-            You are the Chess Game Master coordinating an AI vs AI chess match.
+            Você é o Mestre do Jogo de Xadrez coordenando uma partida de xadrez IA vs IA.
             
-            Your roles:
-            1. MOVE COORDINATION: Route move requests to the appropriate player agent
-            2. GAME ANALYSIS: Provide position evaluation and commentary when requested
-            3. GAME STATE: Monitor game progress and detect special conditions
+            Seus papéis:
+            1. COORDENAÇÃO DE JOGADAS: Rotear solicitações de jogada para o agente jogador apropriado
+            2. ANÁLISE DO JOGO: Fornecer avaliação de posição e comentários quando solicitado
+            3. ESTADO DO JOGO: Monitorar progresso do jogo e detectar condições especiais
             
-            When handling requests:
+            Ao lidar com solicitações:
             
-            FOR MOVE REQUESTS:
-            - Check 'current_player' in the context/dependencies
-            - If current_player is 'white_piece_agent': route to White Player
-            - If current_player is 'black_piece_agent': route to Black Player
-            - Return the player's move response EXACTLY without modification
+            PARA SOLICITAÇÕES DE JOGADA:
+            - Verificar 'current_player' no contexto/dependências
+            - Se current_player é 'white_piece_agent': rotear para White Player
+            - Se current_player é 'black_piece_agent': rotear para Black Player
+            - Retornar a resposta de jogada do jogador EXATAMENTE sem modificação
             
-            FOR ANALYSIS REQUESTS:
-            - When no current_player is specified, provide game analysis
-            - Evaluate piece activity, king safety, material balance
-            - Assess tactical and strategic themes in the position
-            - Comment on recent moves and future planning
+            PARA SOLICITAÇÕES DE ANÁLISE:
+            - Quando nenhum current_player for especificado, fornecer análise do jogo
+            - Avaliar atividade de peças, segurança do rei, equilíbrio material
+            - Avaliar temas táticos e estratégicos na posição
+            - Comentar sobre jogadas recentes e planejamento futuro
             
-            Important guidelines:
-            - Never modify or interpret player agent responses
-            - Route move requests directly to the appropriate agent
-            - Only provide analysis when explicitly requested
-            - Maintain game flow and coordinate smooth turn transitions
+            Diretrizes importantes:
+            - Nunca modificar ou interpretar respostas dos agentes jogadores
+            - Rotear solicitações de jogada diretamente para o agente apropriado
+            - Apenas fornecer análise quando explicitamente solicitado
+            - Manter fluxo do jogo e coordenar transições suaves de turno
         """,
         markdown=True,
         debug_mode=True,

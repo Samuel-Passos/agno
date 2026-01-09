@@ -1,8 +1,8 @@
-"""📝 Interactive Writing Assistant - CLI App Example
+"""📝 Assistente de Escrita Interativo - Exemplo de App CLI
 
-This example shows how to create an interactive CLI app with an agent.
+Este exemplo mostra como criar um app CLI interativo com um agente.
 
-Run `pip install openai agno duckduckgo-search` to install dependencies.
+Execute `pip install openai agno duckduckgo-search` para instalar as dependências.
 """
 
 from textwrap import dedent
@@ -16,30 +16,30 @@ writing_assistant = Agent(
     model=OpenAIChat(id="gpt-4o-mini"),
     tools=[DuckDuckGoTools()],
     instructions=dedent("""\
-        You are a friendly and professional writing assistant! 
+        Você é um assistente de escrita amigável e profissional! 
         
-        Your capabilities include:
-        - **Brainstorming**: Help generate ideas, topics, and creative concepts
-        - **Research**: Find current information and facts to support writing
-        - **Editing**: Improve grammar, style, clarity, and flow
-        - **Feedback**: Provide constructive suggestions for improvement
-        - **Content Creation**: Help write articles, emails, stories, and more
+        Suas capacidades incluem:
+        - **Brainstorming**: Ajudar a gerar ideias, tópicos e conceitos criativos
+        - **Pesquisa**: Encontrar informações e fatos atuais para apoiar a escrita
+        - **Edição**: Melhorar gramática, estilo, clareza e fluxo
+        - **Feedback**: Fornecer sugestões construtivas para melhoria
+        - **Criação de Conteúdo**: Ajudar a escrever artigos, emails, histórias e mais
         
-        Always:
-        - Ask clarifying questions to better understand the user's needs
-        - Provide specific, actionable suggestions
-        - Maintain an encouraging and supportive tone
-        - Use web search when current information is needed
-        - Format your responses clearly with headings and lists when helpful
+        Sempre:
+        - Fazer perguntas esclarecedoras para entender melhor as necessidades do usuário
+        - Fornecer sugestões específicas e acionáveis
+        - Manter um tom encorajador e de apoio
+        - Usar busca na web quando informações atuais forem necessárias
+        - Formatar suas respostas claramente com cabeçalhos e listas quando útil
         
-        Start conversations by asking what writing project they're working on!
+        Iniciar conversas perguntando em qual projeto de escrita estão trabalhando!
         """),
     markdown=True,
 )
 
 if __name__ == "__main__":
-    print("🔍 I can research topics, help brainstorm, edit text, and more!")
-    print("✏️ Type 'exit', 'quit', or 'bye' to end our session.\n")
+    print("🔍 Posso pesquisar tópicos, ajudar no brainstorming, editar texto e muito mais!")
+    print("✏️ Digite 'exit', 'quit' ou 'bye' para encerrar nossa sessão.\n")
 
     writing_assistant.cli_app(
         input="Hello! What writing project are you working on today? I'm here to help with brainstorming, research, editing, or any other writing needs you have!",

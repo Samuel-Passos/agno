@@ -1,30 +1,30 @@
-# Gemini Agents
+# Agentes Gemini
 
-Production-grade AI agents powered by Gemini and Agno. This cookbook demonstrates how to combine Gemini's native capabilities with Agno's agent runtime, memory, knowledge, and state management systems.
+Agentes de IA de nível de produção alimentados por Gemini e Agno. Este cookbook demonstra como combinar as capacidades nativas do Gemini com o runtime de agentes, memória, conhecimento e sistemas de gerenciamento de estado do Agno.
 
-## Agents
+## Agentes
 
-| Agent | Description | Key Features |
+| Agente | Descrição | Recursos Principais |
 | :--- | :--- | :--- |
-| **Simple Research Agent** | Web research with cited answers | Grounding, Search |
-| **Creative Studio** | High-quality image generation | Imagen |
-| **Product Comparison** | Analyze and compare content from URLs | URL Context |
-| **Self-Learning Agent** | Answers questions and learns from successful runs | Parallel Search, YFinance, Knowledge Base |
-| **Self-Learning Research Agent** | Tracks internet consensus over time with historical snapshots | Parallel Search, Continuous Learning |
-| **PaL (Plan and Learn)** | Disciplined planning and execution with learning | Session State, Knowledge Base, Parallel Search |
+| **Simple Research Agent** | Pesquisa web com respostas citadas | Grounding, Search |
+| **Creative Studio** | Geração de imagens de alta qualidade | Imagen |
+| **Product Comparison** | Analisar e comparar conteúdo de URLs | URL Context |
+| **Self-Learning Agent** | Responde perguntas e aprende de execuções bem-sucedidas | Parallel Search, YFinance, Knowledge Base |
+| **Self-Learning Research Agent** | Rastreia consenso da internet ao longo do tempo com snapshots históricos | Parallel Search, Continuous Learning |
+| **PaL (Plan and Learn)** | Planejamento e execução disciplinados com aprendizado | Session State, Knowledge Base, Parallel Search |
 
-## ✨ Featured: PaL — Plan and Learn Agent
+## ✨ Destaque: PaL — Agente Planejar e Aprender
 
-> *Plan. Execute. Learn. Repeat.*
+> *Planejar. Executar. Aprender. Repetir.*
 
-PaL is a disciplined execution agent that:
+PaL é um agente de execução disciplinado que:
 
-- **Plans** — Breaks goals into steps with clear success criteria
-- **Executes** — Works through steps sequentially, verifying completion
-- **Adapts** — Modifies plans mid-flight when requirements change
-- **Learns** — Captures reusable patterns from successful executions
+- **Planeja** — Divide objetivos em passos com critérios de sucesso claros
+- **Executa** — Trabalha através de passos sequencialmente, verificando conclusão
+- **Adapta** — Modifica planos em meio ao voo quando requisitos mudam
+- **Aprende** — Captura padrões reutilizáveis de execuções bem-sucedidas
 
-**New pattern**: PaL uses Agno's incredible **Session State** feature — persistent state that survives across conversation turns and sessions. Track progress, manage workflows, and build stateful agents.
+**Novo padrão**: PaL usa o recurso incrível **Session State** do Agno — estado persistente que sobrevive através de turnos de conversa e sessões. Rastrear progresso, gerenciar workflows e construir agentes com estado.
 
 ```python
 # Session state persists across runs
@@ -38,23 +38,23 @@ session_state={
 
 [→ See the full implementation](agents/pal_agent.py)
 
-## Native Gemini Features
+## Recursos Nativos do Gemini
 
-Agno supports all native Gemini capabilities out of the box:
+Agno suporta todas as capacidades nativas do Gemini prontas para uso:
 
-| Feature | Parameter | Description |
+| Recurso | Parâmetro | Descrição |
 | :--- | :--- | :--- |
-| Google Search | `search=True` | Search the web (Gemini 2.0+) |
-| Grounding | `grounding=True` | Search with citations |
-| URL Context | `url_context=True` | Analyze web page content |
-| Imagen | `ImagenTools()` | Image generation toolkit |
+| Google Search | `search=True` | Pesquisar na web (Gemini 2.0+) |
+| Grounding | `grounding=True` | Pesquisar com citações |
+| URL Context | `url_context=True` | Analisar conteúdo de página web |
+| Imagen | `ImagenTools()` | Toolkit de geração de imagens |
 
-## Why Gemini + Agno
+## Por que Gemini + Agno
 
-- **Speed** — Fast inference makes agent workflows feel responsive
-- **Reasoning** — Strong native reasoning with fewer hallucinations
-- **Built-in primitives** — Image generation, URL context, and grounding are first-class
-- **Production-ready** — Agno provides persistence, memory, knowledge, and state management
+- **Velocidade** — Inferência rápida torna workflows de agentes responsivos
+- **Raciocínio** — Raciocínio nativo forte com menos alucinações
+- **Primitivas integradas** — Geração de imagens, contexto de URL e grounding são de primeira classe
+- **Pronto para produção** — Agno fornece persistência, memória, conhecimento e gerenciamento de estado
 
 ## Getting Started
 

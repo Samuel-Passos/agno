@@ -1,16 +1,16 @@
-"""🤔 DeepKnowledge - An AI Agent that iteratively searches a knowledge base to answer questions
+"""🤔 DeepKnowledge - Um Agente de IA que pesquisa iterativamente uma base de conhecimento para responder perguntas
 
-This agent performs iterative searches through its knowledge base, breaking down complex
-queries into sub-questions, and synthesizing comprehensive answers. It's designed to explore
-topics deeply and thoroughly by following chains of reasoning.
+Este agente realiza buscas iterativas em sua base de conhecimento, dividindo consultas complexas
+em sub-perguntas e sintetizando respostas abrangentes. Ele foi projetado para explorar
+tópicos profundamente e completamente seguindo cadeias de raciocínio.
 
-In this example, the agent uses the Agno documentation as a knowledge base
+Neste exemplo, o agente usa a documentação do Agno como base de conhecimento
 
-Key Features:
-- Iteratively searches a knowledge base
-- Source attribution and citations
+Características Principais:
+- Pesquisa iterativamente uma base de conhecimento
+- Atribuição de fontes e citações
 
-Run `pip install openai lancedb tantivy inquirer agno` to install dependencies.
+Execute `pip install openai lancedb tantivy inquirer agno` para instalar as dependências.
 """
 
 from textwrap import dedent
@@ -29,8 +29,8 @@ from rich import print
 
 
 def initialize_knowledge_base():
-    """Initialize the knowledge base with your preferred documentation or knowledge source
-    Here we use Agno docs as an example, but you can replace with any relevant URLs
+    """Inicializar a base de conhecimento com sua documentação ou fonte de conhecimento preferida
+    Aqui usamos a documentação do Agno como exemplo, mas você pode substituir por URLs relevantes
     """
     agent_knowledge = Knowledge(
         vector_db=LanceDb(
@@ -47,12 +47,12 @@ def initialize_knowledge_base():
 
 
 def get_agent_db():
-    """Return agent storage"""
+    """Retornar armazenamento do agente"""
     return SqliteDb(session_table="deep_knowledge_sessions", db_file="tmp/agents.db")
 
 
 def create_agent(session_id: Optional[str] = None) -> Agent:
-    """Create and return a configured DeepKnowledge agent."""
+    """Criar e retornar um agente DeepKnowledge configurado."""
     agent_knowledge = initialize_knowledge_base()
     agent_db = get_agent_db()
     return Agent(
@@ -60,49 +60,49 @@ def create_agent(session_id: Optional[str] = None) -> Agent:
         session_id=session_id,
         model=OpenAIChat(id="gpt-4o"),
         description=dedent("""\
-        You are DeepKnowledge, an advanced reasoning agent designed to provide thorough,
-        well-researched answers to any query by searching your knowledge base.
+        Você é DeepKnowledge, um agente de raciocínio avançado projetado para fornecer respostas
+        completas e bem pesquisadas a qualquer consulta pesquisando sua base de conhecimento.
 
-        Your strengths include:
-        - Breaking down complex topics into manageable components
-        - Connecting information across multiple domains
-        - Providing nuanced, well-researched answers
-        - Maintaining intellectual honesty and citing sources
-        - Explaining complex concepts in clear, accessible terms"""),
+        Seus pontos fortes incluem:
+        - Dividir tópicos complexos em componentes gerenciáveis
+        - Conectar informações em múltiplos domínios
+        - Fornecer respostas matizadas e bem pesquisadas
+        - Manter honestidade intelectual e citar fontes
+        - Explicar conceitos complexos em termos claros e acessíveis"""),
         instructions=dedent("""\
-        Your mission is to leave no stone unturned in your pursuit of the correct answer.
+        Sua missão é não deixar pedra sobre pedra em sua busca pela resposta correta.
 
-        To achieve this, follow these steps:
-        1. **Analyze the input and break it down into key components**.
-        2. **Search terms**: You must identify at least 3-5 key search terms to search for.
-        3. **Initial Search:** Searching your knowledge base for relevant information. You must make atleast 3 searches to get all relevant information.
-        4. **Evaluation:** If the answer from the knowledge base is incomplete, ambiguous, or insufficient - Ask the user for clarification. Do not make informed guesses.
-        5. **Iterative Process:**
-            - Continue searching your knowledge base till you have a comprehensive answer.
-            - Reevaluate the completeness of your answer after each search iteration.
-            - Repeat the search process until you are confident that every aspect of the question is addressed.
-        4. **Reasoning Documentation:** Clearly document your reasoning process:
-            - Note when additional searches were triggered.
-            - Indicate which pieces of information came from the knowledge base and where it was sourced from.
-            - Explain how you reconciled any conflicting or ambiguous information.
-        5. **Final Synthesis:** Only finalize and present your answer once you have verified it through multiple search passes.
-            Include all pertinent details and provide proper references.
-        6. **Continuous Improvement:** If new, relevant information emerges even after presenting your answer,
-            be prepared to update or expand upon your response.
+        Para alcançar isso, siga estes passos:
+        1. **Analisar a entrada e dividi-la em componentes-chave**.
+        2. **Termos de busca**: Você deve identificar pelo menos 3-5 termos de busca-chave para pesquisar.
+        3. **Busca Inicial:** Pesquisar sua base de conhecimento por informações relevantes. Você deve fazer pelo menos 3 buscas para obter todas as informações relevantes.
+        4. **Avaliação:** Se a resposta da base de conhecimento estiver incompleta, ambígua ou insuficiente - Peça esclarecimentos ao usuário. Não faça suposições informadas.
+        5. **Processo Iterativo:**
+            - Continue pesquisando sua base de conhecimento até ter uma resposta abrangente.
+            - Reavalie a completude de sua resposta após cada iteração de busca.
+            - Repita o processo de busca até ter certeza de que todos os aspectos da pergunta foram abordados.
+        4. **Documentação de Raciocínio:** Documente claramente seu processo de raciocínio:
+            - Observe quando buscas adicionais foram acionadas.
+            - Indique quais informações vieram da base de conhecimento e de onde foram obtidas.
+            - Explique como você reconciliou quaisquer informações conflitantes ou ambíguas.
+        5. **Síntese Final:** Apenas finalize e apresente sua resposta depois de verificá-la através de múltiplas passadas de busca.
+            Inclua todos os detalhes pertinentes e forneça referências adequadas.
+        6. **Melhoria Contínua:** Se novas informações relevantes surgirem mesmo após apresentar sua resposta,
+            esteja preparado para atualizar ou expandir sua resposta.
 
-        **Communication Style:**
-        - Use clear and concise language.
-        - Organize your response with numbered steps, bullet points, or short paragraphs as needed.
-        - Be transparent about your search process and cite your sources.
-        - Ensure that your final answer is comprehensive and leaves no part of the query unaddressed.
+        **Estilo de Comunicação:**
+        - Use linguagem clara e concisa.
+        - Organize sua resposta com passos numerados, marcadores ou parágrafos curtos conforme necessário.
+        - Seja transparente sobre seu processo de busca e cite suas fontes.
+        - Garanta que sua resposta final seja abrangente e não deixe nenhuma parte da consulta sem resposta.
 
-        Remember: **Do not finalize your answer until every angle of the question has been explored.**"""),
+        Lembre-se: **Não finalize sua resposta até que todos os ângulos da pergunta tenham sido explorados.**"""),
         additional_context=dedent("""\
-        You should only respond with the final answer and the reasoning process.
-        No need to include irrelevant information.
+        Você deve responder apenas com a resposta final e o processo de raciocínio.
+        Não há necessidade de incluir informações irrelevantes.
 
         - User ID: {user_id}
-        - Memory: You have access to your previous search results and reasoning process.
+        - Memória: Você tem acesso aos seus resultados de busca anteriores e processo de raciocínio.
         """),
         knowledge=agent_knowledge,
         db=agent_db,
@@ -114,7 +114,7 @@ def create_agent(session_id: Optional[str] = None) -> Agent:
 
 
 def get_example_topics() -> List[str]:
-    """Return a list of example topics for the agent."""
+    """Retornar uma lista de tópicos de exemplo para o agente."""
     return [
         "What are AI agents and how do they work in Agno?",
         "What chunking strategies does Agno support for text processing?",
@@ -125,7 +125,7 @@ def get_example_topics() -> List[str]:
 
 
 def handle_session_selection() -> Optional[str]:
-    """Handle session selection and return the selected session ID."""
+    """Lidar com a seleção de sessão e retornar o ID da sessão selecionada."""
     agent_db = get_agent_db()
 
     new = typer.confirm("Do you want to start a new session?", default=True)
@@ -134,15 +134,15 @@ def handle_session_selection() -> Optional[str]:
 
     existing_sessions: List[str] = agent_db.get_sessions(session_type=SessionType.AGENT)
     if not existing_sessions:
-        print("No existing sessions found. Starting a new session.")
+        print("Nenhuma sessão existente encontrada. Iniciando uma nova sessão.")
         return None
 
-    print("\nExisting sessions:")
+    print("\nSessões existentes:")
     for i, session in enumerate(existing_sessions, 1):
         print(f"{i}. {session}")
 
     session_idx = typer.prompt(
-        "Choose a session number to continue (or press Enter for most recent)",
+        "Escolha um número de sessão para continuar (ou pressione Enter para a mais recente)",
         default=1,
     )
 
@@ -153,7 +153,7 @@ def handle_session_selection() -> Optional[str]:
 
 
 def run_interactive_loop(agent: Agent):
-    """Run the interactive question-answering loop."""
+    """Executar o loop interativo de perguntas e respostas."""
     example_topics = get_example_topics()
 
     while True:
@@ -163,7 +163,7 @@ def run_interactive_loop(agent: Agent):
         questions = [
             inquirer.List(
                 "topic",
-                message="Select a topic or ask a different question:",
+                message="Selecione um tópico ou faça uma pergunta diferente:",
                 choices=choices,
             )
         ]
@@ -173,7 +173,7 @@ def run_interactive_loop(agent: Agent):
             break
 
         if answer["topic"] == "Enter custom question...":
-            questions = [inquirer.Text("custom", message="Enter your question:")]
+            questions = [inquirer.Text("custom", message="Digite sua pergunta:")]
             custom_answer = inquirer.prompt(questions)
             topic = custom_answer["custom"]
         else:
@@ -183,20 +183,20 @@ def run_interactive_loop(agent: Agent):
 
 
 def deep_knowledge_agent():
-    """Main function to run the DeepKnowledge agent."""
+    """Função principal para executar o agente DeepKnowledge."""
 
     session_id = handle_session_selection()
     agent = create_agent(session_id)
 
-    print("\n🤔 Welcome to DeepKnowledge - Your Advanced Research Assistant! 📚")
+    print("\n🤔 Bem-vindo ao DeepKnowledge - Seu Assistente de Pesquisa Avançado! 📚")
     if session_id is None:
         session_id = agent.session_id
         if session_id is not None:
-            print(f"[bold green]Started New Session: {session_id}[/bold green]\n")
+            print(f"[bold green]Nova Sessão Iniciada: {session_id}[/bold green]\n")
         else:
-            print("[bold green]Started New Session[/bold green]\n")
+            print("[bold green]Nova Sessão Iniciada[/bold green]\n")
     else:
-        print(f"[bold blue]Continuing Previous Session: {session_id}[/bold blue]\n")
+        print(f"[bold blue]Continuando Sessão Anterior: {session_id}[/bold blue]\n")
 
     run_interactive_loop(agent)
 
@@ -204,9 +204,9 @@ def deep_knowledge_agent():
 if __name__ == "__main__":
     typer.run(deep_knowledge_agent)
 
-# Example prompts to try:
+# Exemplos de prompts para tentar:
 """
-Explore Agno's capabilities with these queries:
+Explore as capacidades do Agno com estas consultas:
 1. "What are the different types of agents in Agno?"
 2. "How does Agno handle knowledge base management?"
 3. "What embedding models does Agno support?"

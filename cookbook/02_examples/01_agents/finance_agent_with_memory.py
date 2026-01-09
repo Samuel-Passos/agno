@@ -1,17 +1,17 @@
-"""🗞️ Finance Agent with Memory - Your Market Analyst that remembers your preferences
+"""🗞️ Finance Agent with Memory - Seu Analista de Mercado que lembra suas preferências
 
-1. Create virtual environment and install dependencies:
-   - Run `uv venv --python 3.12` to create a virtual environment
-   - Run `source .venv/bin/activate` to activate the virtual environment
-   - Run `uv pip install agno openai sqlalchemy fastapi uvicorn yfinance ddgs` to install the dependencies
-   - Run `ag setup` to connect your local env to Agno
-   - Export your OpenAI key: `export OPENAI_API_KEY=<your_openai_key>`
-2. Run the app:
-   - Run `python cookbook/examples/agents/financial_agent_with_memory.py` to start the app
-3. Chat with the agent:
-   - Open `https://app.agno.com/playground?endpoint=localhost%3A7777`
-   - Tell the agent your name and favorite stocks
-   - Ask the agent to analyze your favorite stocks
+1. Criar ambiente virtual e instalar dependências:
+   - Executar `uv venv --python 3.12` para criar um ambiente virtual
+   - Executar `source .venv/bin/activate` para ativar o ambiente virtual
+   - Executar `uv pip install agno openai sqlalchemy fastapi uvicorn yfinance ddgs` para instalar as dependências
+   - Executar `ag setup` para conectar seu ambiente local ao Agno
+   - Exportar sua chave OpenAI: `export OPENAI_API_KEY=<your_openai_key>`
+2. Executar o aplicativo:
+   - Executar `python cookbook/examples/agents/financial_agent_with_memory.py` para iniciar o aplicativo
+3. Conversar com o agente:
+   - Abrir `https://app.agno.com/playground?endpoint=localhost%3A7777`
+   - Dizer ao agente seu nome e ações favoritas
+   - Pedir ao agente para analisar suas ações favoritas
 """
 
 from textwrap import dedent
@@ -28,43 +28,43 @@ finance_agent_with_memory = Agent(
     id="financial_agent_with_memory",
     model=OpenAIChat(id="gpt-4.1"),
     tools=[YFinanceTools(), DuckDuckGoTools()],
-    # Let the Agent create and manage user memories
+    # Permitir que o Agente crie e gerencie memórias do usuário
     enable_agentic_memory=True,
-    # Uncomment to always create memories from the input
-    # can be used instead of enable_agentic_memory
+    # Descomentar para sempre criar memórias a partir da entrada
+    # pode ser usado em vez de enable_agentic_memory
     # enable_user_memories=True,
     db=SqliteDb(
         session_table="agent_sessions",
         db_file="tmp/agent_data.db",
         memory_table="agent_memory",
     ),
-    # Add messages from the last 3 runs to the messages
+    # Adicionar mensagens das últimas 3 execuções às mensagens
     add_history_to_context=True,
     num_history_runs=3,
-    # Add the current datetime to the instructions
+    # Adicionar a data e hora atual às instruções
     add_datetime_to_context=True,
-    # Use markdown formatting
+    # Usar formatação markdown
     markdown=True,
     instructions=dedent("""\
-        You are a Wall Street analyst. Your goal is to help users with financial analysis.
+        Você é um analista de Wall Street. Seu objetivo é ajudar usuários com análise financeira.
 
-        Checklist for different types of financial analysis:
-        1. Market Overview: Stock price, 52-week range.
-        2. Financials: P/E, Market Cap, EPS.
-        3. Insights: Analyst recommendations, rating changes.
-        4. Market Context: Industry trends, competitive landscape, sentiment.
+        Lista de verificação para diferentes tipos de análise financeira:
+        1. Visão Geral do Mercado: Preço da ação, faixa de 52 semanas.
+        2. Financeiro: P/E, Market Cap, EPS.
+        3. Insights: Recomendações de analistas, mudanças de classificação.
+        4. Contexto de Mercado: Tendências da indústria, cenário competitivo, sentimento.
 
-        Formatting guidelines:
-        - Use tables for data presentation
-        - Include clear section headers
-        - Add emoji indicators for trends (📈 📉)
-        - Highlight key insights with bullet points
+        Diretrizes de formatação:
+        - Usar tabelas para apresentação de dados
+        - Incluir cabeçalhos de seção claros
+        - Adicionar indicadores de emoji para tendências (📈 📉)
+        - Destacar insights-chave com marcadores
     """),
 )
 
-# Initialize the AgentOS with the workflows
+# Inicializar o AgentOS com os workflows
 agent_os = AgentOS(
-    description="Example OS setup",
+    description="Configuração de OS de exemplo",
     agents=[finance_agent_with_memory],
 )
 app = agent_os.get_app()

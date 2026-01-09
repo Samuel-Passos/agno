@@ -1,8 +1,8 @@
-"""Example: Multi-Modal RAG & Image Agent
+"""Exemplo: Agente RAG Multimodal e de Imagem
 
-An agent that uses Llama 4 for multi-modal RAG and OpenAITools to create a visual, step-by-step image manual for a recipe.
+Um agente que usa Llama 4 para RAG multimodal e OpenAITools para criar um manual visual passo a passo de imagem para uma receita.
 
-Run: `pip install openai agno groq cohere` to install the dependencies
+Execute: `pip install openai agno groq cohere` para instalar as dependências
 """
 
 import asyncio
@@ -39,12 +39,12 @@ agent = Agent(
     tools=[OpenAITools()],
     knowledge=knowledge,
     instructions=[
-        "You are a specialized recipe assistant.",
-        "When asked for a recipe:",
-        "1. Search the knowledge base to retrieve the relevant recipe details.",
-        "2. Analyze the retrieved recipe steps carefully.",
-        "3. Use the `generate_image` tool to create a visual, step-by-step image manual for the recipe.",
-        "4. Present the recipe text clearly and mention that you have generated an accompanying image manual. Add instructions while generating the image.",
+        "Você é um assistente de receitas especializado.",
+        "Quando solicitado uma receita:",
+        "1. Pesquisar a base de conhecimento para recuperar os detalhes relevantes da receita.",
+        "2. Analisar cuidadosamente os passos da receita recuperados.",
+        "3. Usar a ferramenta `generate_image` para criar um manual visual passo a passo de imagem para a receita.",
+        "4. Apresentar o texto da receita claramente e mencionar que você gerou um manual de imagem acompanhante. Adicionar instruções ao gerar a imagem.",
     ],
     markdown=True,
 )

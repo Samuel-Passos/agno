@@ -67,15 +67,15 @@ def main():
     ####################################################################
     st.markdown("<h1 class='main-title'>Agentic RAG</h1>", unsafe_allow_html=True)
     st.markdown(
-        "<p class='subtitle'>Your intelligent RAG Agent powered by Agno</p>",
+        "<p class='subtitle'>Seu Agente RAG inteligente alimentado por Agno</p>",
         unsafe_allow_html=True,
     )
 
     ####################################################################
-    # Model selector
+    # Seletor de modelo
     ####################################################################
     selected_model = st.sidebar.selectbox(
-        "Select Model",
+        "Selecionar Modelo",
         options=MODELS,
         index=0,
         key="model_selector",
@@ -88,37 +88,37 @@ def main():
     agentic_rag_agent = initialize_agent(selected_model, get_agentic_rag_agent)
     reset_session_state(agentic_rag_agent)
 
-    if prompt := st.chat_input("👋 Ask me anything!"):
+    if prompt := st.chat_input("👋 Pergunte-me qualquer coisa!"):
         add_message("user", prompt)
 
     ####################################################################
-    # Document Management
+    # Gerenciamento de Documentos
     ####################################################################
-    st.sidebar.markdown("#### 📚 Document Management")
+    st.sidebar.markdown("#### 📚 Gerenciamento de Documentos")
     knowledge_base_info_widget(agentic_rag_agent)
 
-    # URL input
-    input_url = st.sidebar.text_input("Add URL to Knowledge Base")
+    # Entrada de URL
+    input_url = st.sidebar.text_input("Adicionar URL à Base de Conhecimento")
     if input_url and not prompt:
-        alert = st.sidebar.info("Processing URL...", icon="ℹ️")
+        alert = st.sidebar.info("Processando URL...", icon="ℹ️")
         try:
             agentic_rag_agent.knowledge.add_content(
                 name=f"URL: {input_url}",
                 url=input_url,
-                description=f"Content from {input_url}",
+                description=f"Conteúdo de {input_url}",
             )
-            st.sidebar.success("URL added to knowledge base")
+            st.sidebar.success("URL adicionada à base de conhecimento")
         except Exception as e:
-            st.sidebar.error(f"Error processing URL: {str(e)}")
+            st.sidebar.error(f"Erro ao processar URL: {str(e)}")
         finally:
             alert.empty()
 
-    # File upload
+    # Upload de arquivo
     uploaded_file = st.sidebar.file_uploader(
-        "Add a Document (.pdf, .csv, or .txt)", key="file_upload"
+        "Adicionar um Documento (.pdf, .csv ou .txt)", key="file_upload"
     )
     if uploaded_file and not prompt:
-        alert = st.sidebar.info("Processing document...", icon="ℹ️")
+        alert = st.sidebar.info("Processando documento...", icon="ℹ️")
         try:
             with tempfile.NamedTemporaryFile(
                 suffix=f".{uploaded_file.name.split('.')[-1]}", delete=False
@@ -129,48 +129,48 @@ def main():
             agentic_rag_agent.knowledge.add_content(
                 name=uploaded_file.name,
                 path=tmp_path,
-                description=f"Uploaded file: {uploaded_file.name}",
+                description=f"Arquivo enviado: {uploaded_file.name}",
             )
 
             unlink(tmp_path)
-            st.sidebar.success(f"{uploaded_file.name} added to knowledge base")
+            st.sidebar.success(f"{uploaded_file.name} adicionado à base de conhecimento")
         except Exception as e:
-            st.sidebar.error(f"Error processing file: {str(e)}")
+            st.sidebar.error(f"Erro ao processar arquivo: {str(e)}")
         finally:
             alert.empty()
 
-    if st.sidebar.button("Clear Knowledge Base"):
+    if st.sidebar.button("Limpar Base de Conhecimento"):
         if agentic_rag_agent.knowledge.vector_db:
             agentic_rag_agent.knowledge.vector_db.delete()
-        st.sidebar.success("Knowledge base cleared")
+        st.sidebar.success("Base de conhecimento limpa")
 
     ###############################################################
-    # Sample Question
+    # Pergunta de Exemplo
     ###############################################################
-    st.sidebar.markdown("#### ❓ Sample Questions")
-    if st.sidebar.button("🖼️ What can you do?"):
+    st.sidebar.markdown("#### ❓ Perguntas de Exemplo")
+    if st.sidebar.button("🖼️ O que você pode fazer?"):
         add_message(
             "user",
-            "What can you do?",
+            "O que você pode fazer?",
         )
-    if st.sidebar.button("📝 Summarize"):
+    if st.sidebar.button("📝 Resumir"):
         add_message(
             "user",
-            "Can you summarize what is currently in the knowledge base (use `search_knowledge_base` tool)?",
+            "Você pode resumir o que está atualmente na base de conhecimento (usar a ferramenta `search_knowledge_base`)?",
         )
-    if st.sidebar.button("🔍 What is Agentic RAG?"):
+    if st.sidebar.button("🔍 O que é Agentic RAG?"):
         add_message(
             "user",
-            "What is Agentic RAG?",
+            "O que é Agentic RAG?",
         )
 
     ###############################################################
-    # Utility buttons
+    # Botões de utilidade
     ###############################################################
-    st.sidebar.markdown("#### 🛠️ Utilities")
+    st.sidebar.markdown("#### 🛠️ Utilitários")
     col1, col2 = st.sidebar.columns([1, 1])
     with col1:
-        if st.sidebar.button("🔄 New Chat", use_container_width=True):
+        if st.sidebar.button("🔄 Novo Chat", use_container_width=True):
             restart_agent()
             st.rerun()
 
@@ -189,29 +189,29 @@ def main():
                 filename = "agentic_rag_chat_new.md"
 
             if st.sidebar.download_button(
-                "💾 Export Chat",
+                "💾 Exportar Chat",
                 export_chat_history("Agentic RAG"),
                 file_name=filename,
                 mime="text/markdown",
                 use_container_width=True,
-                help=f"Export {len(st.session_state['messages'])} messages",
+                help=f"Exportar {len(st.session_state['messages'])} mensagens",
             ):
-                st.sidebar.success("Chat history exported!")
+                st.sidebar.success("Histórico de chat exportado!")
         else:
             st.sidebar.button(
-                "💾 Export Chat",
+                "💾 Exportar Chat",
                 disabled=True,
                 use_container_width=True,
-                help="No messages to export",
+                help="Nenhuma mensagem para exportar",
             )
 
     ####################################################################
-    # Display Chat Messages
+    # Exibir Mensagens do Chat
     ####################################################################
     display_chat_messages()
 
     ####################################################################
-    # Generate response for user message
+    # Gerar resposta para mensagem do usuário
     ####################################################################
     last_message = (
         st.session_state["messages"][-1] if st.session_state["messages"] else None
@@ -221,15 +221,15 @@ def main():
         display_response(agentic_rag_agent, question)
 
     ####################################################################
-    # Session management widgets
+    # Widgets de gerenciamento de sessão
     ####################################################################
     session_selector_widget(agentic_rag_agent, selected_model, get_agentic_rag_agent)
 
     ####################################################################
-    # About section
+    # Seção sobre
     ####################################################################
     about_section(
-        "This Agentic RAG Assistant helps you analyze documents and web content using natural language queries."
+        "Este Assistente Agentic RAG ajuda você a analisar documentos e conteúdo web usando consultas em linguagem natural."
     )
 
 

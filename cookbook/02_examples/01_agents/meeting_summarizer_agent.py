@@ -1,9 +1,9 @@
-"""Example: Meeting Summarizer & Visualizer Agent
+"""Exemplo: Agente Resumidor e Visualizador de Reuniões
 
-This script uses OpenAITools (transcribe_audio, generate_image, generate_speech)
-to process a meeting recording, summarize it, visualize it, and create an audio summary.
+Este script usa OpenAITools (transcribe_audio, generate_image, generate_speech)
+para processar uma gravação de reunião, resumi-la, visualizá-la e criar um resumo de áudio.
 
-Requires: pip install openai agno
+Requer: pip install openai agno
 """
 
 import base64
@@ -21,24 +21,24 @@ input_audio_url: str = (
 )
 
 local_audio_path = Path("tmp/meeting_recording.mp3")
-print(f"Downloading file to local path: {local_audio_path}")
+print(f"Baixando arquivo para o caminho local: {local_audio_path}")
 download_file(input_audio_url, local_audio_path)
 
 meeting_agent: Agent = Agent(
     model=Gemini(id="gemini-2.0-flash"),
     tools=[OpenAITools(), ReasoningTools()],
     description=dedent("""\
-        You are an efficient Meeting Assistant AI.
-        Your purpose is to process audio recordings of meetings, extract key information,
-        create a visual representation, and provide an audio summary.
+        Você é uma IA Assistente de Reuniões eficiente.
+        Seu propósito é processar gravações de áudio de reuniões, extrair informações-chave,
+        criar uma representação visual e fornecer um resumo de áudio.
     """),
     instructions=dedent("""\
-        Follow these steps precisely:
-        1. Receive the path to an audio file.
-        2. Use the `transcribe_audio` tool to get the text transcription.
-        3. Analyze the transcription and write a concise summary highlighting key discussion points, decisions, and action items.
-        4. Based *only* on the summary created in step 3, generating important meeting points. This should be a essentially an overview of the summary's content properly ordered and formatted in the form of meeting minutes.
-        5. Convert the meeting minutes into an audio summary using the `generate_speech` tool.
+        Siga estes passos precisamente:
+        1. Receber o caminho para um arquivo de áudio.
+        2. Usar a ferramenta `transcribe_audio` para obter a transcrição de texto.
+        3. Analisar a transcrição e escrever um resumo conciso destacando pontos-chave de discussão, decisões e itens de ação.
+        4. Com base *apenas* no resumo criado na etapa 3, gerar pontos importantes da reunião. Isso deve ser essencialmente uma visão geral do conteúdo do resumo adequadamente ordenado e formatado na forma de atas de reunião.
+        5. Converter as atas de reunião em um resumo de áudio usando a ferramenta `generate_speech`.
     """),
     markdown=True,
 )
@@ -49,4 +49,4 @@ response = meeting_agent.run(
 if response.audio:
     base64_audio = base64.b64encode(response.audio[0].content).decode("utf-8")
     save_base64_data(base64_audio, Path("tmp/meeting_summary.mp3"))
-    print(f"Meeting summary saved to: {Path('tmp/meeting_summary.mp3')}")
+    print(f"Resumo da reunião salvo em: {Path('tmp/meeting_summary.mp3')}")

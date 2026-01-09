@@ -24,10 +24,10 @@ legal_agent = Agent(
     model=OpenAIChat(id="gpt-4o"),
     markdown=True,
     instructions=[
-        "Provide legal information and advice based on the knowledge base.",
-        "Include relevant legal citations and sources when answering questions.",
-        "Always clarify that you're providing general legal information, not professional legal advice.",
-        "Recommend consulting with a licensed attorney for specific legal situations.",
+        "Fornecer informações e conselhos legais com base na base de conhecimento.",
+        "Incluir citações e fontes legais relevantes ao responder perguntas.",
+        "Sempre esclarecer que você está fornecendo informações legais gerais, não aconselhamento jurídico profissional.",
+        "Recomendar consultar com um advogado licenciado para situações legais específicas.",
     ],
 )
 

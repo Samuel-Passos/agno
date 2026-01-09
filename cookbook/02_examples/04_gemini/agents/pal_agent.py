@@ -1,13 +1,13 @@
 """
-PaL — Plan and Learn Agent
-===========================
-A disciplined planning and execution agent that:
-- Creates structured plans with success criteria
-- Executes steps sequentially with verification
-- Learns from successful executions
-- Persists state across sessions
+PaL — Agente Planejar e Aprender
+=================================
+Um agente de planejamento e execução disciplinado que:
+- Cria planos estruturados com critérios de sucesso
+- Executa passos sequencialmente com verificação
+- Aprende de execuções bem-sucedidas
+- Persiste estado através de sessões
 
-> Plan. Execute. Learn. Repeat.
+> Planejar. Executar. Aprender. Repetir.
 """
 
 import json
@@ -27,7 +27,7 @@ from agno.vectordb.pgvector import PgVector, SearchType
 from db import db_url, gemini_agents_db
 
 # ============================================================================
-# Knowledge Base: Stores execution learnings
+# Base de Conhecimento: Armazena aprendizados de execução
 # ============================================================================
 execution_knowledge = Knowledge(
     name="PaL Execution Learnings",
@@ -43,7 +43,7 @@ execution_knowledge = Knowledge(
 
 
 # ============================================================================
-# Planning Tools
+# Ferramentas de Planejamento
 # ============================================================================
 def create_plan(
     run_context: RunContext,
@@ -52,49 +52,49 @@ def create_plan(
     context: Optional[str] = None,
 ) -> str:
     """
-    Create an execution plan with ordered steps and success criteria.
+    Criar um plano de execução com passos ordenados e critérios de sucesso.
 
     Args:
-        objective: The overall goal to achieve
-        steps: List of step objects, each with:
-               - description (str): What to do
-               - success_criteria (str): How to verify completion
-        context: Optional background information
+        objective: O objetivo geral a alcançar
+        steps: Lista de objetos de passo, cada um com:
+               - description (str): O que fazer
+               - success_criteria (str): Como verificar conclusão
+        context: Informações de fundo opcionais
 
-    Example:
+    Exemplo:
         create_plan(
-            objective="Competitive analysis of cloud storage",
+            objective="Análise competitiva de armazenamento em nuvem",
             steps=[
-                {"description": "Identify top 3 providers", "success_criteria": "List with market share data"},
-                {"description": "Compare pricing tiers", "success_criteria": "Pricing table for all tiers"},
-                {"description": "Analyze features", "success_criteria": "Feature matrix with 10+ attributes"},
-                {"description": "Write summary", "success_criteria": "Executive summary under 500 words"},
+                {"description": "Identificar top 3 provedores", "success_criteria": "Lista com dados de participação de mercado"},
+                {"description": "Comparar níveis de preços", "success_criteria": "Tabela de preços para todos os níveis"},
+                {"description": "Analisar recursos", "success_criteria": "Matriz de recursos com 10+ atributos"},
+                {"description": "Escrever resumo", "success_criteria": "Resumo executivo com menos de 500 palavras"},
             ]
         )
     """
     state = run_context.session_state
 
-    # Guard: Don't overwrite active plan
+    # Guarda: Não sobrescrever plano ativo
     if state.get("plan") and state.get("status") == "in_progress":
         return (
-            "⚠️ A plan is already in progress.\n"
-            "Options:\n"
-            "  - Complete the current plan\n"
-            "  - Call reset_plan(confirm=True) to start fresh"
+            "⚠️ Um plano já está em progresso.\n"
+            "Opções:\n"
+            "  - Completar o plano atual\n"
+            "  - Chamar reset_plan(confirm=True) para começar do zero"
         )
 
-    # Validate and build plan structure
+    # Validar e construir estrutura do plano
     plan_items = []
     for i, step in enumerate(steps, 1):
         if not isinstance(step, dict) or "description" not in step:
-            return f"❌ Invalid step format at position {i}. Need {{'description': '...', 'success_criteria': '...'}}"
+            return f"❌ Formato de passo inválido na posição {i}. Precisa {{'description': '...', 'success_criteria': '...'}}"
 
         plan_items.append(
             {
                 "id": i,
                 "description": step["description"].strip(),
                 "success_criteria": step.get(
-                    "success_criteria", "Task completed successfully"
+                    "success_criteria", "Tarefa concluída com sucesso"
                 ).strip(),
                 "status": "pending",
                 "started_at": None,
@@ -103,7 +103,7 @@ def create_plan(
             }
         )
 
-    # Initialize state
+    # Inicializar estado
     state["objective"] = objective.strip()
     state["context"] = context.strip() if context else None
     state["plan"] = plan_items
@@ -113,86 +113,86 @@ def create_plan(
     state["created_at"] = datetime.now(timezone.utc).isoformat()
     state["completed_at"] = None
 
-    # Format response
+    # Formatar resposta
     steps_display = "\n".join(
         [
-            f"  {s['id']}. {s['description']}\n     ✓ Done when: {s['success_criteria']}"
+            f"  {s['id']}. {s['description']}\n     ✓ Concluído quando: {s['success_criteria']}"
             for s in plan_items
         ]
     )
 
-    logger.info(f"[PaL] Plan created: {objective} ({len(plan_items)} steps)")
+    logger.info(f"[PaL] Plano criado: {objective} ({len(plan_items)} passos)")
 
     return (
-        f"✅ Plan created!\n\n"
-        f"🎯 Objective: {objective}\n"
-        f"{'📝 Context: ' + context + chr(10) if context else ''}\n"
-        f"Steps:\n{steps_display}\n\n"
-        f"→ Ready to begin with Step 1"
+        f"✅ Plano criado!\n\n"
+        f"🎯 Objetivo: {objective}\n"
+        f"{'📝 Contexto: ' + context + chr(10) if context else ''}\n"
+        f"Passos:\n{steps_display}\n\n"
+        f"→ Pronto para começar com Passo 1"
     )
 
 
 def complete_step(run_context: RunContext, output: str) -> str:
     """
-    Mark the current step as complete with verification output.
+    Marcar o passo atual como completo com saída de verificação.
 
-    The output should demonstrate that the success criteria has been met.
-    The agent will automatically advance to the next step.
+    A saída deve demonstrar que os critérios de sucesso foram atendidos.
+    O agente avançará automaticamente para o próximo passo.
 
     Args:
-        output: Evidence/results that satisfy the step's success criteria
+        output: Evidências/resultados que satisfazem os critérios de sucesso do passo
     """
     state = run_context.session_state
     plan = state.get("plan", [])
     current = state.get("current_step", 1)
 
     if not plan:
-        return "❌ No plan exists. Create one first with create_plan()."
+        return "❌ Nenhum plano existe. Criar um primeiro com create_plan()."
 
     if state.get("status") == "complete":
-        return "✅ Plan is already complete. Use reset_plan(confirm=True) to start a new one."
+        return "✅ Plano já está completo. Usar reset_plan(confirm=True) para começar um novo."
 
-    # Get current step
+    # Obter passo atual
     step = plan[current - 1]
 
     if step["status"] == "complete":
-        return f"❌ Step {current} is already complete."
+        return f"❌ Passo {current} já está completo."
 
-    # Mark complete
+    # Marcar como completo
     now = datetime.now(timezone.utc).isoformat()
     step["status"] = "complete"
     step["completed_at"] = now
     step["output"] = output.strip()
 
-    logger.info(f"[PaL] Step {current} completed: {step['description'][:50]}...")
+    logger.info(f"[PaL] Passo {current} concluído: {step['description'][:50]}...")
 
-    # Check if this was the last step
+    # Verificar se este foi o último passo
     if current >= len(plan):
         state["status"] = "complete"
         state["completed_at"] = now
 
-        # Calculate duration
+        # Calcular duração
         created = datetime.fromisoformat(state["created_at"].replace("Z", "+00:00"))
         completed = datetime.fromisoformat(now.replace("Z", "+00:00"))
         duration = completed - created
 
         return (
-            f"✅ Step {current} complete!\n\n"
-            f"🎉 **Plan Finished!**\n"
-            f"All {len(plan)} steps completed successfully.\n"
-            f"Duration: {duration}\n\n"
-            f"💡 **Learning opportunity**: Is there a reusable insight from this execution?\n"
-            f"If so, propose it and I'll save it with `save_learning()` for future tasks."
+            f"✅ Passo {current} completo!\n\n"
+            f"🎉 **Plano Finalizado!**\n"
+            f"Todos os {len(plan)} passos concluídos com sucesso.\n"
+            f"Duração: {duration}\n\n"
+            f"💡 **Oportunidade de aprendizado**: Há um insight reutilizável desta execução?\n"
+            f"Se sim, proponha e eu salvarei com `save_learning()` para tarefas futuras."
         )
 
-    # Advance to next step
+    # Avançar para o próximo passo
     state["current_step"] = current + 1
     next_step = plan[current]
 
     return (
-        f"✅ Step {current} complete!\n\n"
-        f"→ **Step {current + 1}**: {next_step['description']}\n"
-        f"  Success criteria: {next_step['success_criteria']}"
+        f"✅ Passo {current} completo!\n\n"
+        f"→ **Passo {current + 1}**: {next_step['description']}\n"
+        f"  Critérios de sucesso: {next_step['success_criteria']}"
     )
 
 
@@ -204,37 +204,37 @@ def update_plan(
     reason: Optional[str] = None,
 ) -> str:
     """
-    Modify the current plan dynamically.
+    Modificar o plano atual dinamicamente.
 
     Args:
-        action: The modification type
-                - "add": Append a new step to the end
-                - "insert": Insert a step after step_id
-                - "remove": Remove a future step
-                - "revisit": Go back to a previous step
-        step_id: Target step ID (required for insert/remove/revisit)
-        new_step: Step definition for add/insert {"description": "...", "success_criteria": "..."}
-        reason: Explanation for the change (required for revisit)
+        action: O tipo de modificação
+                - "add": Anexar um novo passo ao final
+                - "insert": Inserir um passo após step_id
+                - "remove": Remover um passo futuro
+                - "revisit": Voltar a um passo anterior
+        step_id: ID do passo alvo (necessário para insert/remove/revisit)
+        new_step: Definição de passo para add/insert {"description": "...", "success_criteria": "..."}
+        reason: Explicação para a mudança (necessário para revisit)
     """
     state = run_context.session_state
     plan = state.get("plan", [])
     current = state.get("current_step", 1)
 
     if not plan:
-        return "❌ No plan exists. Create one first."
+        return "❌ Nenhum plano existe. Criar um primeiro."
 
-    # ADD: Append new step to end
+    # ADD: Anexar novo passo ao final
     if action == "add":
         if not new_step or "description" not in new_step:
             return (
-                "❌ Provide new_step={'description': '...', 'success_criteria': '...'}"
+                "❌ Fornecer new_step={'description': '...', 'success_criteria': '...'}"
             )
 
         new_item = {
             "id": len(plan) + 1,
             "description": new_step["description"].strip(),
             "success_criteria": new_step.get(
-                "success_criteria", "Task completed"
+                "success_criteria", "Tarefa concluída"
             ).strip(),
             "status": "pending",
             "started_at": None,
@@ -244,21 +244,21 @@ def update_plan(
         plan.append(new_item)
         state["plan_length"] = len(plan)
 
-        logger.info(f"[PaL] Step added: {new_item['description'][:50]}...")
-        return f"✅ Added Step {new_item['id']}: {new_item['description']}"
+        logger.info(f"[PaL] Passo adicionado: {new_item['description'][:50]}...")
+        return f"✅ Passo {new_item['id']} adicionado: {new_item['description']}"
 
-    # INSERT: Add step after a specific position
+    # INSERT: Adicionar passo após uma posição específica
     elif action == "insert":
         if not step_id or not new_step:
-            return "❌ Provide step_id (insert after) and new_step"
+            return "❌ Fornecer step_id (inserir após) e new_step"
         if step_id < current:
-            return f"❌ Cannot insert before current step {current}"
+            return f"❌ Não é possível inserir antes do passo atual {current}"
 
         new_item = {
             "id": step_id + 1,
             "description": new_step["description"].strip(),
             "success_criteria": new_step.get(
-                "success_criteria", "Task completed"
+                "success_criteria", "Tarefa concluída"
             ).strip(),
             "status": "pending",
             "started_at": None,
@@ -266,103 +266,103 @@ def update_plan(
             "output": None,
         }
 
-        # Insert and renumber
+        # Inserir e renumerar
         plan.insert(step_id, new_item)
         for i, s in enumerate(plan, 1):
             s["id"] = i
         state["plan_length"] = len(plan)
 
         logger.info(
-            f"[PaL] Step inserted after {step_id}: {new_item['description'][:50]}..."
+            f"[PaL] Passo inserido após {step_id}: {new_item['description'][:50]}..."
         )
-        return f"✅ Inserted new Step {step_id + 1}: {new_item['description']}"
+        return f"✅ Novo Passo {step_id + 1} inserido: {new_item['description']}"
 
-    # REMOVE: Delete a future step
+    # REMOVE: Excluir um passo futuro
     elif action == "remove":
         if not step_id:
-            return "❌ Provide step_id to remove"
+            return "❌ Fornecer step_id para remover"
         if step_id <= current:
-            return f"❌ Cannot remove step {step_id} — already current or completed"
+            return f"❌ Não é possível remover passo {step_id} — já é atual ou concluído"
 
         removed = next((s for s in plan if s["id"] == step_id), None)
         if not removed:
-            return f"❌ Step {step_id} not found"
+            return f"❌ Passo {step_id} não encontrado"
 
         state["plan"] = [s for s in plan if s["id"] != step_id]
-        # Renumber remaining steps
+        # Renumerar passos restantes
         for i, s in enumerate(state["plan"], 1):
             s["id"] = i
         state["plan_length"] = len(state["plan"])
 
-        logger.info(f"[PaL] Step removed: {removed['description'][:50]}...")
-        return f"✅ Removed: {removed['description']}\nPlan now has {state['plan_length']} steps."
+        logger.info(f"[PaL] Passo removido: {removed['description'][:50]}...")
+        return f"✅ Removido: {removed['description']}\nPlano agora tem {state['plan_length']} passos."
 
-    # REVISIT: Go back to a previous step
+    # REVISIT: Voltar a um passo anterior
     elif action == "revisit":
         if not step_id:
-            return "❌ Provide step_id to revisit"
+            return "❌ Fornecer step_id para revisitar"
         if not reason:
-            return "❌ Provide reason for revisiting"
+            return "❌ Fornecer razão para revisitar"
         if step_id > current:
-            return f"❌ Step {step_id} hasn't been reached yet"
+            return f"❌ Passo {step_id} ainda não foi alcançado"
 
-        # Reset this step and all subsequent
+        # Redefinir este passo e todos os subsequentes
         for s in plan:
             if s["id"] >= step_id:
                 s["status"] = "pending"
                 s["started_at"] = None
                 s["completed_at"] = None
                 if s["id"] == step_id:
-                    s["output"] = f"[Revisiting: {reason}]"
+                    s["output"] = f"[Revisitando: {reason}]"
                 else:
                     s["output"] = None
 
         state["current_step"] = step_id
         state["status"] = "in_progress"
 
-        logger.info(f"[PaL] Revisiting step {step_id}: {reason}")
+        logger.info(f"[PaL] Revisitando passo {step_id}: {reason}")
         return (
-            f"🔄 Revisiting Step {step_id}\n"
-            f"Reason: {reason}\n"
-            f"Progress reset to this step."
+            f"🔄 Revisitando Passo {step_id}\n"
+            f"Razão: {reason}\n"
+            f"Progresso redefinido para este passo."
         )
 
-    return f"❌ Unknown action: {action}. Use 'add', 'insert', 'remove', or 'revisit'."
+    return f"❌ Ação desconhecida: {action}. Usar 'add', 'insert', 'remove' ou 'revisit'."
 
 
 def block_step(
     run_context: RunContext, blocker: str, suggestion: Optional[str] = None
 ) -> str:
     """
-    Mark the current step as blocked with an explanation.
+    Marcar o passo atual como bloqueado com uma explicação.
 
     Args:
-        blocker: What is preventing progress
-        suggestion: Optional suggested resolution
+        blocker: O que está impedindo o progresso
+        suggestion: Resolução sugerida opcional
     """
     state = run_context.session_state
     plan = state.get("plan", [])
     current = state.get("current_step", 1)
 
     if not plan:
-        return "❌ No plan exists."
+        return "❌ Nenhum plano existe."
 
     step = plan[current - 1]
     step["status"] = "blocked"
-    step["output"] = f"BLOCKED: {blocker}"
+    step["output"] = f"BLOQUEADO: {blocker}"
 
-    logger.warning(f"[PaL] Step {current} blocked: {blocker}")
+    logger.warning(f"[PaL] Passo {current} bloqueado: {blocker}")
 
-    response = f"⚠️ Step {current} is blocked\n\n**Blocker**: {blocker}\n"
+    response = f"⚠️ Passo {current} está bloqueado\n\n**Bloqueador**: {blocker}\n"
 
     if suggestion:
-        response += f"**Suggested resolution**: {suggestion}\n"
+        response += f"**Resolução sugerida**: {suggestion}\n"
 
     response += (
-        "\n**Options**:\n"
-        "  - Resolve the blocker and call complete_step()\n"
-        "  - Use update_plan(action='revisit', ...) to try a different approach\n"
-        "  - Use reset_plan(confirm=True) to start over"
+        "\n**Opções**:\n"
+        "  - Resolver o bloqueador e chamar complete_step()\n"
+        "  - Usar update_plan(action='revisit', ...) para tentar uma abordagem diferente\n"
+        "  - Usar reset_plan(confirm=True) para começar do zero"
     )
 
     return response
@@ -370,21 +370,21 @@ def block_step(
 
 def get_status(run_context: RunContext) -> str:
     """
-    Get a formatted view of the current plan status.
-    Shows objective, all steps with their status, and progress.
+    Obter uma visão formatada do status atual do plano.
+    Mostra objetivo, todos os passos com seus status e progresso.
     """
     state = run_context.session_state
 
     if not state.get("plan"):
         return (
-            "📋 No active plan.\n\n"
-            "Use create_plan() to start. Example:\n"
+            "📋 Nenhum plano ativo.\n\n"
+            "Usar create_plan() para começar. Exemplo:\n"
             "```\n"
             "create_plan(\n"
-            '    objective="Your goal here",\n'
+            '    objective="Seu objetivo aqui",\n'
             "    steps=[\n"
-            '        {"description": "First step", "success_criteria": "How to verify"},\n'
-            '        {"description": "Second step", "success_criteria": "How to verify"},\n'
+            '        {"description": "Primeiro passo", "success_criteria": "Como verificar"},\n'
+            '        {"description": "Segundo passo", "success_criteria": "Como verificar"},\n'
             "    ]\n"
             ")\n"
             "```"
@@ -454,15 +454,15 @@ def get_status(run_context: RunContext) -> str:
 
 def reset_plan(run_context: RunContext, confirm: bool = False) -> str:
     """
-    Clear the current plan to start fresh.
+    Limpar o plano atual para começar do zero.
 
     Args:
-        confirm: Must be True to actually reset (safety check)
+        confirm: Deve ser True para realmente redefinir (verificação de segurança)
     """
     if not confirm:
         return (
-            "⚠️ This will clear the current plan and all progress.\n"
-            "To confirm, call: reset_plan(confirm=True)"
+            "⚠️ Isso limpará o plano atual e todo o progresso.\n"
+            "Para confirmar, chamar: reset_plan(confirm=True)"
         )
 
     state = run_context.session_state
@@ -479,12 +479,12 @@ def reset_plan(run_context: RunContext, confirm: bool = False) -> str:
         }
     )
 
-    logger.info("[PaL] Plan reset")
-    return "🗑️ Plan cleared. Ready to create a new plan."
+    logger.info("[PaL] Plano redefinido")
+    return "🗑️ Plano limpo. Pronto para criar um novo plano."
 
 
 # ============================================================================
-# Learning Tool
+# Ferramenta de Aprendizado
 # ============================================================================
 def save_learning(
     run_context: RunContext,
@@ -494,24 +494,24 @@ def save_learning(
     effectiveness: Optional[str] = "medium",
 ) -> str:
     """
-    Save a reusable learning from this execution for future reference.
+    Salvar um aprendizado reutilizável desta execução para referência futura.
 
-    Only save learnings that are:
-    - Specific and actionable
-    - Applicable to similar future tasks
-    - Based on what actually worked
+    Apenas salvar aprendizados que sejam:
+    - Específicos e acionáveis
+    - Aplicáveis a tarefas futuras semelhantes
+    - Baseados no que realmente funcionou
 
     Args:
-        title: Short descriptive name (e.g., "Pricing Research Pattern")
-        learning: The actual insight/pattern (be specific!)
-        applies_to: What types of tasks this helps with
-        effectiveness: How well it worked - "low" | "medium" | "high"
+        title: Nome descritivo curto (ex: "Padrão de Pesquisa de Preços")
+        learning: O insight/padrão real (seja específico!)
+        applies_to: Que tipos de tarefas isso ajuda
+        effectiveness: Quão bem funcionou - "low" | "medium" | "high"
 
-    Example:
+    Exemplo:
         save_learning(
-            title="Competitor Pricing Sources",
-            learning="For SaaS pricing: 1) Official pricing page, 2) G2/Capterra, 3) PricingBot archives. Official pages often hide enterprise tiers.",
-            applies_to="competitive analysis, pricing research, market research",
+            title="Fontes de Preços de Concorrentes",
+            learning="Para preços SaaS: 1) Página oficial de preços, 2) G2/Capterra, 3) Arquivos PricingBot. Páginas oficiais frequentemente escondem níveis empresariais.",
+            applies_to="análise competitiva, pesquisa de preços, pesquisa de mercado",
             effectiveness="high"
         )
     """
@@ -527,7 +527,7 @@ def save_learning(
         "created_at": datetime.now(timezone.utc).isoformat(),
     }
 
-    logger.info(f"[PaL] Saving learning: {payload['title']}")
+    logger.info(f"[PaL] Salvando aprendizado: {payload['title']}")
 
     try:
         execution_knowledge.add_content(
@@ -537,75 +537,75 @@ def save_learning(
             skip_if_exists=True,
         )
         return (
-            f"💡 Learning saved!\n\n"
+            f"💡 Aprendizado salvo!\n\n"
             f"**{title}**\n"
             f"{learning}\n\n"
-            f"_Applies to: {applies_to}_"
+            f"_Aplica-se a: {applies_to}_"
         )
     except Exception as e:
-        logger.error(f"[PaL] Failed to save learning: {e}")
-        return f"❌ Failed to save learning: {str(e)}"
+        logger.error(f"[PaL] Falha ao salvar aprendizado: {e}")
+        return f"❌ Falha ao salvar aprendizado: {str(e)}"
 
 
 # ============================================================================
-# Agent Instructions
+# Instruções do Agente
 # ============================================================================
 instructions = """\
-You are **PaL** — the **Plan and Learn** Agent.
+Você é **PaL** — o Agente **Planejar e Aprender**.
 
-You're a friendly, helpful assistant that can also tackle complex multi-step tasks with discipline. You plan when it's useful, not for everything.
+Você é um assistente amigável e útil que também pode lidar com tarefas complexas de múltiplos passos com disciplina. Você planeja quando é útil, não para tudo.
 
-## WHEN TO PLAN
+## QUANDO PLANEJAR
 
-**Create a plan** for tasks that:
-- Have multiple distinct steps
-- Need to be done in a specific order
-- Would benefit from tracking progress
-- Are complex enough that you might lose track
+**Criar um plano** para tarefas que:
+- Têm múltiplos passos distintos
+- Precisam ser feitas em uma ordem específica
+- Se beneficiariam do rastreamento de progresso
+- São complexas o suficiente para você perder o controle
 
-**Don't plan** for:
-- Simple questions → just answer them
-- Quick tasks → just do them
-- Casual conversation → just chat
-- Single-step requests → just handle them
+**Não planejar** para:
+- Perguntas simples → apenas respondê-las
+- Tarefas rápidas → apenas fazê-las
+- Conversa casual → apenas conversar
+- Solicitações de passo único → apenas lidar com elas
 
-When in doubt: if you can do it in one response without losing track, skip the plan.
+Em caso de dúvida: se você pode fazer em uma resposta sem perder o controle, pule o plano.
 
-## CURRENT STATE
-- Objective: {objective}
-- Step: {current_step} of {plan_length}
+## ESTADO ATUAL
+- Objetivo: {objective}
+- Passo: {current_step} de {plan_length}
 - Status: {status}
 
-## THE PaL CYCLE (for complex tasks)
+## O CICLO PaL (para tarefas complexas)
 
-1. **PLAN** — Break the goal into steps with success criteria. Call `create_plan()`.
-2. **EXECUTE** — Work through steps one at a time. Call `complete_step()` with evidence.
-3. **ADAPT** — Add, revisit, or block steps as needed. Plans can evolve.
-4. **LEARN** — After success, propose reusable insights. Save only with user approval.
+1. **PLANEJAR** — Dividir o objetivo em passos com critérios de sucesso. Chamar `create_plan()`.
+2. **EXECUTAR** — Trabalhar através de passos um de cada vez. Chamar `complete_step()` com evidências.
+3. **ADAPTAR** — Adicionar, revisitar ou bloquear passos conforme necessário. Planos podem evoluir.
+4. **APRENDER** — Após o sucesso, propor insights reutilizáveis. Salvar apenas com aprovação do usuário.
 
-## EXECUTION RULES (when planning)
+## REGRAS DE EXECUÇÃO (ao planejar)
 
-- Complete step N before starting step N+1
-- Verify success criteria before calling `complete_step()`
-- Use tools to change state — don't just describe changes
+- Completar passo N antes de começar passo N+1
+- Verificar critérios de sucesso antes de chamar `complete_step()`
+- Usar ferramentas para mudar estado — não apenas descrever mudanças
 
-## YOUR KNOWLEDGE BASE
+## SUA BASE DE CONHECIMENTO
 
-You have learnings from past tasks. When planning something similar:
-- Search for relevant patterns
-- Apply what worked before
-- Mention when a learning influenced your approach
+Você tem aprendizados de tarefas passadas. Ao planejar algo semelhante:
+- Buscar padrões relevantes
+- Aplicar o que funcionou antes
+- Mencionar quando um aprendizado influenciou sua abordagem
 
-## PERSONALITY
+## PERSONALIDADE
 
-You're a PaL — friendly, helpful, and easy to talk to. You:
-- Chat naturally for simple stuff
-- Get structured when complexity requires it
-- Celebrate progress without being over-the-top
-- Push back gently if asked to skip important steps
-- Learn and improve over time
+Você é um PaL — amigável, útil e fácil de conversar. Você:
+- Conversa naturalmente para coisas simples
+- Fica estruturado quando a complexidade exige
+- Celebra progresso sem exagerar
+- Resiste suavemente se pedido para pular passos importantes
+- Aprende e melhora com o tempo
 
-Be helpful first. Be disciplined when it matters.\
+Seja útil primeiro. Seja disciplinado quando importa.\
 """
 
 
@@ -617,12 +617,12 @@ pal_agent = Agent(
     name="PaL (Plan and Learn Agent)",
     model=Gemini(id="gemini-3-flash-preview"),
     instructions=instructions,
-    # Database for persistence
+    # Banco de dados para persistência
     db=gemini_agents_db,
-    # Knowledge base for learnings
+    # Base de conhecimento para aprendizados
     knowledge=execution_knowledge,
     search_knowledge=True,
-    # Session state structure
+    # Estrutura de estado de sessão
     session_state={
         "objective": None,
         "context": None,
@@ -634,82 +634,82 @@ pal_agent = Agent(
         "completed_at": None,
     },
     tools=[
-        # Plan management
+        # Gerenciamento de plano
         create_plan,
         complete_step,
         update_plan,
         block_step,
         get_status,
         reset_plan,
-        # Learning
+        # Aprendizado
         save_learning,
-        # Execution capabilities
+        # Capacidades de execução
         ParallelTools(),
         YFinanceTools(),
     ],
-    # Make state available in instructions
+    # Tornar estado disponível nas instruções
     add_session_state_to_context=True,
-    # Enable memory for user preferences
+    # Habilitar memória para preferências do usuário
     enable_agentic_memory=True,
-    # Context management
+    # Gerenciamento de contexto
     add_datetime_to_context=True,
     add_history_to_context=True,
     num_history_runs=5,
     read_chat_history=True,
-    # Output
+    # Saída
     markdown=True,
 )
 
 
 # ============================================================================
-# CLI Interface
+# Interface CLI
 # ============================================================================
 def run_pal(message: str, session_id: Optional[str] = None, show_state: bool = True):
     """
-    Run PaL with a message, optionally continuing a session.
+    Executar PaL com uma mensagem, opcionalmente continuando uma sessão.
 
     Args:
-        message: The user's message/request
-        session_id: Optional session ID to continue a previous session
-        show_state: Whether to print the state after the response
+        message: A mensagem/solicitação do usuário
+        session_id: ID de sessão opcional para continuar uma sessão anterior
+        show_state: Se deve imprimir o estado após a resposta
     """
     pal_agent.print_response(message, session_id=session_id, stream=True)
     if show_state:
         state = pal_agent.get_session_state()
         print(f"\n{'─' * 50}")
-        print("📊 Session State:")
+        print("📊 Estado da Sessão:")
         print(f"   Status: {state.get('status', 'no_plan')}")
         if state.get("plan"):
             done = sum(1 for s in state["plan"] if s["status"] == "complete")
-            print(f"   Progress: {done}/{len(state['plan'])} steps")
+            print(f"   Progresso: {done}/{len(state['plan'])} passos")
         print(f"{'─' * 50}")
 
 
 # ============================================================================
-# Main
+# Principal
 # ============================================================================
 if __name__ == "__main__":
     import sys
 
     if len(sys.argv) > 1:
-        # Run with command line argument
+        # Executar com argumento de linha de comando
         message = " ".join(sys.argv[1:])
         run_pal(message)
     else:
-        # Interactive mode
+        # Modo interativo
         print("=" * 60)
-        print("🤝 PaL — Plan and Learn Agent")
-        print("   Plan. Execute. Learn. Repeat.")
+        print("🤝 PaL — Agente Planejar e Aprender")
+        print("   Planejar. Executar. Aprender. Repetir.")
         print("=" * 60)
-        print("\nType 'quit' or 'exit' to stop.\n")
+        print("\nDigite 'quit' ou 'exit' para parar.\n")
 
         session_id = f"pal_session_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
 
         while True:
             try:
-                user_input = input("\n👤 You: ").strip()
+                user_input = input("\n👤 Você: ").strip()
                 if user_input.lower() in ["quit", "exit", "q"]:
-                    print("\n👋 Goodbye!")
+                    print("\n👋 Até logo!")
                     break
                 if not user_input:
                     continue
@@ -718,5 +718,5 @@ if __name__ == "__main__":
                 run_pal(user_input, session_id=session_id)
 
             except KeyboardInterrupt:
-                print("\n\n👋 Goodbye!")
+                print("\n\n👋 Até logo!")
                 break

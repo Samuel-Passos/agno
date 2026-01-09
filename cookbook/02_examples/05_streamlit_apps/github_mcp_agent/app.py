@@ -24,13 +24,13 @@ st.markdown(COMMON_CSS, unsafe_allow_html=True)
 
 
 def restart_agent():
-    """Reset the agent session"""
+    """Redefinir a sessão do agente"""
     st.session_state["messages"] = []
     st.session_state["is_new_session"] = True
 
 
 def on_model_change():
-    """Handle model selection change"""
+    """Lidar com mudança de seleção de modelo"""
     selected_model = st.session_state.get("model_selector")
     if selected_model:
         if selected_model in MODELS:
@@ -39,41 +39,41 @@ def on_model_change():
                 st.session_state["current_model"] = selected_model
                 restart_agent()
         else:
-            st.sidebar.error(f"Unknown model: {selected_model}")
+            st.sidebar.error(f"Modelo desconhecido: {selected_model}")
 
 
 def main():
     ####################################################################
     # App header
     ####################################################################
-    st.markdown("<h1 class='main-title'>GitHub MCP Agent</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 class='main-title'>Agente GitHub MCP</h1>", unsafe_allow_html=True)
     st.markdown(
-        "<p class='subtitle'>Explore GitHub repositories with natural language using the Model Context Protocol</p>",
+        "<p class='subtitle'>Explore repositórios do GitHub com linguagem natural usando o Model Context Protocol</p>",
         unsafe_allow_html=True,
     )
 
     ####################################################################
-    # Sidebar - Authentication
+    # Barra lateral - Autenticação
     ####################################################################
-    st.sidebar.header("🔑 Authentication")
+    st.sidebar.header("🔑 Autenticação")
     github_token = st.sidebar.text_input(
-        "GitHub Token",
+        "Token do GitHub",
         type="password",
-        help="Create a token with repo scope at github.com/settings/tokens",
+        help="Criar um token com escopo repo em github.com/settings/tokens",
     )
 
     if github_token:
         os.environ["GITHUB_TOKEN"] = github_token
-        st.sidebar.success("✅ GitHub token configured")
+        st.sidebar.success("✅ Token do GitHub configurado")
     else:
-        st.sidebar.warning("⚠️ GitHub token required")
+        st.sidebar.warning("⚠️ Token do GitHub necessário")
 
     ####################################################################
-    # Model selector
+    # Seletor de modelo
     ####################################################################
     st.sidebar.markdown("---")
     selected_model = st.sidebar.selectbox(
-        "Select Model",
+        "Selecionar Modelo",
         options=MODELS,
         index=0,
         key="model_selector",
@@ -81,41 +81,41 @@ def main():
     )
 
     ####################################################################
-    # Repository and Query Input
+    # Entrada de Repositório e Consulta
     ####################################################################
     col1, col2 = st.columns([3, 1])
 
     with col1:
         repo = st.text_input(
-            "Repository", value="agno-agi/agno", help="Format: owner/repo", key="repo"
+            "Repositório", value="agno-agi/agno", help="Formato: owner/repo", key="repo"
         )
 
     with col2:
         st.selectbox(
-            "Query Type",
-            ["Issues", "Pull Requests", "Repository Activity", "Custom"],
+            "Tipo de Consulta",
+            ["Issues", "Pull Requests", "Atividade do Repositório", "Personalizado"],
             key="query_type",
         )
 
     ####################################################################
-    # Sample Questions
+    # Perguntas de Exemplo
     ####################################################################
-    st.sidebar.markdown("#### ❓ Sample Questions")
-    if st.sidebar.button("🔍 Issues by label"):
-        add_message("user", f"Show me issues by label in {repo}")
-    if st.sidebar.button("📝 Recent PRs"):
-        add_message("user", f"Show me recent merged PRs in {repo}")
-    if st.sidebar.button("📊 Repository health"):
-        add_message("user", f"Show repository health metrics for {repo}")
+    st.sidebar.markdown("#### ❓ Perguntas de Exemplo")
+    if st.sidebar.button("🔍 Issues por rótulo"):
+        add_message("user", f"Mostrar-me issues por rótulo em {repo}")
+    if st.sidebar.button("📝 PRs Recentes"):
+        add_message("user", f"Mostrar-me PRs mesclados recentes em {repo}")
+    if st.sidebar.button("📊 Saúde do repositório"):
+        add_message("user", f"Mostrar métricas de saúde do repositório para {repo}")
 
     ####################################################################
-    # Utility buttons
+    # Botões de utilidade
     ####################################################################
-    st.sidebar.markdown("#### 🛠️ Utilities")
+    st.sidebar.markdown("#### 🛠️ Utilitários")
 
     col1, col2 = st.sidebar.columns([1, 1])
     with col1:
-        if st.sidebar.button("🔄 New Chat", use_container_width=True):
+        if st.sidebar.button("🔄 Novo Chat", use_container_width=True):
             restart_agent()
             st.rerun()
 
@@ -125,45 +125,45 @@ def main():
         )
         if has_messages:
             if st.sidebar.download_button(
-                "💾 Export Chat",
+                "💾 Exportar Chat",
                 export_chat_history("GitHub Agent"),
                 file_name=f"github_mcp_chat_{repo.replace('/', '_')}.md",
                 mime="text/markdown",
                 use_container_width=True,
             ):
-                st.sidebar.success("Chat history exported!")
+                st.sidebar.success("Histórico de chat exportado!")
 
-    # About section
+    # Seção sobre
     about_section(
-        "This GitHub MCP Agent helps you analyze repositories using natural language queries."
+        "Este Agente GitHub MCP ajuda você a analisar repositórios usando consultas em linguagem natural."
     )
 
     ####################################################################
-    # Chat input and processing
+    # Entrada de chat e processamento
     ####################################################################
-    if prompt := st.chat_input("Ask me anything about this GitHub repository!"):
+    if prompt := st.chat_input("Pergunte-me qualquer coisa sobre este repositório do GitHub!"):
         add_message("user", prompt)
 
     ####################################################################
-    # Process user input or button queries
+    # Processar entrada do usuário ou consultas de botão
     ####################################################################
     if st.session_state.get("messages"):
         last_message = st.session_state["messages"][-1]
         if last_message["role"] == "user":
             user_query = last_message["content"]
 
-            # Ensure repo is mentioned in query
+            # Garantir que repo seja mencionado na consulta
             if repo and repo not in user_query:
-                full_query = f"{user_query} in {repo}"
+                full_query = f"{user_query} em {repo}"
             else:
                 full_query = user_query
 
-            with st.spinner("Analyzing GitHub repository..."):
+            with st.spinner("Analisando repositório do GitHub..."):
                 try:
                     result = asyncio.run(run_github_agent(full_query, selected_model))
                     add_message("assistant", result)
                 except Exception as e:
-                    error_msg = f"Error: {str(e)}"
+                    error_msg = f"Erro: {str(e)}"
                     add_message("assistant", error_msg)
             st.rerun()
 

@@ -1,6 +1,6 @@
-# Universal MCP Agent
+# Agente MCP Universal
 
-**Universal MCP Agent (UAgI)** is a powerful agent application that leverages the Model Context Protocol (MCP) to provide a unified interface for interacting with various MCP servers. This application allows you to connect to different data sources and tools through MCP servers, providing a seamless experience for working with external services.
+**Agente MCP Universal (UAgI)** é uma aplicação de agente poderosa que aproveita o Model Context Protocol (MCP) para fornecer uma interface unificada para interagir com vários servidores MCP. Esta aplicação permite conectar a diferentes fontes de dados e ferramentas através de servidores MCP, fornecendo uma experiência perfeita para trabalhar com serviços externos.
 
 > Note: Fork and clone this repository if needed
 

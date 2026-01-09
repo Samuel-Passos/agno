@@ -9,7 +9,7 @@ db_url = "postgresql+psycopg://ai:ai@localhost:5532/ai"
 db_engine = create_engine(db_url)
 s3_uri = "https://agno-public.s3.amazonaws.com/f1"
 
-# List of files and their corresponding table names
+# Lista de arquivos e seus nomes de tabela correspondentes
 files_to_tables = {
     f"{s3_uri}/constructors_championship_1958_2020.csv": "constructors_championship",
     f"{s3_uri}/drivers_championship_1950_2020.csv": "drivers_championship",
@@ -20,28 +20,28 @@ files_to_tables = {
 
 
 def load_f1_data():
-    """Load F1 data into the database"""
+    """Carregar dados de F1 no banco de dados"""
 
-    logger.info("Loading database.")
-    # Load each CSV file into the corresponding PostgreSQL table
+    logger.info("Carregando banco de dados.")
+    # Carregar cada arquivo CSV na tabela PostgreSQL correspondente
     for file_path, table_name in files_to_tables.items():
-        logger.info(f"Loading {file_path} into {table_name} table.")
-        # Download the file using requests
+        logger.info(f"Carregando {file_path} na tabela {table_name}.")
+        # Baixar o arquivo usando requests
         response = requests.get(file_path, verify=False)
-        response.raise_for_status()  # Raise an exception for bad status codes
+        response.raise_for_status()  # Levantar uma exceção para códigos de status ruins
 
-        # Read the CSV data from the response content
+        # Ler os dados CSV do conteúdo da resposta
         csv_data = StringIO(response.text)
         df = pd.read_csv(csv_data)
 
         df.to_sql(table_name, db_engine, if_exists="replace", index=False)
-        logger.info(f"{file_path} loaded into {table_name} table.")
+        logger.info(f"{file_path} carregado na tabela {table_name}.")
 
-    logger.info("Database loaded.")
+    logger.info("Banco de dados carregado.")
 
 
 if __name__ == "__main__":
-    # Disable SSL verification warnings
+    # Desabilitar avisos de verificação SSL
     import urllib3
 
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)

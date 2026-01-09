@@ -12,20 +12,20 @@ def get_geobuddy_agent(
     user_id: Optional[str] = None,
     session_id: Optional[str] = None,
 ) -> Agent:
-    """Get a GeoBuddy Agent for geographical image analysis.
+    """Obter um Agente GeoBuddy para análise de imagens geográficas.
 
     Args:
-        model_id: Model ID to use for analysis
-        user_id: Optional user ID for session tracking
-        session_id: Optional session ID for conversation continuity
+        model_id: ID do modelo a usar para análise
+        user_id: ID de usuário opcional para rastreamento de sessão
+        session_id: ID de sessão opcional para continuidade de conversa
 
     Returns:
-        Agent instance configured for geographical analysis
+        Instância de Agent configurada para análise geográfica
     """
 
     model = get_model_from_id(model_id)
 
-    # Create the geography analysis agent
+    # Criar o agente de análise geográfica
     geobuddy_agent = Agent(
         name="GeoBuddy",
         model=model,
@@ -33,29 +33,29 @@ def get_geobuddy_agent(
         user_id=user_id,
         session_id=session_id,
         tools=[DuckDuckGoTools()],
-        role="Geography Location Detective",
+        role="Detetive de Localização Geográfica",
         instructions="""
-            You are GeoBuddy, a geography expert who helps identify locations from photos.
+            Você é GeoBuddy, um especialista em geografia que ajuda a identificar localizações a partir de fotos.
             
-            When analyzing images, look for these clues:
+            Ao analisar imagens, procurar por estas pistas:
             
-            • **Architecture & Buildings**: What style? What materials? Modern or historic?
-            • **Signs & Text**: Street names, store signs, billboards - any readable text
-            • **Landmarks**: Famous buildings, monuments, or recognizable structures  
-            • **Natural Features**: Mountains, coastlines, rivers, distinctive landscapes
-            • **Cultural Details**: Clothing, vehicles, license plates, local customs
-            • **Environment**: Weather, vegetation, lighting that hints at climate/region
+            • **Arquitetura e Edifícios**: Que estilo? Que materiais? Moderno ou histórico?
+            • **Placas e Texto**: Nomes de ruas, placas de lojas, outdoors - qualquer texto legível
+            • **Marcos**: Edifícios famosos, monumentos ou estruturas reconhecíveis
+            • **Características Naturais**: Montanhas, litorais, rios, paisagens distintas
+            • **Detalhes Culturais**: Roupas, veículos, placas de carros, costumes locais
+            • **Ambiente**: Clima, vegetação, iluminação que sugere clima/região
             
-            For each image, provide:
+            Para cada imagem, fornecer:
             
-            **Location Guess**: Be as specific as possible (street, city, country)
-            **Confidence**: How sure are you? (High/Medium/Low)
-            **Key Clues**: What made you think of this location?
-            **Reasoning**: Walk through your thought process
-            **Other Possibilities**: If unsure, what else could it be?
+            **Palpite de Localização**: Seja o mais específico possível (rua, cidade, país)
+            **Confiança**: Quão certo você está? (Alta/Média/Baixa)
+            **Pistas-Chave**: O que te fez pensar nesta localização?
+            **Raciocínio**: Caminhar através do seu processo de pensamento
+            **Outras Possibilidades**: Se incerto, o que mais poderia ser?
             
-            Keep your analysis clear and conversational. Focus on what you can actually see, not speculation.
-            Use search when you need to verify landmarks or get more information.
+            Manter sua análise clara e conversacional. Focar no que você pode realmente ver, não especulação.
+            Usar busca quando precisar verificar marcos ou obter mais informações.
         """,
         add_history_to_context=True,
         num_history_runs=3,
@@ -67,22 +67,22 @@ def get_geobuddy_agent(
 
 
 def analyze_image_location(agent: Agent, image_path: Path) -> Optional[str]:
-    """Analyze an image to predict its geographical location.
+    """Analisar uma imagem para prever sua localização geográfica.
 
     Args:
-        agent: The GeoBuddy agent instance
-        image_path: Path to the image file
+        agent: A instância do agente GeoBuddy
+        image_path: Caminho para o arquivo de imagem
 
     Returns:
-        Analysis result or None if failed
+        Resultado da análise ou None se falhou
     """
     try:
         prompt = """
-        Please analyze this image and predict its geographical location. Use your comprehensive 
-        visual analysis framework to identify the location based on all available clues.
+        Por favor, analise esta imagem e preveja sua localização geográfica. Use sua estrutura 
+        abrangente de análise visual para identificar a localização com base em todas as pistas disponíveis.
         
-        Provide a detailed analysis following your structured response format with location prediction,
-        visual analysis, reasoning process, and alternative possibilities.
+        Fornecer uma análise detalhada seguindo seu formato de resposta estruturado com previsão de localização,
+        análise visual, processo de raciocínio e possibilidades alternativas.
         """
 
         response = agent.run(prompt, images=[Image(filepath=image_path)])

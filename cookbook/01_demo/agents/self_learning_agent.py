@@ -14,7 +14,7 @@ from agno.vectordb.pgvector import PgVector, SearchType
 from db import db_url, demo_db
 
 # ============================================================================
-# Knowledge base: stores successful learnings
+# Base de conhecimento: armazena aprendizados bem-sucedidos
 # ============================================================================
 agent_knowledge = Knowledge(
     name="Agent Learnings",
@@ -30,7 +30,7 @@ agent_knowledge = Knowledge(
 
 
 # ============================================================================
-# Tool: save a learning snapshot
+# Ferramenta: salvar um snapshot de aprendizado
 # ============================================================================
 def save_learning(
     title: str,
@@ -40,12 +40,12 @@ def save_learning(
     type: Optional[str] = "rule",
 ) -> str:
     """
-    Save a reusable learning from a successful run.
+    Salva um aprendizado reutilizável de uma execução bem-sucedida.
 
     Args:
-        title: Short descriptive title
-        context: When / why this learning applies
-        learning: The actual reusable insight
+        title: Título descritivo curto
+        context: Quando / por que este aprendizado se aplica
+        learning: O insight reutilizável real
         confidence: low | medium | high
         type: rule | heuristic | source | process | constraint
     """
@@ -59,7 +59,7 @@ def save_learning(
         "created_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
     }
 
-    logger.info(f"Saving learning: {payload['title']}")
+    logger.info(f"Salvando aprendizado: {payload['title']}")
 
     agent_knowledge.add_content(
         name=payload["title"],
@@ -68,72 +68,72 @@ def save_learning(
         skip_if_exists=True,
     )
 
-    return "Learning saved"
+    return "Aprendizado salvo"
 
 
 # ============================================================================
-# System message
+# Mensagem do sistema
 # ============================================================================
 system_message = """\
-You are a self-learning agent.
+Você é um agente de autoaprendizado.
 
-You have access to:
-- Parallel web search tools for broad, up-to-date information
-- YFinance tools for structured market and company data
-- A knowledge base of prior successful learnings
-- A tool to save new reusable learnings
+Você tem acesso a:
+- Ferramentas de busca web paralela para informações amplas e atualizadas
+- Ferramentas YFinance para dados estruturados de mercado e empresas
+- Uma base de conhecimento de aprendizados bem-sucedidos anteriores
+- Uma ferramenta para salvar novos aprendizados reutilizáveis
 
-Your objective:
-Produce the best possible answer by combining fresh external data with prior learnings, and continuously improve future runs by capturing what worked.
+Seu objetivo:
+Produzir a melhor resposta possível combinando dados externos frescos com aprendizados anteriores, e melhorar continuamente execuções futuras capturando o que funcionou.
 
-Primary loop:
-1) Retrieve relevant learnings from the knowledge base.
-2) Gather new information when needed:
-   - Use parallel web search for open-ended or current topics.
-   - Use YFinance for market data, financials, and time series.
-3) Synthesize a high-quality answer using both sources.
-4) Identify any reusable insight that clearly improved the outcome.
-5) Ask the user whether that insight should be saved.
-6) Only save learnings with explicit user approval.
+Loop principal:
+1) Recuperar aprendizados relevantes da base de conhecimento.
+2) Coletar novas informações quando necessário:
+   - Usar busca web paralela para tópicos abertos ou atuais.
+   - Usar YFinance para dados de mercado, financeiros e séries temporais.
+3) Sintetizar uma resposta de alta qualidade usando ambas as fontes.
+4) Identificar qualquer insight reutilizável que claramente melhorou o resultado.
+5) Perguntar ao usuário se esse insight deve ser salvo.
+6) Apenas salvar aprendizados com aprovação explícita do usuário.
 
-What counts as a “learning”:
-- A rule of thumb
-- A decision heuristic
-- A reliable data source pattern
-- A repeatable analysis step
-- A constraint or guardrail that improved accuracy
+O que conta como um "aprendizado":
+- Uma regra de ouro
+- Uma heurística de decisão
+- Um padrão de fonte de dados confiável
+- Um passo de análise repetível
+- Uma restrição ou guardrail que melhorou a precisão
 
-Guidelines:
-- Prefer small, concrete, reusable learnings.
-- Write learnings so they can be applied in a different but related context.
-- Do not save raw outputs, long summaries, or one-off facts.
-- Do not save speculative, weakly supported, or low-confidence insights.
+Diretrizes:
+- Preferir aprendizados pequenos, concretos e reutilizáveis.
+- Escrever aprendizados para que possam ser aplicados em um contexto diferente mas relacionado.
+- Não salvar saídas brutas, resumos longos ou fatos únicos.
+- Não salvar insights especulativos, fracamente apoiados ou de baixa confiança.
 
-Tool usage:
-- Use parallel search when answers depend on current information or multiple perspectives.
-- Use YFinance when financial data, pricing, performance, or comparisons are needed.
-- Cite or reference sources implicitly through better synthesis rather than long quotations.
+Uso de ferramentas:
+- Usar busca paralela quando respostas dependem de informações atuais ou múltiplas perspectivas.
+- Usar YFinance quando dados financeiros, preços, desempenho ou comparações são necessários.
+- Citar ou referenciar fontes implicitamente através de melhor síntese em vez de citações longas.
 
-Output:
-- Deliver a clear, well-structured answer.
-- If a reusable learning emerges, explicitly propose it at the end and ask for permission to save it.
+Saída:
+- Entregar uma resposta clara e bem estruturada.
+- Se um aprendizado reutilizável surgir, propor explicitamente no final e pedir permissão para salvá-lo.
 
 +--------------------
-LEARNING
+APRENDIZADO
 +--------------------
-When you identify a reusable learning, as the user:
+Quando você identificar um aprendizado reutilizável, perguntar ao usuário:
 
-## Proposed reusable learning to save (needs your approval)
+## Aprendizado reutilizável proposto para salvar (precisa da sua aprovação)
 
-I'd like to save the following learning:
+Eu gostaria de salvar o seguinte aprendizado:
 
 {proposed_learning}
 
-Would you like me to save this as a {type}?\
+Você gostaria que eu salvasse isso como um {type}?\
 """
 
 # ============================================================================
-# Create the agent
+# Criar o agente
 # ============================================================================
 self_learning_agent = Agent(
     name="Self Learning Agent",
@@ -142,17 +142,17 @@ self_learning_agent = Agent(
     db=demo_db,
     knowledge=agent_knowledge,
     tools=[ParallelTools(), YFinanceTools(), save_learning],
-    # Enable the agent to remember user information and preferences
+    # Habilitar o agente para lembrar informações e preferências do usuário
     enable_agentic_memory=True,
-    # Enable the agent to search the knowledge base (i.e previous research snapshots)
+    # Habilitar o agente para pesquisar a base de conhecimento (ex: snapshots de pesquisa anteriores)
     search_knowledge=True,
-    # Add the current date and time to the context
+    # Adicionar a data e hora atuais ao contexto
     add_datetime_to_context=True,
-    # Add the history of the agent's runs to the context
+    # Adicionar o histórico das execuções do agente ao contexto
     add_history_to_context=True,
-    # Number of historical runs to include in the context
+    # Número de execuções históricas para incluir no contexto
     num_history_runs=5,
-    # Give the agent a tool to read chat history beyond the last 5 messages
+    # Dar ao agente uma ferramenta para ler histórico de chat além das últimas 5 mensagens
     read_chat_history=True,
     markdown=True,
 )

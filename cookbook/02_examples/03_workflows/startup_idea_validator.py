@@ -1,48 +1,48 @@
 """
-🚀 Startup Idea Validator - Your Personal Business Validation Assistant!
+🚀 Validador de Ideia de Startup - Seu Assistente Pessoal de Validação de Negócios!
 
-This workflow helps entrepreneurs validate their startup ideas by:
-1. Clarifying and refining the core business concept
-2. Evaluating originality compared to existing solutions
-3. Defining clear mission and objectives
-4. Conducting comprehensive market research and analysis
+Este workflow ajuda empreendedores a validar suas ideias de startup por:
+1. Esclarecer e refinar o conceito central do negócio
+2. Avaliar originalidade comparada a soluções existentes
+3. Definir missão e objetivos claros
+4. Realizar pesquisa e análise abrangente de mercado
 
-Why is this helpful?
+Por que isso é útil?
 --------------------------------------------------------------------------------
-• Get objective feedback on your startup idea before investing resources
-• Understand your total addressable market and target segments
-• Validate assumptions about market opportunity and competition
-• Define clear mission and objectives to guide execution
+• Obter feedback objetivo sobre sua ideia de startup antes de investir recursos
+• Entender seu mercado total endereçável e segmentos-alvo
+• Validar suposições sobre oportunidade de mercado e competição
+• Definir missão e objetivos claros para guiar a execução
 
-Who should use this?
+Quem deve usar isso?
 --------------------------------------------------------------------------------
-• Entrepreneurs and Startup Founders
-• Product Managers and Business Strategists
-• Innovation Teams
-• Angel Investors and VCs doing initial screening
+• Empreendedores e Fundadores de Startup
+• Gerentes de Produto e Estrategistas de Negócios
+• Equipes de Inovação
+• Investidores Anjo e VCs fazendo triagem inicial
 
-Example use cases:
+Casos de uso de exemplo:
 --------------------------------------------------------------------------------
-• New product/service validation
-• Market opportunity assessment
-• Competitive analysis
-• Business model validation
-• Target customer segmentation
-• Mission/vision refinement
+• Validação de novo produto/serviço
+• Avaliação de oportunidade de mercado
+• Análise competitiva
+• Validação de modelo de negócios
+• Segmentação de clientes-alvo
+• Refinamento de missão/visão
 
-Quick Start:
+Início Rápido:
 --------------------------------------------------------------------------------
-1. Install dependencies:
+1. Instalar dependências:
    pip install openai agno
 
-2. Set environment variables:
+2. Definir variáveis de ambiente:
    - OPENAI_API_KEY
 
-3. Run:
+3. Executar:
    python startup_idea_validator.py
 
-The workflow will guide you through validating your startup idea with AI-powered
-analysis and research. Use the insights to refine your concept and business plan!
+O workflow guiará você através da validação de sua ideia de startup com análise
+e pesquisa alimentadas por IA. Use os insights para refinar seu conceito e plano de negócios!
 """
 
 import asyncio
@@ -58,56 +58,56 @@ from agno.workflow.workflow import Workflow
 from pydantic import BaseModel, Field
 
 
-# --- Response models ---
+# --- Modelos de Resposta ---
 class IdeaClarification(BaseModel):
-    originality: str = Field(..., description="Originality of the idea.")
-    mission: str = Field(..., description="Mission of the company.")
-    objectives: str = Field(..., description="Objectives of the company.")
+    originality: str = Field(..., description="Originalidade da ideia.")
+    mission: str = Field(..., description="Missão da empresa.")
+    objectives: str = Field(..., description="Objetivos da empresa.")
 
 
 class MarketResearch(BaseModel):
     total_addressable_market: str = Field(
-        ..., description="Total addressable market (TAM)."
+        ..., description="Mercado total endereçável (TAM)."
     )
     serviceable_available_market: str = Field(
-        ..., description="Serviceable available market (SAM)."
+        ..., description="Mercado disponível atendível (SAM)."
     )
     serviceable_obtainable_market: str = Field(
-        ..., description="Serviceable obtainable market (SOM)."
+        ..., description="Mercado obtível atendível (SOM)."
     )
-    target_customer_segments: str = Field(..., description="Target customer segments.")
+    target_customer_segments: str = Field(..., description="Segmentos de clientes-alvo.")
 
 
 class CompetitorAnalysis(BaseModel):
-    competitors: str = Field(..., description="List of identified competitors.")
-    swot_analysis: str = Field(..., description="SWOT analysis for each competitor.")
+    competitors: str = Field(..., description="Lista de concorrentes identificados.")
+    swot_analysis: str = Field(..., description="Análise SWOT para cada concorrente.")
     positioning: str = Field(
-        ..., description="Startup's potential positioning relative to competitors."
+        ..., description="Posicionamento potencial da startup em relação aos concorrentes."
     )
 
 
 class ValidationReport(BaseModel):
     executive_summary: str = Field(
-        ..., description="Executive summary of the validation."
+        ..., description="Resumo executivo da validação."
     )
-    idea_assessment: str = Field(..., description="Assessment of the startup idea.")
-    market_opportunity: str = Field(..., description="Market opportunity analysis.")
+    idea_assessment: str = Field(..., description="Avaliação da ideia de startup.")
+    market_opportunity: str = Field(..., description="Análise de oportunidade de mercado.")
     competitive_landscape: str = Field(
-        ..., description="Competitive landscape overview."
+        ..., description="Visão geral do cenário competitivo."
     )
-    recommendations: str = Field(..., description="Strategic recommendations.")
-    next_steps: str = Field(..., description="Recommended next steps.")
+    recommendations: str = Field(..., description="Recomendações estratégicas.")
+    next_steps: str = Field(..., description="Próximos passos recomendados.")
 
 
-# --- Agents ---
+# --- Agentes ---
 idea_clarifier_agent = Agent(
     name="Idea Clarifier",
     model=OpenAIChat(id="gpt-4o-mini"),
     instructions=[
-        "Given a user's startup idea, your goal is to refine that idea.",
-        "Evaluate the originality of the idea by comparing it with existing concepts.",
-        "Define the mission and objectives of the startup.",
-        "Provide clear, actionable insights about the core business concept.",
+        "Dada uma ideia de startup do usuário, seu objetivo é refinar essa ideia.",
+        "Avaliar a originalidade da ideia comparando-a com conceitos existentes.",
+        "Definir a missão e objetivos da startup.",
+        "Fornecer insights claros e acionáveis sobre o conceito central do negócio.",
     ],
     add_history_to_context=True,
     add_datetime_to_context=True,
@@ -120,11 +120,11 @@ market_research_agent = Agent(
     model=OpenAIChat(id="gpt-4o-mini"),
     tools=[DuckDuckGoTools()],
     instructions=[
-        "You are provided with a startup idea and the company's mission and objectives.",
-        "Estimate the total addressable market (TAM), serviceable available market (SAM), and serviceable obtainable market (SOM).",
-        "Define target customer segments and their characteristics.",
-        "Search the web for resources and data to support your analysis.",
-        "Provide specific market size estimates with supporting data sources.",
+        "Você recebe uma ideia de startup e a missão e objetivos da empresa.",
+        "Estimar o mercado total endereçável (TAM), mercado disponível atendível (SAM) e mercado obtível atendível (SOM).",
+        "Definir segmentos de clientes-alvo e suas características.",
+        "Pesquisar na web por recursos e dados para apoiar sua análise.",
+        "Fornecer estimativas específicas de tamanho de mercado com fontes de dados de apoio.",
     ],
     add_history_to_context=True,
     add_datetime_to_context=True,
@@ -136,11 +136,11 @@ competitor_analysis_agent = Agent(
     model=OpenAIChat(id="gpt-4o-mini"),
     tools=[DuckDuckGoTools()],
     instructions=[
-        "You are provided with a startup idea and market research data.",
-        "Identify existing competitors in the market.",
-        "Perform Strengths, Weaknesses, Opportunities, and Threats (SWOT) analysis for each competitor.",
-        "Assess the startup's potential positioning relative to competitors.",
-        "Search for recent competitor information and market positioning.",
+        "Você recebe uma ideia de startup e dados de pesquisa de mercado.",
+        "Identificar concorrentes existentes no mercado.",
+        "Realizar análise de Forças, Fraquezas, Oportunidades e Ameaças (SWOT) para cada concorrente.",
+        "Avaliar o posicionamento potencial da startup em relação aos concorrentes.",
+        "Pesquisar informações recentes de concorrentes e posicionamento de mercado.",
     ],
     add_history_to_context=True,
     add_datetime_to_context=True,
@@ -152,11 +152,11 @@ report_agent = Agent(
     name="Report Generator",
     model=OpenAIChat(id="gpt-4o-mini"),
     instructions=[
-        "You are provided with comprehensive data about a startup idea including clarification, market research, and competitor analysis.",
-        "Synthesize all information into a comprehensive validation report.",
-        "Provide clear executive summary, assessment, and actionable recommendations.",
-        "Structure the report professionally with clear sections and insights.",
-        "Include specific next steps for the entrepreneur.",
+        "Você recebe dados abrangentes sobre uma ideia de startup incluindo esclarecimento, pesquisa de mercado e análise de concorrentes.",
+        "Sintetizar todas as informações em um relatório de validação abrangente.",
+        "Fornecer resumo executivo claro, avaliação e recomendações acionáveis.",
+        "Estruturar o relatório profissionalmente com seções e insights claros.",
+        "Incluir próximos passos específicos para o empreendedor.",
     ],
     add_history_to_context=True,
     add_datetime_to_context=True,
@@ -165,27 +165,27 @@ report_agent = Agent(
 )
 
 
-# --- Execution function ---
+# --- Função de Execução ---
 async def startup_validation_execution(
     workflow: Workflow,
     execution_input: WorkflowExecutionInput,
     startup_idea: str,
     **kwargs: Any,
 ) -> str:
-    """Execute the complete startup idea validation workflow"""
+    """Executar o workflow completo de validação de ideia de startup"""
 
-    # Get inputs
+    # Obter entradas
     message: str = execution_input.input
     idea: str = startup_idea
 
     if not idea:
-        return "❌ No startup idea provided"
+        return "❌ Nenhuma ideia de startup fornecida"
 
-    print(f"🚀 Starting startup idea validation for: {idea}")
-    print(f"💡 Validation request: {message}")
+    print(f"🚀 Iniciando validação de ideia de startup para: {idea}")
+    print(f"💡 Solicitação de validação: {message}")
 
-    # Phase 1: Idea Clarification
-    print("\n🎯 PHASE 1: IDEA CLARIFICATION & REFINEMENT")
+    # Fase 1: Esclarecimento de Ideia
+    print("\n🎯 FASE 1: ESCLARECIMENTO E REFINAMENTO DE IDEIA")
     print("=" * 60)
 
     clarification_prompt = f"""
@@ -202,174 +202,174 @@ async def startup_validation_execution(
     Provide insights on how to strengthen and focus the core concept.
     """
 
-    print("🔍 Analyzing and refining the startup concept...")
+    print("🔍 Analisando e refinando o conceito de startup...")
 
     try:
         clarification_result = await idea_clarifier_agent.arun(clarification_prompt)
         idea_clarification = clarification_result.content
 
-        print("✅ Idea clarification completed")
-        print(f"📝 Mission: {idea_clarification.mission[:100]}...")
+        print("✅ Esclarecimento de ideia concluído")
+        print(f"📝 Missão: {idea_clarification.mission[:100]}...")
 
     except Exception as e:
-        return f"❌ Failed to clarify idea: {str(e)}"
+        return f"❌ Falha ao esclarecer ideia: {str(e)}"
 
-    # Phase 2: Market Research
-    print("\n📊 PHASE 2: MARKET RESEARCH & ANALYSIS")
+    # Fase 2: Pesquisa de Mercado
+    print("\n📊 FASE 2: PESQUISA E ANÁLISE DE MERCADO")
     print("=" * 60)
 
     market_research_prompt = f"""
-    Based on the refined startup idea and clarification below, conduct comprehensive market research:
-    STARTUP IDEA: {idea}
-    ORIGINALITY: {idea_clarification.originality}
-    MISSION: {idea_clarification.mission}
-    OBJECTIVES: {idea_clarification.objectives}
-    Please research and provide:
-    1. Total Addressable Market (TAM) - overall market size
-    2. Serviceable Available Market (SAM) - portion you could serve
-    3. Serviceable Obtainable Market (SOM) - realistic market share
-    4. Target customer segments with detailed characteristics
-    Use web search to find current market data and trends.
+    Com base na ideia de startup refinada e esclarecimento abaixo, realizar pesquisa abrangente de mercado:
+    IDEIA DE STARTUP: {idea}
+    ORIGINALIDADE: {idea_clarification.originality}
+    MISSÃO: {idea_clarification.mission}
+    OBJETIVOS: {idea_clarification.objectives}
+    Por favor pesquisar e fornecer:
+    1. Mercado Total Endereçável (TAM) - tamanho geral do mercado
+    2. Mercado Disponível Atendível (SAM) - porção que você poderia atender
+    3. Mercado Obtível Atendível (SOM) - participação de mercado realista
+    4. Segmentos de clientes-alvo com características detalhadas
+    Usar busca web para encontrar dados e tendências atuais de mercado.
     """
 
-    print("📈 Researching market size and customer segments...")
+    print("📈 Pesquisando tamanho de mercado e segmentos de clientes...")
 
     try:
         market_result = await market_research_agent.arun(market_research_prompt)
         market_research = market_result.content
 
-        print("✅ Market research completed")
+        print("✅ Pesquisa de mercado concluída")
         print(f"🎯 TAM: {market_research.total_addressable_market[:100]}...")
 
     except Exception as e:
-        return f"❌ Failed to complete market research: {str(e)}"
+        return f"❌ Falha ao completar pesquisa de mercado: {str(e)}"
 
-    # Phase 3: Competitor Analysis
-    print("\n🏢 PHASE 3: COMPETITIVE LANDSCAPE ANALYSIS")
+    # Fase 3: Análise de Concorrentes
+    print("\n🏢 FASE 3: ANÁLISE DO CENÁRIO COMPETITIVO")
     print("=" * 60)
 
     competitor_prompt = f"""
-    Based on the startup idea and market research below, analyze the competitive landscape:
-    STARTUP IDEA: {idea}
+    Com base na ideia de startup e pesquisa de mercado abaixo, analisar o cenário competitivo:
+    IDEIA DE STARTUP: {idea}
     TAM: {market_research.total_addressable_market}
     SAM: {market_research.serviceable_available_market}
     SOM: {market_research.serviceable_obtainable_market}
-    TARGET SEGMENTS: {market_research.target_customer_segments}
-    Please research and provide:
-    1. Identify direct and indirect competitors
-    2. SWOT analysis for each major competitor
-    3. Assessment of startup's potential competitive positioning
-    4. Market gaps and opportunities
-    Use web search to find current competitor information.
+    SEGMENTOS-ALVO: {market_research.target_customer_segments}
+    Por favor pesquisar e fornecer:
+    1. Identificar concorrentes diretos e indiretos
+    2. Análise SWOT para cada concorrente principal
+    3. Avaliação do posicionamento competitivo potencial da startup
+    4. Lacunas e oportunidades de mercado
+    Usar busca web para encontrar informações atuais de concorrentes.
     """
 
-    print("🔎 Analyzing competitive landscape...")
+    print("🔎 Analisando cenário competitivo...")
 
     try:
         competitor_result = await competitor_analysis_agent.arun(competitor_prompt)
         competitor_analysis = competitor_result.content
 
-        print("✅ Competitor analysis completed")
-        print(f"🏆 Positioning: {competitor_analysis.positioning[:100]}...")
+        print("✅ Análise de concorrentes concluída")
+        print(f"🏆 Posicionamento: {competitor_analysis.positioning[:100]}...")
 
     except Exception as e:
-        return f"❌ Failed to complete competitor analysis: {str(e)}"
+        return f"❌ Falha ao completar análise de concorrentes: {str(e)}"
 
-    # Phase 4: Final Validation Report
-    print("\n📋 PHASE 4: COMPREHENSIVE VALIDATION REPORT")
+    # Fase 4: Relatório Final de Validação
+    print("\n📋 FASE 4: RELATÓRIO ABRANGENTE DE VALIDAÇÃO")
     print("=" * 60)
 
     report_prompt = f"""
-    Synthesize all the research and analysis into a comprehensive startup validation report:
+    Sintetizar toda a pesquisa e análise em um relatório abrangente de validação de startup:
 
-    STARTUP IDEA: {idea}
+    IDEIA DE STARTUP: {idea}
 
-    IDEA CLARIFICATION:
-    - Originality: {idea_clarification.originality}
-    - Mission: {idea_clarification.mission}
-    - Objectives: {idea_clarification.objectives}
-    MARKET RESEARCH:
+    ESCLARECIMENTO DE IDEIA:
+    - Originalidade: {idea_clarification.originality}
+    - Missão: {idea_clarification.mission}
+    - Objetivos: {idea_clarification.objectives}
+    PESQUISA DE MERCADO:
     - TAM: {market_research.total_addressable_market}
     - SAM: {market_research.serviceable_available_market}
     - SOM: {market_research.serviceable_obtainable_market}
-    - Target Segments: {market_research.target_customer_segments}
-    COMPETITOR ANALYSIS:
-    - Competitors: {competitor_analysis.competitors}
+    - Segmentos-Alvo: {market_research.target_customer_segments}
+    ANÁLISE DE CONCORRENTES:
+    - Concorrentes: {competitor_analysis.competitors}
     - SWOT: {competitor_analysis.swot_analysis}
-    - Positioning: {competitor_analysis.positioning}
-    Create a professional validation report with:
-    1. Executive summary
-    2. Idea assessment (strengths/weaknesses)
-    3. Market opportunity analysis
-    4. Competitive landscape overview
-    5. Strategic recommendations
-    6. Specific next steps for the entrepreneur
+    - Posicionamento: {competitor_analysis.positioning}
+    Criar um relatório de validação profissional com:
+    1. Resumo executivo
+    2. Avaliação de ideia (pontos fortes/fraquezas)
+    3. Análise de oportunidade de mercado
+    4. Visão geral do cenário competitivo
+    5. Recomendações estratégicas
+    6. Próximos passos específicos para o empreendedor
     """
 
-    print("📝 Generating comprehensive validation report...")
+    print("📝 Gerando relatório abrangente de validação...")
 
     try:
         final_result = await report_agent.arun(report_prompt)
         validation_report = final_result.content
 
-        print("✅ Validation report completed")
+        print("✅ Relatório de validação concluído")
 
     except Exception as e:
-        return f"❌ Failed to generate final report: {str(e)}"
+        return f"❌ Falha ao gerar relatório final: {str(e)}"
 
-    # Final summary
+    # Resumo final
     summary = f"""
-    🎉 STARTUP IDEA VALIDATION COMPLETED!
-    📊 Validation Summary:
-    • Startup Idea: {idea}
-    • Idea Clarification: ✅ Completed
-    • Market Research: ✅ Completed
-    • Competitor Analysis: ✅ Completed
-    • Final Report: ✅ Generated
+    🎉 VALIDAÇÃO DE IDEIA DE STARTUP CONCLUÍDA!
+    📊 Resumo da Validação:
+    • Ideia de Startup: {idea}
+    • Esclarecimento de Ideia: ✅ Concluído
+    • Pesquisa de Mercado: ✅ Concluída
+    • Análise de Concorrentes: ✅ Concluída
+    • Relatório Final: ✅ Gerado
 
-    📈 Key Market Insights:
+    📈 Principais Insights de Mercado:
     • TAM: {market_research.total_addressable_market[:150]}...
-    • Target Segments: {market_research.target_customer_segments[:150]}...
+    • Segmentos-Alvo: {market_research.target_customer_segments[:150]}...
 
-    🏆 Competitive Positioning:
+    🏆 Posicionamento Competitivo:
     {competitor_analysis.positioning[:200]}...
 
-    📋 COMPREHENSIVE VALIDATION REPORT:
+    📋 RELATÓRIO ABRANGENTE DE VALIDAÇÃO:
 
-    ## Executive Summary
+    ## Resumo Executivo
     {validation_report.executive_summary}
 
-    ## Idea Assessment
+    ## Avaliação de Ideia
     {validation_report.idea_assessment}
 
-    ## Market Opportunity
+    ## Oportunidade de Mercado
     {validation_report.market_opportunity}
 
-    ## Competitive Landscape
+    ## Cenário Competitivo
     {validation_report.competitive_landscape}
 
-    ## Strategic Recommendations
+    ## Recomendações Estratégicas
     {validation_report.recommendations}
 
-    ## Next Steps
+    ## Próximos Passos
     {validation_report.next_steps}
 
-    ⚠️ Disclaimer: This validation is for informational purposes only. Conduct additional due diligence before making investment decisions.
+    ⚠️ Aviso: Esta validação é apenas para fins informativos. Realizar due diligence adicional antes de tomar decisões de investimento.
     """
 
     return summary
 
 
-# --- Workflow definition ---
+# --- Definição do Workflow ---
 startup_validation_workflow = Workflow(
     name="Startup Idea Validator",
-    description="Comprehensive startup idea validation with market research and competitive analysis",
+    description="Validação abrangente de ideia de startup com pesquisa de mercado e análise competitiva",
     db=SqliteDb(
         session_table="workflow_session",
         db_file="tmp/workflows.db",
     ),
     steps=startup_validation_execution,
-    session_state={},  # Initialize empty workflow session state
+    session_state={},  # Inicializar estado de sessão do workflow vazio
 )
 
 
@@ -378,13 +378,13 @@ if __name__ == "__main__":
     async def main():
         from rich.prompt import Prompt
 
-        # Get idea from user
+        # Obter ideia do usuário
         idea = Prompt.ask(
-            "[bold]What is your startup idea?[/bold]\n✨",
+            "[bold]Qual é sua ideia de startup?[/bold]\n✨",
             default="A marketplace for Christmas Ornaments made from leather",
         )
 
-        print("🧪 Testing Startup Idea Validator with New Workflow Structure")
+        print("🧪 Testando Validador de Ideia de Startup com Nova Estrutura de Workflow")
         print("=" * 70)
 
         result = await startup_validation_workflow.arun(

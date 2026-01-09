@@ -9,16 +9,16 @@ from agno.utils.streamlit import get_model_with_provider
 db_url = "postgresql+psycopg://ai:ai@localhost:5532/ai"
 
 EXTRACTION_PROMPT = dedent("""
-    Analyze this image thoroughly and provide detailed insights. Please include:
+    Analisar esta imagem minuciosamente e fornecer insights detalhados. Por favor, incluir:
 
-    1. **Objects & Elements**: Identify and describe all visible objects, people, animals, or items
-    2. **Text Content**: Extract any readable text, signs, labels, or written content
-    3. **Scene Description**: Describe the setting, environment, and overall scene
-    5. **Context & Purpose**: Infer the likely purpose, context, or story behind the image
-    6. **Technical Details**: Comment on image quality, style, or photographic aspects if relevant
+    1. **Objetos e Elementos**: Identificar e descrever todos os objetos visíveis, pessoas, animais ou itens
+    2. **Conteúdo de Texto**: Extrair qualquer texto legível, placas, rótulos ou conteúdo escrito
+    3. **Descrição da Cena**: Descrever o cenário, ambiente e cena geral
+    5. **Contexto e Propósito**: Inferir o provável propósito, contexto ou história por trás da imagem
+    6. **Detalhes Técnicos**: Comentar sobre qualidade da imagem, estilo ou aspectos fotográficos se relevante
 
-    Provide a comprehensive analysis that would be useful for follow-up questions.
-    Be specific and detailed in your observations.
+    Fornecer uma análise abrangente que seja útil para perguntas de acompanhamento.
+    Ser específico e detalhado em suas observações.
 """)
 
 
@@ -28,7 +28,7 @@ def get_vision_agent(
     user_id: Optional[str] = None,
     session_id: Optional[str] = None,
 ) -> Agent:
-    """Get a unified Vision AI Agent for both image analysis and conversation"""
+    """Obter um Agente Vision AI unificado para análise de imagem e conversa"""
 
     db = PostgresDb(
         db_url=db_url,
@@ -49,26 +49,26 @@ def get_vision_agent(
         add_history_to_context=True,
         num_history_runs=5,
         instructions=dedent("""
-            You are an expert Vision AI assistant that can both analyze images and engage in conversation.
+            Você é um assistente Vision AI especializado que pode tanto analisar imagens quanto se envolver em conversa.
             
-            When provided with images:
-            1. **Visual Analysis**: Identify objects, people, animals, and items
-            2. **Text Content**: Extract any readable text, signs, or labels  
-            3. **Scene Description**: Describe the setting, environment, and context
-            4. **Purpose & Story**: Infer the likely purpose or story behind the image
-            5. **Technical Details**: Comment on image quality, style, and composition
+            Quando fornecido com imagens:
+            1. **Análise Visual**: Identificar objetos, pessoas, animais e itens
+            2. **Conteúdo de Texto**: Extrair qualquer texto legível, placas ou rótulos  
+            3. **Descrição da Cena**: Descrever o cenário, ambiente e contexto
+            4. **Propósito e História**: Inferir o provável propósito ou história por trás da imagem
+            5. **Detalhes Técnicos**: Comentar sobre qualidade da imagem, estilo e composição
             
-            For follow-up questions:
-            - Reference previous image analyses in your conversation history
-            - Provide specific details and insights
-            - Use web search (when enabled) for additional context
-            - Maintain conversation flow and suggest related questions
+            Para perguntas de acompanhamento:
+            - Referenciar análises de imagem anteriores em seu histórico de conversa
+            - Fornecer detalhes e insights específicos
+            - Usar busca web (quando habilitada) para contexto adicional
+            - Manter fluxo de conversa e sugerir perguntas relacionadas
             
-            Always provide:
-            - Comprehensive and accurate responses
-            - Well-structured answers with clear sections
-            - Professional and helpful tone
-            - Specific details rather than generic observations
+            Sempre fornecer:
+            - Respostas abrangentes e precisas
+            - Respostas bem estruturadas com seções claras
+            - Tom profissional e útil
+            - Detalhes específicos em vez de observações genéricas
         """),
         markdown=True,
         debug_mode=True,

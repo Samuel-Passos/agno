@@ -1,6 +1,6 @@
 """
-This example shows how to use concurrent tool calls in Agno.
-You should see the tool calls start and complete in parallel.
+Este exemplo mostra como usar chamadas de ferramenta concorrentes em Agno.
+Você deve ver as chamadas de ferramenta iniciarem e completarem em paralelo.
 """
 
 from typing import AsyncIterator
@@ -42,11 +42,11 @@ agent = Agent(
 async def test():
     import time
 
-    print("Starting agent run...")
+    print("Iniciando execução do agente...")
     start_time = time.time()
 
     generator = agent.arun(
-        "What is the weather and activities in San Francisco?",
+        "Qual é o clima e as atividades em San Francisco?",
         stream=True,
         stream_events=True,
     )
@@ -62,7 +62,7 @@ async def test():
                 print(f"[{current_time:.2f}s] {event.event}")
 
     total_time = time.time() - start_time
-    print(f"Total execution time: {total_time:.2f}s")
+    print(f"Tempo total de execução: {total_time:.2f}s")
 
 
 if __name__ == "__main__":

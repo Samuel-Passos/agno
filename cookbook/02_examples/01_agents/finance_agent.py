@@ -1,18 +1,18 @@
-"""🗞️ Finance Agent - Your Personal Market Analyst!
+"""🗞️ Finance Agent - Seu Analista de Mercado Pessoal!
 
-This example shows how to create a sophisticated financial analyst that provides
-comprehensive market insights using real-time data. The agent combines stock market data,
-analyst recommendations, company information, and latest news to deliver professional-grade
-financial analysis.
+Este exemplo mostra como criar um analista financeiro sofisticado que fornece
+insights abrangentes de mercado usando dados em tempo real. O agente combina dados do mercado de ações,
+recomendações de analistas, informações da empresa e últimas notícias para entregar análise
+financeira de nível profissional.
 
-Example prompts to try:
+Exemplos de prompts para tentar:
 - "What's the latest news and financial performance of Apple (AAPL)?"
 - "Give me a detailed analysis of Tesla's (TSLA) current market position"
 - "How are Microsoft's (MSFT) financials looking? Include analyst recommendations"
 - "Analyze NVIDIA's (NVDA) stock performance and future outlook"
 - "What's the market saying about Amazon's (AMZN) latest quarter?"
 
-Run: `pip install openai yfinance agno` to install the dependencies
+Execute: `pip install openai yfinance agno` para instalar as dependências
 """
 
 from textwrap import dedent
@@ -27,48 +27,48 @@ finance_agent = Agent(
         YFinanceTools(),
     ],
     instructions=dedent("""\
-        You are a seasoned Wall Street analyst with deep expertise in market analysis! 📊
+        Você é um analista experiente de Wall Street com profunda expertise em análise de mercado! 📊
 
-        Follow these steps for comprehensive financial analysis:
-        1. Market Overview
-           - Latest stock price
-           - 52-week high and low
-        2. Financial Deep Dive
-           - Key metrics (P/E, Market Cap, EPS)
-        3. Professional Insights
-           - Analyst recommendations breakdown
-           - Recent rating changes
+        Siga estes passos para análise financeira abrangente:
+        1. Visão Geral do Mercado
+           - Preço da ação mais recente
+           - Máxima e mínima de 52 semanas
+        2. Análise Profunda Financeira
+           - Métricas-chave (P/E, Market Cap, EPS)
+        3. Insights Profissionais
+           - Detalhamento de recomendações de analistas
+           - Mudanças recentes de classificação
 
-        4. Market Context
-           - Industry trends and positioning
-           - Competitive analysis
-           - Market sentiment indicators
+        4. Contexto de Mercado
+           - Tendências e posicionamento da indústria
+           - Análise competitiva
+           - Indicadores de sentimento do mercado
 
-        Your reporting style:
-        - Begin with an executive summary
-        - Use tables for data presentation
-        - Include clear section headers
-        - Add emoji indicators for trends (📈 📉)
-        - Highlight key insights with bullet points
-        - Compare metrics to industry averages
-        - Include technical term explanations
-        - End with a forward-looking analysis
+        Seu estilo de relatório:
+        - Comece com um resumo executivo
+        - Use tabelas para apresentação de dados
+        - Inclua cabeçalhos de seção claros
+        - Adicione indicadores de emoji para tendências (📈 📉)
+        - Destaque insights-chave com marcadores
+        - Compare métricas com médias da indústria
+        - Inclua explicações de termos técnicos
+        - Termine com uma análise prospectiva
 
-        Risk Disclosure:
-        - Always highlight potential risk factors
-        - Note market uncertainties
-        - Mention relevant regulatory concerns
+        Divulgação de Riscos:
+        - Sempre destaque fatores de risco potenciais
+        - Observe incertezas do mercado
+        - Mencione preocupações regulatórias relevantes
     """),
     add_datetime_to_context=True,
     markdown=True,
 )
 
-# Example usage with detailed market analysis request
+# Exemplo de uso com solicitação de análise de mercado detalhada
 finance_agent.print_response(
     "What's the latest news and financial performance of Apple (AAPL)?", stream=True
 )
 
-# Semiconductor market analysis example
+# Exemplo de análise de mercado de semicondutores
 finance_agent.print_response(
     dedent("""\
     Analyze the semiconductor market performance focusing on:
@@ -80,7 +80,7 @@ finance_agent.print_response(
     stream=True,
 )
 
-# Automotive market analysis example
+# Exemplo de análise de mercado automotivo
 finance_agent.print_response(
     dedent("""\
     Evaluate the automotive industry's current state:
@@ -92,16 +92,16 @@ finance_agent.print_response(
     stream=True,
 )
 
-# More example prompts to explore:
+# Mais exemplos de prompts para explorar:
 """
-Advanced analysis queries:
+Consultas de análise avançadas:
 1. "Compare Tesla's valuation metrics with traditional automakers"
 2. "Analyze the impact of recent product launches on AMD's stock performance"
 3. "How do Meta's financial metrics compare to its social media peers?"
 4. "Evaluate Netflix's subscriber growth impact on financial metrics"
 5. "Break down Amazon's revenue streams and segment performance"
 
-Industry-specific analyses:
+Análises específicas da indústria:
 Semiconductor Market:
 1. "How is the chip shortage affecting TSMC's market position?"
 2. "Compare NVIDIA's AI chip revenue growth with competitors"

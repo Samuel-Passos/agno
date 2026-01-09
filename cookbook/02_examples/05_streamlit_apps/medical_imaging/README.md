@@ -1,6 +1,6 @@
-# Medical Imaging Analysis
+# Análise de Imagens Médicas
 
-**Medical Imaging Analysis** Agent is a medical imaging analysis agent that analyzes medical images and provides detailed findings by utilizing models and external tools.
+**Análise de Imagens Médicas** é um agente de análise de imagens médicas que analisa imagens médicas e fornece achados detalhados utilizando modelos e ferramentas externas.
 
 > Note: Fork and clone this repository if needed
 

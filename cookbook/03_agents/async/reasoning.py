@@ -3,7 +3,7 @@ import asyncio
 from agno.agent import Agent
 from agno.models.openai import OpenAIChat
 
-task = "9.11 and 9.9 -- which is bigger?"
+task = "9.11 e 9.9 -- qual é maior?"
 
 regular_agent = Agent(model=OpenAIChat(id="gpt-4o"), markdown=True)
 reasoning_agent = Agent(

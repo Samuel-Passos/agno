@@ -1,6 +1,6 @@
-# Paperpal Research Assistant
+# Assistente de Pesquisa Paperpal
 
-**Paperpal** is a research and technical blog writer workflow that writes a detailed blog on research topics referencing research papers by utilizing models and external tools: Exa and ArXiv
+**Paperpal** é um fluxo de trabalho de escritor de blog de pesquisa e técnico que escreve um blog detalhado sobre tópicos de pesquisa referenciando artigos de pesquisa utilizando modelos e ferramentas externas: Exa e ArXiv
 
 > Note: Fork and clone this repository if needed
 

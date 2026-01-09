@@ -1,5 +1,5 @@
 """
-Speech to text example using Gemini. This cookbook demonstrates how to transcribe audio files using Gemini and obtain structured output.
+Exemplo de fala para texto usando Gemini. Este cookbook demonstra como transcrever arquivos de áudio usando Gemini e obter saída estruturada.
 """
 
 import httpx
@@ -9,36 +9,36 @@ from agno.models.google import Gemini
 from pydantic import BaseModel, Field
 
 INSTRUCTIONS = """
-Transcribe the audio accurately and completely.
+Transcrever o áudio com precisão e completamente.
 
-Speaker identification:
-- Use the speaker's name if mentioned in the conversation
-- Otherwise use 'Speaker 1', 'Speaker 2', etc. consistently
+Identificação de falante:
+- Usar o nome do falante se mencionado na conversa
+- Caso contrário, usar 'Falante 1', 'Falante 2', etc. consistentemente
 
-Non-speech audio:
-- Note significant non-speech elements (e.g., [long pause], [music], [background noise]) only when relevant to understanding the conversation
-- Ignore brief natural pauses
+Áudio não-fala:
+- Notar elementos não-fala significativos (ex: [pausa longa], [música], [ruído de fundo]) apenas quando relevantes para entender a conversa
+- Ignorar pausas naturais breves
 
-Include everything spoken, even false starts and filler words (um, uh, etc.).
+Incluir tudo que foi falado, mesmo falsos começos e palavras de preenchimento (um, uh, etc.).
 """
 
 
 class Utterance(BaseModel):
-    speaker: str = Field(..., description="Name or identifier of the speaker")
-    text: str = Field(..., description="What was said by the speaker")
+    speaker: str = Field(..., description="Nome ou identificador do falante")
+    text: str = Field(..., description="O que foi dito pelo falante")
 
 
 class Transcription(BaseModel):
-    description: str = Field(..., description="A description of the audio conversation")
+    description: str = Field(..., description="Uma descrição da conversa de áudio")
     utterances: list[Utterance] = Field(
-        ..., description="Sequential list of utterances in conversation order"
+        ..., description="Lista sequencial de enunciados na ordem da conversa"
     )
 
 
-# Fetch the audio file and convert it to a base64 encoded string
-# Simple audio file with a single speaker
+# Buscar o arquivo de áudio e convertê-lo para uma string codificada em base64
+# Arquivo de áudio simples com um único falante
 # url = "https://openaiassets.blob.core.windows.net/$web/API/docs/audio/alloy.wav"
-# Audio file with multiple speakers
+# Arquivo de áudio com múltiplos falantes
 url = "https://agno-public.s3.us-east-1.amazonaws.com/demo_data/sample_audio.wav"
 
 try:
@@ -46,9 +46,9 @@ try:
     response.raise_for_status()
     wav_data = response.content
 except httpx.HTTPStatusError as e:
-    raise ValueError(f"Error fetching audio file: {url}") from e
+    raise ValueError(f"Erro ao buscar arquivo de áudio: {url}") from e
 
-# Provide the agent with the audio file and get result as text
+# Fornecer o arquivo de áudio ao agente e obter resultado como texto
 agent = Agent(
     model=Gemini(id="gemini-3-flash-preview"),
     markdown=True,
@@ -57,6 +57,6 @@ agent = Agent(
 )
 
 agent.print_response(
-    "Give a transcript of the audio conversation",
+    "Fornecer uma transcrição da conversa de áudio",
     audio=[Audio(content=wav_data)],
 )

@@ -18,7 +18,7 @@ knowledge = Knowledge(
 knowledge.add_content(
     url="https://docs.agno.com/introduction",
     reader=WebsiteReader(
-        # Number of links to follow from the seed URLs
+        # Número de links para seguir a partir das URLs iniciais
         max_links=10,
     ),
 )
@@ -29,54 +29,54 @@ feedback_channel = "testing"
 
 doc_researcher_agent = Agent(
     name="Doc researcher Agent",
-    role="Search the knowledge base for information",
+    role="Pesquisar a base de conhecimento por informações",
     model=OpenAIChat(id="gpt-4o"),
     tools=[DuckDuckGoTools(), ExaTools()],
     knowledge=knowledge,
     search_knowledge=True,
     instructions=[
-        "You are a documentation expert for given product. Search the knowledge base thoroughly to answer user questions.",
-        "Always provide accurate information based on the documentation.",
-        "If the question matches an FAQ, provide the specific FAQ answer from the documentation.",
-        "When relevant, include direct links to specific documentation pages that address the user's question.",
-        "If you're unsure about an answer, acknowledge it and suggest where the user might find more information.",
-        "Format your responses clearly with headings, bullet points, and code examples when appropriate.",
-        "Always verify that your answer directly addresses the user's specific question.",
-        "If you cannot find the answer in the documentation knowledge base, use the DuckDuckGoTools or ExaTools to search the web for relevant information to answer the user's question.",
+        "Você é um especialista em documentação para o produto fornecido. Pesquisar a base de conhecimento completamente para responder perguntas do usuário.",
+        "Sempre fornecer informações precisas com base na documentação.",
+        "Se a pergunta corresponder a uma FAQ, fornecer a resposta específica da FAQ da documentação.",
+        "Quando relevante, incluir links diretos para páginas específicas da documentação que abordam a pergunta do usuário.",
+        "Se não tiver certeza sobre uma resposta, reconhecer isso e sugerir onde o usuário pode encontrar mais informações.",
+        "Formatar suas respostas claramente com cabeçalhos, marcadores e exemplos de código quando apropriado.",
+        "Sempre verificar que sua resposta aborda diretamente a pergunta específica do usuário.",
+        "Se não conseguir encontrar a resposta na base de conhecimento da documentação, usar DuckDuckGoTools ou ExaTools para pesquisar na web por informações relevantes para responder a pergunta do usuário.",
     ],
 )
 
 
 escalation_manager_agent = Agent(
     name="Escalation Manager Agent",
-    role="Escalate the issue to the slack channel",
+    role="Escalar o problema para o canal do slack",
     model=OpenAIChat(id="gpt-4o"),
     tools=[SlackTools()],
     instructions=[
-        "You are an escalation manager responsible for routing critical issues to the support team.",
-        f"When a user reports an issue, always send it to the #{support_channel} Slack channel with all relevant details using the send_message toolkit function.",
-        "Include the user's name, contact information (if available), and a clear description of the issue.",
-        "After escalating the issue, respond to the user confirming that their issue has been escalated.",
-        "Your response should be professional and reassuring, letting them know the support team will address it soon.",
-        "Always include a ticket or reference number if available to help the user track their issue.",
-        "Never attempt to solve technical problems yourself - your role is strictly to escalate and communicate.",
+        "Você é um gerente de escalação responsável por rotear problemas críticos para a equipe de suporte.",
+        f"Quando um usuário reportar um problema, sempre enviá-lo para o canal Slack #{support_channel} com todos os detalhes relevantes usando a função send_message do toolkit.",
+        "Incluir o nome do usuário, informações de contato (se disponíveis) e uma descrição clara do problema.",
+        "Após escalar o problema, responder ao usuário confirmando que seu problema foi escalado.",
+        "Sua resposta deve ser profissional e tranquilizadora, informando que a equipe de suporte o abordará em breve.",
+        "Sempre incluir um número de ticket ou referência se disponível para ajudar o usuário a rastrear seu problema.",
+        "Nunca tentar resolver problemas técnicos sozinho - seu papel é estritamente escalar e comunicar.",
     ],
 )
 
 feedback_collector_agent = Agent(
     name="Feedback Collector Agent",
-    role="Collect feedback from the user",
+    role="Coletar feedback do usuário",
     model=OpenAIChat(id="gpt-4o"),
     tools=[SlackTools()],
-    description="You are an AI agent that can collect feedback from the user.",
+    description="Você é um agente de IA que pode coletar feedback do usuário.",
     instructions=[
-        "You are responsible for collecting user feedback about the product or feature requests.",
-        f"When a user provides feedback or suggests a feature, use the Slack tool to send it to the #{feedback_channel} channel using the send_message toolkit function.",
-        "Include all relevant details from the user's feedback in your Slack message.",
-        "After sending the feedback to Slack, respond to the user professionally, thanking them for their input.",
-        "Your response should acknowledge their feedback and assure them that it will be taken into consideration.",
-        "Be warm and appreciative in your tone, as user feedback is valuable for improving our product.",
-        "Do not promise specific timelines or guarantee that their suggestions will be implemented.",
+        "Você é responsável por coletar feedback do usuário sobre o produto ou solicitações de recursos.",
+        f"Quando um usuário fornecer feedback ou sugerir um recurso, usar a ferramenta Slack para enviá-lo para o canal #{feedback_channel} usando a função send_message do toolkit.",
+        "Incluir todos os detalhes relevantes do feedback do usuário em sua mensagem do Slack.",
+        "Após enviar o feedback para o Slack, responder ao usuário profissionalmente, agradecendo por sua contribuição.",
+        "Sua resposta deve reconhecer o feedback deles e garantir que será levado em consideração.",
+        "Ser caloroso e apreciativo em seu tom, pois o feedback do usuário é valioso para melhorar nosso produto.",
+        "Não prometer prazos específicos ou garantir que suas sugestões serão implementadas.",
     ],
 )
 
@@ -91,19 +91,19 @@ customer_support_team = Team(
     debug_mode=True,
     show_members_responses=True,
     instructions=[
-        "You are the lead customer support agent responsible for classifying and routing customer inquiries.",
-        "Carefully analyze each user message and determine if it is: a question that needs documentation research, a bug report that requires escalation, or product feedback.",
-        "For general questions about the product, route to the doc_researcher_agent who will search documentation for answers.",
-        "If the doc_researcher_agent cannot find an answer to a question, escalate it to the escalation_manager_agent.",
-        "For bug reports or technical issues, immediately route to the escalation_manager_agent.",
-        "For feature requests or product feedback, route to the feedback_collector_agent.",
-        "Always provide a clear explanation of why you're routing the inquiry to a specific agent.",
-        "After receiving a response from the appropriate agent, relay that information back to the user in a professional and helpful manner.",
-        "Ensure a seamless experience for the user by maintaining context throughout the conversation.",
+        "Você é o agente principal de suporte ao cliente responsável por classificar e rotear consultas de clientes.",
+        "Analisar cuidadosamente cada mensagem do usuário e determinar se é: uma pergunta que precisa de pesquisa na documentação, um relatório de bug que requer escalação ou feedback do produto.",
+        "Para perguntas gerais sobre o produto, rotear para o doc_researcher_agent que pesquisará a documentação por respostas.",
+        "Se o doc_researcher_agent não conseguir encontrar uma resposta para uma pergunta, escalá-la para o escalation_manager_agent.",
+        "Para relatórios de bugs ou problemas técnicos, rotear imediatamente para o escalation_manager_agent.",
+        "Para solicitações de recursos ou feedback do produto, rotear para o feedback_collector_agent.",
+        "Sempre fornecer uma explicação clara do por que está roteando a consulta para um agente específico.",
+        "Após receber uma resposta do agente apropriado, retransmitir essas informações de volta ao usuário de forma profissional e útil.",
+        "Garantir uma experiência perfeita para o usuário mantendo o contexto ao longo da conversa.",
     ],
 )
 
-# Add in the query and the agent redirects it to the appropriate agent
+# Adicionar a consulta e o agente redireciona para o agente apropriado
 customer_support_team.print_response(
     "Hi Team, I want to build an educational platform where the models are have access to tons of study materials, How can Agno platform help me build this?",
     stream=True,

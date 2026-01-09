@@ -1,25 +1,25 @@
 """
-Multi-Agent Team - Investment Research Team
-============================================
-This example shows how to create a team of agents that work together.
-Each agent has a specialized role, and the team leader coordinates.
+Time Multi-Agente - Time de Pesquisa de Investimentos
+======================================================
+Este exemplo mostra como criar um time de agentes que trabalham juntos.
+Cada agente tem um papel especializado, e o líder do time coordena.
 
-We'll build an investment research team with opposing perspectives:
-- Bull Agent: Makes the case FOR investing
-- Bear Agent: Makes the case AGAINST investing
-- Lead Analyst: Synthesizes into a balanced recommendation
+Vamos construir um time de pesquisa de investimentos com perspectivas opostas:
+- Agente Bull: Faz o caso A FAVOR do investimento
+- Agente Bear: Faz o caso CONTRA o investimento
+- Analista Líder: Sintetiza em uma recomendação equilibrada
 
-This adversarial approach produces better analysis than a single agent.
+Esta abordagem adversarial produz melhor análise do que um único agente.
 
-Key concepts:
-- Team: A group of agents coordinated by a leader
-- Members: Specialized agents with distinct roles
-- The leader delegates, synthesizes, and produces final output
+Conceitos-chave:
+- Time: Um grupo de agentes coordenados por um líder
+- Membros: Agentes especializados com papéis distintos
+- O líder delega, sintetiza e produz a saída final
 
-Example prompts to try:
-- "Should I invest in NVIDIA?"
-- "Analyze Tesla as a long-term investment"
-- "Is Apple overvalued right now?"
+Exemplos de prompts para testar:
+- "Devo investir na NVIDIA?"
+- "Analise a Tesla como um investimento de longo prazo"
+- "A Apple está supervalorizada agora?"
 """
 
 from agno.agent import Agent
@@ -29,12 +29,12 @@ from agno.team.team import Team
 from agno.tools.yfinance import YFinanceTools
 
 # ============================================================================
-# Storage Configuration
+# Configuração de Armazenamento
 # ============================================================================
 team_db = SqliteDb(db_file="tmp/agents.db")
 
 # ============================================================================
-# Bull Agent — Makes the Case FOR
+# Agente Bull — Faz o Caso A FAVOR
 # ============================================================================
 bull_agent = Agent(
     name="Bull Analyst",
@@ -43,14 +43,14 @@ bull_agent = Agent(
     tools=[YFinanceTools()],
     db=team_db,
     instructions="""\
-You are a bull analyst. Your job is to make the strongest possible case
-FOR investing in a stock. Find the positives:
-- Growth drivers and catalysts
-- Competitive advantages
-- Strong financials and metrics
-- Market opportunities
+Você é um analista bull. Seu trabalho é fazer o caso mais forte possível
+A FAVOR de investir em uma ação. Encontre os pontos positivos:
+- Drivers de crescimento e catalisadores
+- Vantagens competitivas
+- Finanças e métricas fortes
+- Oportunidades de mercado
 
-Be persuasive but grounded in data. Use the tools to get real numbers.\
+Seja persuasivo, mas fundamentado em dados. Use as ferramentas para obter números reais.\
 """,
     add_datetime_to_context=True,
     add_history_to_context=True,
@@ -58,7 +58,7 @@ Be persuasive but grounded in data. Use the tools to get real numbers.\
 )
 
 # ============================================================================
-# Bear Agent — Makes the Case AGAINST
+# Agente Bear — Faz o Caso CONTRA
 # ============================================================================
 bear_agent = Agent(
     name="Bear Analyst",
@@ -67,14 +67,14 @@ bear_agent = Agent(
     tools=[YFinanceTools()],
     db=team_db,
     instructions="""\
-You are a bear analyst. Your job is to make the strongest possible case
-AGAINST investing in a stock. Find the risks:
-- Valuation concerns
-- Competitive threats
-- Weak spots in financials
-- Market or macro risks
+Você é um analista bear. Seu trabalho é fazer o caso mais forte possível
+CONTRA investir em uma ação. Encontre os riscos:
+- Preocupações de avaliação
+- Ameaças competitivas
+- Pontos fracos nas finanças
+- Riscos de mercado ou macro
 
-Be critical but fair. Use the tools to get real numbers to support your concerns.\
+Seja crítico, mas justo. Use as ferramentas para obter números reais que apoiem suas preocupações.\
 """,
     add_datetime_to_context=True,
     add_history_to_context=True,
@@ -82,31 +82,31 @@ Be critical but fair. Use the tools to get real numbers to support your concerns
 )
 
 # ============================================================================
-# Team Leader — Synthesizes Both Views
+# Líder do Time — Sintetiza Ambas as Visões
 # ============================================================================
 multi_agent_team = Team(
     name="Multi-Agent Team",
     model=Gemini(id="gemini-3-flash-preview"),
     members=[bull_agent, bear_agent],
     instructions="""\
-You lead an investment research team with a Bull Analyst and Bear Analyst.
+Você lidera um time de pesquisa de investimentos com um Analista Bull e um Analista Bear.
 
-## Process
+## Processo
 
-1. Send the stock to BOTH analysts
-2. Let each make their case independently
-3. Synthesize their arguments into a balanced recommendation
+1. Envie a ação para AMBOS os analistas
+2. Deixe cada um fazer seu caso independentemente
+3. Sintetize seus argumentos em uma recomendação equilibrada
 
-## Output Format
+## Formato de Saída
 
-After hearing from both analysts, provide:
-- **Bull Case Summary**: Key points from the bull analyst
-- **Bear Case Summary**: Key points from the bear analyst
-- **Synthesis**: Where do they agree? Where do they disagree?
-- **Recommendation**: Your balanced view (Buy/Hold/Sell) with confidence level
-- **Key Metrics**: A table of the important numbers
+Após ouvir ambos os analistas, forneça:
+- **Resumo do Caso Bull**: Pontos-chave do analista bull
+- **Resumo do Caso Bear**: Pontos-chave do analista bear
+- **Síntese**: Onde eles concordam? Onde discordam?
+- **Recomendação**: Sua visão equilibrada (Buy/Hold/Sell) com nível de confiança
+- **Métricas-Chave**: Uma tabela dos números importantes
 
-Be decisive but acknowledge uncertainty.\
+Seja decisivo, mas reconheça a incerteza.\
 """,
     db=team_db,
     show_members_responses=True,
@@ -117,50 +117,50 @@ Be decisive but acknowledge uncertainty.\
 )
 
 # ============================================================================
-# Run the Team
+# Executar o Time
 # ============================================================================
 if __name__ == "__main__":
-    # First analysis
+    # Primeira análise
     multi_agent_team.print_response(
-        "Should I invest in NVIDIA (NVDA)?",
+        "Devo investir na NVIDIA (NVDA)?",
         stream=True,
     )
 
-    # Follow-up question — team remembers the previous analysis
+    # Pergunta de acompanhamento — o time lembra da análise anterior
     multi_agent_team.print_response(
-        "How does AMD compare to that?",
+        "Como a AMD se compara a isso?",
         stream=True,
     )
 
 # ============================================================================
-# More Examples
+# Mais Exemplos
 # ============================================================================
 """
-When to use Teams vs single Agent:
+Quando usar Times vs Agente único:
 
-Single Agent:
-- One coherent task
-- No need for opposing views
-- Simpler is better
+Agente Único:
+- Uma tarefa coerente
+- Não precisa de visões opostas
+- Simples é melhor
 
-Team:
-- Multiple perspectives needed
-- Specialized expertise
-- Complex tasks that benefit from division of labor
-- Adversarial reasoning (like this example)
+Time:
+- Múltiplas perspectivas necessárias
+- Expertise especializada
+- Tarefas complexas que se beneficiam da divisão de trabalho
+- Raciocínio adversarial (como este exemplo)
 
-Other team patterns:
+Outros padrões de time:
 
-1. Research → Analysis → Writing pipeline
-   researcher = Agent(role="Gather information")
-   analyst = Agent(role="Analyze data")
-   writer = Agent(role="Write report")
+1. Pipeline Pesquisa → Análise → Escrita
+   researcher = Agent(role="Coletar informações")
+   analyst = Agent(role="Analisar dados")
+   writer = Agent(role="Escrever relatório")
 
-2. Checker pattern
-   worker = Agent(role="Do the task")
-   checker = Agent(role="Verify the work")
+2. Padrão Verificador
+   worker = Agent(role="Fazer a tarefa")
+   checker = Agent(role="Verificar o trabalho")
 
-3. Specialist routing
-   classifier = Agent(role="Route to specialist")
+3. Roteamento de Especialista
+   classifier = Agent(role="Rotear para especialista")
    specialists = [finance_agent, legal_agent, tech_agent]
 """

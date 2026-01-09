@@ -1,5 +1,5 @@
 """
-Speech to text example using OpenAI. This cookbook demonstrates how to transcribe audio files using OpenAI and obtain simple transcription.
+Exemplo de fala para texto usando OpenAI. Este cookbook demonstra como transcrever arquivos de áudio usando OpenAI e obter transcrição simples.
 """
 
 import httpx
@@ -8,23 +8,23 @@ from agno.media import Audio
 from agno.models.openai import OpenAIChat
 
 INSTRUCTIONS = """
-Transcribe the audio accurately and completely.
+Transcrever o áudio com precisão e completamente.
 
-Speaker identification:
-- Use the speaker's name if mentioned in the conversation
-- Otherwise use 'Speaker 1', 'Speaker 2', etc. consistently
+Identificação de falante:
+- Usar o nome do falante se mencionado na conversa
+- Caso contrário, usar 'Falante 1', 'Falante 2', etc. consistentemente
 
-Non-speech audio:
-- Note significant non-speech elements (e.g., [long pause], [music], [background noise]) only when relevant to understanding the conversation
-- Ignore brief natural pauses
+Áudio não-fala:
+- Notar elementos não-fala significativos (ex: [pausa longa], [música], [ruído de fundo]) apenas quando relevantes para entender a conversa
+- Ignorar pausas naturais breves
 
-Include everything spoken, even false starts and filler words (um, uh, etc.).
+Incluir tudo que foi falado, mesmo falsos começos e palavras de preenchimento (um, uh, etc.).
 """
 
-# Fetch the audio file and convert it to a base64 encoded string
-# Simple audio file with a single speaker
+# Buscar o arquivo de áudio e convertê-lo para uma string codificada em base64
+# Arquivo de áudio simples com um único falante
 # url = "https://openaiassets.blob.core.windows.net/$web/API/docs/audio/alloy.wav"
-# Audio file with multiple speakers
+# Arquivo de áudio com múltiplos falantes
 url = "https://agno-public.s3.us-east-1.amazonaws.com/demo_data/sample_audio.wav"
 
 try:
@@ -32,14 +32,14 @@ try:
     response.raise_for_status()
     wav_data = response.content
 except httpx.HTTPStatusError as e:
-    raise ValueError(f"Error fetching audio file: {url}") from e
+    raise ValueError(f"Erro ao buscar arquivo de áudio: {url}") from e
 
-# Provide the agent with the audio file and get result as text
+# Fornecer o arquivo de áudio ao agente e obter resultado como texto
 agent = Agent(
     model=OpenAIChat(id="gpt-audio-2025-08-28", modalities=["text"]),
     markdown=True,
     instructions=INSTRUCTIONS,
 )
 agent.print_response(
-    "What is in this audio?", audio=[Audio(content=wav_data, format="wav")]
+    "O que há neste áudio?", audio=[Audio(content=wav_data, format="wav")]
 )

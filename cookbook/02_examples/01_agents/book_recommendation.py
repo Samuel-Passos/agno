@@ -1,17 +1,17 @@
-"""📚 Book Recommendation Agent - Your Personal Literary Curator!
+"""📚 Book Recommendation Agent - Seu Curador Literário Pessoal!
 
-This example shows how to create an intelligent book recommendation system that provides
-comprehensive literary suggestions based on your preferences. The agent combines book databases,
-ratings, reviews, and upcoming releases to deliver personalized reading recommendations.
+Este exemplo mostra como criar um sistema inteligente de recomendação de livros que fornece
+sugestões literárias abrangentes com base em suas preferências. O agente combina bancos de dados de livros,
+avaliações, resenhas e lançamentos futuros para entregar recomendações de leitura personalizadas.
 
-Example prompts to try:
+Exemplos de prompts para tentar:
 - "I loved 'The Seven Husbands of Evelyn Hugo' and 'Daisy Jones & The Six', what should I read next?"
 - "Recommend me some psychological thrillers like 'Gone Girl' and 'The Silent Patient'"
 - "What are the best fantasy books released in the last 2 years?"
 - "I enjoy historical fiction with strong female leads, any suggestions?"
 - "Looking for science books that read like novels, similar to 'The Immortal Life of Henrietta Lacks'"
 
-Run: `pip install openai exa_py agno` to install the dependencies
+Execute: `pip install openai exa_py agno` para instalar as dependências
 """
 
 from textwrap import dedent
@@ -25,81 +25,81 @@ book_recommendation_agent = Agent(
     tools=[ExaTools()],
     model=OpenAIChat(id="gpt-4o"),
     description=dedent("""\
-        You are Shelfie, a passionate and knowledgeable literary curator with expertise in books worldwide! 📚
+        Você é Shelfie, um curador literário apaixonado e conhecedor com expertise em livros de todo o mundo! 📚
 
-        Your mission is to help readers discover their next favorite books by providing detailed,
-        personalized recommendations based on their preferences, reading history, and the latest
-        in literature. You combine deep literary knowledge with current ratings and reviews to suggest
-        books that will truly resonate with each reader."""),
+        Sua missão é ajudar leitores a descobrir seus próximos livros favoritos fornecendo recomendações
+        detalhadas e personalizadas com base em suas preferências, histórico de leitura e o que há de mais recente
+        na literatura. Você combina conhecimento literário profundo com avaliações e resenhas atuais para sugerir
+        livros que realmente ressoarão com cada leitor."""),
     instructions=dedent("""\
-        Approach each recommendation with these steps:
+        Aborde cada recomendação com estes passos:
 
-        1. Analysis Phase 📖
-           - Understand reader preferences from their input
-           - Consider mentioned favorite books' themes and styles
-           - Factor in any specific requirements (genre, length, content warnings)
+        1. Fase de Análise 📖
+           - Entender preferências do leitor a partir de sua entrada
+           - Considerar temas e estilos dos livros favoritos mencionados
+           - Considerar quaisquer requisitos específicos (gênero, extensão, avisos de conteúdo)
 
-        2. Search & Curate 🔍
-           - Use Exa to search for relevant books
-           - Ensure diversity in recommendations
-           - Verify all book data is current and accurate
+        2. Buscar e Curadoria 🔍
+           - Usar Exa para buscar livros relevantes
+           - Garantir diversidade nas recomendações
+           - Verificar se todos os dados dos livros estão atuais e precisos
 
-        3. Detailed Information 📝
-           - Book title and author
-           - Publication year
-           - Genre and subgenres
-           - Goodreads/StoryGraph rating
-           - Page count
-           - Brief, engaging plot summary
-           - Content advisories
-           - Awards and recognition
+        3. Informações Detalhadas 📝
+           - Título e autor do livro
+           - Ano de publicação
+           - Gênero e subgêneros
+           - Avaliação Goodreads/StoryGraph
+           - Número de páginas
+           - Resumo do enredo breve e envolvente
+           - Avisos de conteúdo
+           - Prêmios e reconhecimento
 
-        4. Extra Features ✨
-           - Include series information if applicable
-           - Suggest similar authors
-           - Mention audiobook availability
-           - Note any upcoming adaptations
+        4. Recursos Extras ✨
+           - Incluir informações de série, se aplicável
+           - Sugerir autores similares
+           - Mencionar disponibilidade de audiolivro
+           - Observar quaisquer adaptações futuras
 
-        Presentation Style:
-        - Use clear markdown formatting
-        - Present main recommendations in a structured table
-        - Group similar books together
-        - Add emoji indicators for genres (📚 🔮 💕 🔪)
-        - Minimum 5 recommendations per query
-        - Include a brief explanation for each recommendation
-        - Highlight diversity in authors and perspectives
-        - Note trigger warnings when relevant"""),
+        Estilo de Apresentação:
+        - Usar formatação markdown clara
+        - Apresentar recomendações principais em uma tabela estruturada
+        - Agrupar livros similares
+        - Adicionar indicadores de emoji para gêneros (📚 🔮 💕 🔪)
+        - Mínimo de 5 recomendações por consulta
+        - Incluir uma breve explicação para cada recomendação
+        - Destacar diversidade em autores e perspectivas
+        - Observar avisos de gatilho quando relevante"""),
     markdown=True,
     add_datetime_to_context=True,
 )
 
-# Example usage with different types of book queries
+# Exemplo de uso com diferentes tipos de consultas de livros
 book_recommendation_agent.print_response(
     "I really enjoyed 'Anxious People' and 'Lessons in Chemistry', can you suggest similar books?",
     stream=True,
 )
 
-# More example prompts to explore:
+# Mais exemplos de prompts para explorar:
 """
-Genre-specific queries:
+Consultas específicas de gênero:
 1. "Recommend contemporary literary fiction like 'Beautiful World, Where Are You'"
 2. "What are the best fantasy series completed in the last 5 years?"
 3. "Find me atmospheric gothic novels like 'Mexican Gothic' and 'Ninth House'"
 4. "What are the most acclaimed debut novels from this year?"
 
-Contemporary Issues:
+Questões Contemporâneas:
 1. "Suggest books about climate change that aren't too depressing"
 2. "What are the best books about artificial intelligence for non-technical readers?"
 3. "Recommend memoirs about immigrant experiences"
 4. "Find me books about mental health with hopeful endings"
 
-Book Club Selections:
+Seleções de Clube do Livro:
 1. "What are good book club picks that spark discussion?"
 2. "Suggest literary fiction under 350 pages"
 3. "Find thought-provoking novels that tackle current social issues"
 4. "Recommend books with multiple perspectives/narratives"
 
-Upcoming Releases:
+Lançamentos Futuros:
 1. "What are the most anticipated literary releases next month?"
 2. "Show me upcoming releases from my favorite authors"
 3. "What debut novels are getting buzz this season?"

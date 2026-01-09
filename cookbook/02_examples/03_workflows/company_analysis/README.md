@@ -1,50 +1,50 @@
-# Company Analysis Workflow
+# Workflow de Análise de Empresas
 
-A Company analysis workflow that uses strategic frameworks to evaluate suppliers and generate business intelligence reports.
+Um workflow de análise de empresas que usa estruturas estratégicas para avaliar fornecedores e gerar relatórios de inteligência de negócios.
 
-## Overview
+## Visão Geral
 
-This workflow analyzes companies using 8 specialized agents that perform research across multiple strategic frameworks including PESTLE, Porter's Five Forces, and Kraljic Matrix. It generates comprehensive supplier analysis reports for procurement decision-making.
+Este workflow analisa empresas usando 8 agentes especializados que realizam pesquisas em múltiplas estruturas estratégicas incluindo PESTLE, Cinco Forças de Porter e Matriz Kraljic. Ele gera relatórios abrangentes de análise de fornecedores para tomada de decisão de compras.
 
-## Getting Started
+## Começando
 
-### Prerequisites
-- OpenAI API key
-- Firecrawl API. You can get one from https://www.firecrawl.dev/app/api-keys
+### Pré-requisitos
+- Chave de API OpenAI
+- API Firecrawl. Você pode obter uma em https://www.firecrawl.dev/app/api-keys
 
-### Setup
+### Configuração
 ```bash
 export OPENAI_API_KEY="your-openai-key"
 export FIRECRAWL_API_KEY="your-firecrawl-key"
 ```
 
-Install dependencies
+Instalar dependências
 
 ```
 pip install agno firecrawl-py openai
 ```
 
-Run the workflow
+Executar o workflow
 
 ```
 python cookbook/examples/workflows_2/company_analysis/run_workflow.py
 ```
 
-## Analysis Flow
+## Fluxo de Análise
 
-The workflow analyzes companies through strategic frameworks:
+O workflow analisa empresas através de estruturas estratégicas:
 
 ```
-Company Analysis Workflow
-├── Company Overview Research
-├── Parallel Strategic Analysis
-│   ├── Switching Barriers Analysis
-│   ├── PESTLE Analysis
-│   ├── Porter's Five Forces Analysis
-│   ├── Kraljic Matrix Analysis
-│   ├── Cost Drivers Analysis
-│   └── Alternative Suppliers Research
-└── Report Compilation
+Workflow de Análise de Empresas
+├── Pesquisa de Visão Geral da Empresa
+├── Análise Estratégica Paralela
+│   ├── Análise de Barreiras de Troca
+│   ├── Análise PESTLE
+│   ├── Análise das Cinco Forças de Porter
+│   ├── Análise da Matriz Kraljic
+│   ├── Análise de Direcionadores de Custo
+│   └── Pesquisa de Fornecedores Alternativos
+└── Compilação de Relatório
 ```
 
-The workflow uses 8 specialized agents running in parallel to perform comprehensive strategic analysis across multiple frameworks, then compiles the results into an executive-ready procurement report. 
+O workflow usa 8 agentes especializados executando em paralelo para realizar análise estratégica abrangente em múltiplas estruturas, depois compila os resultados em um relatório de compras pronto para executivos. 

@@ -1,47 +1,47 @@
-# Basic Chainlit App
+# Aplicativo Básico Chainlit
 
-**Basic Chainlit App** is a basic chainlit app that uses Agno. Chainlit provide a UI to expose your Agno Agents.
+**Aplicativo Básico Chainlit** é um aplicativo básico chainlit que usa Agno. Chainlit fornece uma UI para expor seus Agentes Agno.
 
-> Note: Fork and clone this repository if needed
+> Nota: Fazer fork e clonar este repositório se necessário
 
-### 1. Create a virtual environment
+### 1. Criar um ambiente virtual
 
 ```shell
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-### 2. Install dependencies
+### 2. Instalar dependências
 
 ```shell
 pip install -r cookbook/examples/chainlit_apps/basic/requirements.txt
 ```
 
-### 3. Configure API Keys
+### 3. Configurar Chaves de API
 
-Required:
+Necessário:
 
 ```bash
 export OPENAI_API_KEY=your_openai_key_here
 ```
 
-### 4. Run Basic Chainlit App
+### 4. Executar Aplicativo Básico Chainlit
 
 ```shell
 streamlit run cookbook/examples/chainlit_apps/basic/app.py
 ```
 
-### How to Use
+### Como Usar
 
-- Open [localhost:8501](http://localhost:8000) in your browser.
+- Abrir [localhost:8501](http://localhost:8000) no seu navegador.
 
-## 📚 Documentation
+## 📚 Documentação
 
-For more detailed information:
+Para informações mais detalhadas:
 
-- [Agno Documentation](https://docs.agno.com)
-- [Chainlit Documentation](https://docs.chainlit.io)
+- [Documentação Agno](https://docs.agno.com)
+- [Documentação Chainlit](https://docs.chainlit.io)
 
-## 🤝 Support
+## 🤝 Suporte
 
-Need help? Join our [Discord community](https://agno.link/discord)
+Precisa de ajuda? Junte-se à nossa [comunidade Discord](https://agno.link/discord)

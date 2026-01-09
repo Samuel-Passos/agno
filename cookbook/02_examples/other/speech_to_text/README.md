@@ -1,56 +1,56 @@
-# Speech to Text Examples
+# Exemplos de Fala para Texto
 
-Speech to text examples using OpenAI and Gemini. These examples demonstrate how to transcribe audio files using Agno. Based on the use case, either of the cookbooks can be used as a starting point for your own implementation.
+Exemplos de fala para texto usando OpenAI e Gemini. Estes exemplos demonstram como transcrever arquivos de áudio usando Agno. Com base no caso de uso, qualquer um dos cookbooks pode ser usado como ponto de partida para sua própria implementação.
 
-## Authentication
+## Autenticação
 
-Set the `OPENAI_API_KEY` and `GEMINI_API_KEY` environment variables with your OpenAI and Gemini API keys.
+Definir as variáveis de ambiente `OPENAI_API_KEY` e `GEMINI_API_KEY` com suas chaves de API OpenAI e Gemini.
 
-**Quick start:**
-Go to https://platform.openai.com/ and https://console.cloud.google.com/ to get your API keys.
+**Início rápido:**
+Ir para https://platform.openai.com/ e https://console.cloud.google.com/ para obter suas chaves de API.
 
-## Features
+## Recursos
 
-- **Structured Transcription** - Get structured output from the audio file
-- **Simple Transcription** - Get simple transcription from the audio file
-- **Workflow** - Use an Agno Workflow to transcribe the audio file
+- **Transcrição Estruturada** - Obter saída estruturada do arquivo de áudio
+- **Transcrição Simples** - Obter transcrição simples do arquivo de áudio
+- **Workflow** - Usar um Workflow Agno para transcrever o arquivo de áudio
 
-The Agents and the Workflow can be used with AgentOS to create a full-fledged speech to text application.
+Os Agentes e o Workflow podem ser usados com AgentOS para criar uma aplicação completa de fala para texto.
 
-## Getting Started
+## Começando
 
-### 1. Clone the repository
+### 1. Clonar o repositório
 
 ```shell
 git clone https://github.com/agno-ai/agno.git
 cd agno/cookbook/02_examples/other/speech_to_text
 ```
 
-### 2. Create and activate a virtual environment
+### 2. Criar e ativar um ambiente virtual
 
 ```shell
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-### 3. Set environment variables
+### 3. Definir variáveis de ambiente
 
-Follow the instructions to get your OpenAI and Gemini API keys. Make sure to copy the API keys and set them in the `OPENAI_API_KEY` and `GEMINI_API_KEY` environment variables.
+Seguir as instruções para obter suas chaves de API OpenAI e Gemini. Certificar-se de copiar as chaves de API e defini-las nas variáveis de ambiente `OPENAI_API_KEY` e `GEMINI_API_KEY`.
 
 ```shell
 export OPENAI_API_KEY=xxx
 export GEMINI_API_KEY=xxx
 ```
 
-### 4. Run Postgres with PgVector
+### 4. Executar Postgres com PgVector
 
-Postgres stores agent sessions, memory, knowledge, and state. Install [Docker Desktop](https://docs.docker.com/desktop/install/mac-install/) and run:
+Postgres armazena sessões de agentes, memória, conhecimento e estado. Instalar [Docker Desktop](https://docs.docker.com/desktop/install/mac-install/) e executar:
 
 ```bash
 ./cookbook/scripts/run_pgvector.sh
 ```
 
-Or run directly:
+Ou executar diretamente:
 
 ```bash
 docker run -d \
@@ -64,7 +64,7 @@ docker run -d \
   agnohq/pgvector:16
 ```
 
-### 5. Run the examples
+### 5. Executar os exemplos
 
 ```shell
 python stt_openai_agent_simple.py

@@ -53,9 +53,9 @@ def on_model_change():
                     restart_agent(model_id=new_model_id)
 
                 except Exception as e:
-                    st.sidebar.error(f"Error switching to {selected_model}: {str(e)}")
+                    st.sidebar.error(f"Erro ao mudar para {selected_model}: {str(e)}")
         else:
-            st.sidebar.error(f"Unknown model: {selected_model}")
+            st.sidebar.error(f"Modelo desconhecido: {selected_model}")
 
 
 def main():
@@ -64,43 +64,43 @@ def main():
     ####################################################################
     st.markdown("<h1 class='main-title'>🖼️ Vision AI</h1>", unsafe_allow_html=True)
     st.markdown(
-        "<p class='subtitle'>Smart image analysis and understanding</p>",
+        "<p class='subtitle'>Análise e compreensão inteligente de imagens</p>",
         unsafe_allow_html=True,
     )
 
     ####################################################################
-    # Model selector
+    # Seletor de modelo
     ####################################################################
     selected_model = st.sidebar.selectbox(
-        "Select Model",
+        "Selecionar Modelo",
         options=MODELS,
         index=0,
         key="model_selector",
         on_change=on_model_change,
-        help="Choose the AI model for image analysis",
+        help="Escolher o modelo de IA para análise de imagem",
     )
 
     ####################################################################
-    # Vision AI Settings
+    # Configurações Vision AI
     ####################################################################
-    st.sidebar.markdown("#### 🔍 Analysis Settings")
+    st.sidebar.markdown("#### 🔍 Configurações de Análise")
 
     analysis_mode = st.sidebar.radio(
-        "Analysis Mode",
+        "Modo de Análise",
         ["Auto", "Manual", "Hybrid"],
         index=0,
         help="""
-        - **Auto**: Automatic comprehensive image analysis
-        - **Manual**: Analysis based on your specific instructions  
-        - **Hybrid**: Automatic analysis + your custom instructions
+        - **Auto**: Análise abrangente automática de imagem
+        - **Manual**: Análise baseada em suas instruções específicas  
+        - **Hybrid**: Análise automática + suas instruções personalizadas
         """,
     )
 
     enable_search = st.sidebar.checkbox(
-        "Enable Web Search",
+        "Habilitar Busca Web",
         value=False,
         key="enable_search",
-        help="Allow the agent to search for additional context",
+        help="Permitir que o agente busque por contexto adicional",
     )
 
     ####################################################################
@@ -115,16 +115,16 @@ def main():
     vision_agent = initialize_agent(selected_model, get_vision_agent_with_settings)
     reset_session_state(vision_agent)
 
-    if prompt := st.chat_input("👋 Ask me anything!"):
+    if prompt := st.chat_input("👋 Pergunte-me qualquer coisa!"):
         add_message("user", prompt)
 
     ####################################################################
-    # File upload
+    # Upload de arquivo
     ####################################################################
-    st.sidebar.markdown("#### 🖼️ Image Analysis")
+    st.sidebar.markdown("#### 🖼️ Análise de Imagem")
 
     uploaded_file = st.sidebar.file_uploader(
-        "Upload an Image", type=["png", "jpg", "jpeg"]
+        "Enviar uma Imagem", type=["png", "jpg", "jpeg"]
     )
 
     if uploaded_file:
@@ -142,50 +142,50 @@ def main():
         }
 
         st.sidebar.image(uploaded_file, caption=uploaded_file.name, width=200)
-        st.sidebar.success(f"Image '{uploaded_file.name}' uploaded")
+        st.sidebar.success(f"Imagem '{uploaded_file.name}' enviada")
 
-    # Analysis
+    # Análise
     if st.session_state.get("current_image") and not prompt:
         if st.sidebar.button(
-            "🔍 Analyze Image", type="primary", use_container_width=True
+            "🔍 Analisar Imagem", type="primary", use_container_width=True
         ):
             image_info = st.session_state["current_image"]
 
             if analysis_mode == "Manual":
                 custom_instructions = st.sidebar.text_area(
-                    "Analysis Instructions", key="manual_instructions"
+                    "Instruções de Análise", key="manual_instructions"
                 )
                 if custom_instructions:
                     add_message(
                         "user",
-                        f"Analyze this image with instructions: {custom_instructions}",
+                        f"Analisar esta imagem com instruções: {custom_instructions}",
                     )
                 else:
-                    add_message("user", f"Analyze this image: {image_info['name']}")
+                    add_message("user", f"Analisar esta imagem: {image_info['name']}")
             elif analysis_mode == "Hybrid":
                 custom_instructions = st.sidebar.text_area(
-                    "Additional Instructions", key="hybrid_instructions"
+                    "Instruções Adicionais", key="hybrid_instructions"
                 )
                 if custom_instructions:
                     add_message(
                         "user",
-                        f"Analyze this image with additional focus: {custom_instructions}",
+                        f"Analisar esta imagem com foco adicional: {custom_instructions}",
                     )
                 else:
-                    add_message("user", f"Analyze this image: {image_info['name']}")
+                    add_message("user", f"Analisar esta imagem: {image_info['name']}")
             else:
-                add_message("user", f"Analyze this image: {image_info['name']}")
+                add_message("user", f"Analisar esta imagem: {image_info['name']}")
 
     ###############################################################
-    # Sample Questions
+    # Perguntas de Exemplo
     ###############################################################
-    st.sidebar.markdown("#### ❓ Sample Questions")
-    if st.sidebar.button("🔍 What are the main objects?"):
-        add_message("user", "What are the main objects?")
-    if st.sidebar.button("📝 Is there any text to read?"):
-        add_message("user", "Is there any text to read?")
-    if st.sidebar.button("🎨 Describe the colors and mood"):
-        add_message("user", "Describe the colors and mood")
+    st.sidebar.markdown("#### ❓ Perguntas de Exemplo")
+    if st.sidebar.button("🔍 Quais são os principais objetos?"):
+        add_message("user", "Quais são os principais objetos?")
+    if st.sidebar.button("📝 Há algum texto para ler?"):
+        add_message("user", "Há algum texto para ler?")
+    if st.sidebar.button("🎨 Descrever as cores e o humor"):
+        add_message("user", "Descrever as cores e o humor")
 
     ####################################################################
     # Display Chat Messages
@@ -215,7 +215,7 @@ def main():
                         response_container.markdown(response.content)
                         add_message("assistant", response.content)
                     except Exception as e:
-                        error_message = f"❌ Error: {str(e)}"
+                        error_message = f"❌ Erro: {str(e)}"
                         response_container.error(error_message)
                         add_message("assistant", error_message)
         else:
@@ -223,12 +223,12 @@ def main():
             display_response(vision_agent, question)
 
     ####################################################################
-    # Utility buttons
+    # Botões de utilidade
     ####################################################################
-    st.sidebar.markdown("#### 🛠️ Utilities")
+    st.sidebar.markdown("#### 🛠️ Utilitários")
     col1, col2 = st.sidebar.columns([1, 1])
     with col1:
-        if st.sidebar.button("🔄 New Chat", use_container_width=True):
+        if st.sidebar.button("🔄 Novo Chat", use_container_width=True):
             restart_agent()
             st.rerun()
 
@@ -255,20 +255,20 @@ def main():
                 filename = "vision_ai_chat_new.md"
 
             if st.sidebar.download_button(
-                "💾 Export Chat",
+                "💾 Exportar Chat",
                 export_chat_history("Vision AI"),
                 file_name=filename,
                 mime="text/markdown",
                 use_container_width=True,
-                help=f"Export {len(st.session_state['messages'])} messages",
+                help=f"Exportar {len(st.session_state['messages'])} mensagens",
             ):
-                st.sidebar.success("Chat history exported!")
+                st.sidebar.success("Histórico de chat exportado!")
         else:
             st.sidebar.button(
-                "💾 Export Chat",
+                "💾 Exportar Chat",
                 disabled=True,
                 use_container_width=True,
-                help="No messages to export",
+                help="Nenhuma mensagem para exportar",
             )
 
     ####################################################################
@@ -286,14 +286,14 @@ def main():
         if is_new_session and has_messages:
             st.session_state["is_new_session"] = False
     else:
-        st.sidebar.info("🆕 New Chat - Start your conversation!")
+        st.sidebar.info("🆕 Novo Chat - Inicie sua conversa!")
 
     ####################################################################
-    # About section
+    # Seção sobre
     ####################################################################
     about_section(
-        "This Vision AI assistant analyzes images and answers questions about visual content using "
-        "advanced vision-language models."
+        "Este assistente Vision AI analisa imagens e responde perguntas sobre conteúdo visual usando "
+        "modelos avançados de visão-linguagem."
     )
 
 

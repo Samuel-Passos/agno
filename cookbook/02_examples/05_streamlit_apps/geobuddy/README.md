@@ -1,6 +1,6 @@
 # GeoBuddy 🌍
 
-An AI-powered geography detective that analyzes images to predict locations based on visual cues. This example demonstrates how to build sophisticated computer vision applications that combine geographical knowledge with advanced image analysis.
+Um detetive geográfico alimentado por IA que analisa imagens para prever localizações com base em pistas visuais. Este exemplo demonstra como construir aplicações sofisticadas de visão computacional que combinam conhecimento geográfico com análise avançada de imagens.
 
 ## Features
 

@@ -29,7 +29,7 @@ st.markdown(COMMON_CSS, unsafe_allow_html=True)
 
 
 def restart_geobuddy(model_id: str = None):
-    """Restart GeoBuddy with new settings."""
+    """Reiniciar GeoBuddy com novas configurações."""
     target_model = model_id or st.session_state.get("current_model", MODELS[0])
 
     new_agent = get_geobuddy_agent(
@@ -45,7 +45,7 @@ def restart_geobuddy(model_id: str = None):
 
 
 def on_model_change():
-    """Handle model changes."""
+    """Lidar com mudanças de modelo."""
     selected_model = st.session_state.get("model_selector")
     if selected_model:
         if selected_model in MODELS:
@@ -55,7 +55,7 @@ def on_model_change():
                     st.session_state["is_loading_session"] = False
                     restart_geobuddy(model_id=selected_model)
                 except Exception as e:
-                    st.sidebar.error(f"Error switching to {selected_model}: {str(e)}")
+                    st.sidebar.error(f"Erro ao mudar para {selected_model}: {str(e)}")
 
 
 def main():
@@ -64,16 +64,16 @@ def main():
     ####################################################################
     st.markdown("<h1 class='main-title'>GeoBuddy</h1>", unsafe_allow_html=True)
     st.markdown(
-        "<p class='subtitle'>Your AI-powered geography detective for location identification</p>",
+        "<p class='subtitle'>Seu detetive geográfico alimentado por IA para identificação de localização</p>",
         unsafe_allow_html=True,
     )
 
     ####################################################################
-    # Model selector
+    # Seletor de modelo
     ####################################################################
-    st.sidebar.header("🔧 Configuration")
+    st.sidebar.header("🔧 Configuração")
     selected_model = st.sidebar.selectbox(
-        "Select Model",
+        "Selecionar Modelo",
         options=MODELS,
         index=0,
         key="model_selector",
@@ -81,26 +81,26 @@ def main():
     )
 
     ####################################################################
-    # Sidebar - Authentication
+    # Barra lateral - Autenticação
     ####################################################################
     st.sidebar.markdown("---")
-    st.sidebar.header("🔑 Authentication")
+    st.sidebar.header("🔑 Autenticação")
 
     if "api_keys" not in st.session_state:
         st.session_state["api_keys"] = {}
 
     if "gpt" in selected_model.lower() or "openai" in selected_model.lower():
-        api_key_label = "OpenAI API Key"
+        api_key_label = "Chave de API OpenAI"
         api_key_env = "OPENAI_API_KEY"
-        api_key_help = "Set your OpenAI API key"
+        api_key_help = "Definir sua chave de API OpenAI"
     elif "gemini" in selected_model.lower() or "google" in selected_model.lower():
-        api_key_label = "Google API Key"
+        api_key_label = "Chave de API Google"
         api_key_env = "GOOGLE_API_KEY"
-        api_key_help = "Set your Google API key"
+        api_key_help = "Definir sua chave de API Google"
     else:
-        api_key_label = "OpenAI API Key"  # Default to OpenAI
+        api_key_label = "Chave de API OpenAI"  # Padrão para OpenAI
         api_key_env = "OPENAI_API_KEY"
-        api_key_help = "Set your OpenAI API key"
+        api_key_help = "Definir sua chave de API OpenAI"
 
     current_api_key = st.session_state["api_keys"].get(api_key_env, "")
 
@@ -114,9 +114,9 @@ def main():
     if api_key:
         st.session_state["api_keys"][api_key_env] = api_key
         os.environ[api_key_env] = api_key
-        st.sidebar.success(f"✅ {api_key_label} configured")
+        st.sidebar.success(f"✅ {api_key_label} configurada")
     else:
-        st.sidebar.warning(f"⚠️ {api_key_label} required")
+        st.sidebar.warning(f"⚠️ {api_key_label} necessária")
 
     ####################################################################
     # Initialize GeoBuddy Agent and Session
@@ -131,52 +131,52 @@ def main():
     reset_session_state(geobuddy_agent)
 
     if prompt := st.chat_input(
-        "🗺️ Ask me anything about geography or location analysis!"
+        "🗺️ Pergunte-me qualquer coisa sobre geografia ou análise de localização!"
     ):
         add_message("user", prompt)
 
     ####################################################################
-    # Image Upload Section
+    # Seção de Upload de Imagem
     ####################################################################
-    st.markdown("### 📷 Image Analysis")
+    st.markdown("### 📷 Análise de Imagem")
 
-    # Create a clean upload area
+    # Criar uma área de upload limpa
     with st.container():
         uploaded_file = st.file_uploader(
-            "Choose an image to analyze",
+            "Escolher uma imagem para analisar",
             type=["jpg", "jpeg", "png", "webp"],
-            help="Upload a clear image with visible landmarks, architecture, or geographical features",
+            help="Enviar uma imagem clara com marcos visíveis, arquitetura ou características geográficas",
         )
 
     if uploaded_file is not None:
         col1, col2 = st.columns([3, 2], gap="large")
 
         with col1:
-            st.markdown("#### 🖼️ Uploaded Image")
+            st.markdown("#### 🖼️ Imagem Enviada")
             st.image(
-                uploaded_file, caption="Image for Analysis", use_container_width=True
+                uploaded_file, caption="Imagem para Análise", use_container_width=True
             )
 
         with col2:
-            st.markdown("#### 🔍 Controls")
+            st.markdown("#### 🔍 Controles")
 
             st.markdown("")
             analyze_button = st.button(
-                "🌍 Analyze Location",
+                "🌍 Analisar Localização",
                 type="primary",
                 use_container_width=True,
-                help="Click to analyze the geographical location of this image",
+                help="Clicar para analisar a localização geográfica desta imagem",
             )
 
             if analyze_button:
                 if not api_key:
                     st.error(
-                        f"❌ Please provide your {api_key_label} in the sidebar first!"
+                        f"❌ Por favor, forneça sua {api_key_label} na barra lateral primeiro!"
                     )
                 else:
-                    with st.spinner("🔍 Analyzing image for geographical clues..."):
+                    with st.spinner("🔍 Analisando imagem para pistas geográficas..."):
                         try:
-                            # Save uploaded file temporarily
+                            # Salvar arquivo enviado temporariamente
                             with tempfile.NamedTemporaryFile(
                                 delete=False,
                                 suffix=f".{uploaded_file.name.split('.')[-1]}",
@@ -184,70 +184,70 @@ def main():
                                 tmp_file.write(uploaded_file.getvalue())
                                 tmp_path = Path(tmp_file.name)
 
-                            # Analyze the image
+                            # Analisar a imagem
                             result = analyze_image_location(geobuddy_agent, tmp_path)
 
-                            # Clean up temporary file
+                            # Limpar arquivo temporário
                             tmp_path.unlink()
 
                             if result:
                                 add_message(
                                     "user",
-                                    "Please analyze this uploaded image for geographical location identification.",
+                                    "Por favor, analise esta imagem enviada para identificação de localização geográfica.",
                                 )
                                 add_message("assistant", result)
                                 st.success(
-                                    "✅ Analysis complete! Check the results below."
+                                    "✅ Análise completa! Verifique os resultados abaixo."
                                 )
                                 st.rerun()
                             else:
                                 st.warning(
-                                    "⚠️ Could not analyze the image. Please try a different image."
+                                    "⚠️ Não foi possível analisar a imagem. Por favor, tente uma imagem diferente."
                                 )
 
                         except Exception as e:
-                            st.error(f"❌ Error during analysis: {str(e)}")
-                            # Clean up on error
+                            st.error(f"❌ Erro durante análise: {str(e)}")
+                            # Limpar em caso de erro
                             if "tmp_path" in locals() and tmp_path.exists():
                                 tmp_path.unlink()
 
     ####################################################################
-    # Sample Analysis Options
+    # Opções de Análise de Exemplo
     ####################################################################
-    st.sidebar.markdown("#### 🌍 Sample Locations")
+    st.sidebar.markdown("#### 🌍 Localizações de Exemplo")
 
-    if st.sidebar.button("🗽 Famous Landmarks"):
+    if st.sidebar.button("🗽 Marcos Famosos"):
         add_message(
             "user",
-            "I'd like to test GeoBuddy with famous landmarks. Can you provide tips for analyzing landmark photos?",
+            "Gostaria de testar GeoBuddy com marcos famosos. Você pode fornecer dicas para analisar fotos de marcos?",
         )
 
-    if st.sidebar.button("🏛️ Architectural Styles"):
+    if st.sidebar.button("🏛️ Estilos Arquitetônicos"):
         add_message(
             "user",
-            "How can GeoBuddy identify locations based on architectural styles? What should I look for in buildings?",
+            "Como GeoBuddy pode identificar localizações com base em estilos arquitetônicos? O que devo procurar em edifícios?",
         )
 
-    if st.sidebar.button("🏔️ Natural Features"):
+    if st.sidebar.button("🏔️ Características Naturais"):
         add_message(
             "user",
-            "What natural geographical features help GeoBuddy identify locations? How do you analyze landscapes?",
+            "Quais características geográficas naturais ajudam GeoBuddy a identificar localizações? Como você analisa paisagens?",
         )
 
-    if st.sidebar.button("🌆 Urban Analysis"):
+    if st.sidebar.button("🌆 Análise Urbana"):
         add_message(
             "user",
-            "How does GeoBuddy analyze urban environments and city characteristics for location identification?",
+            "Como GeoBuddy analisa ambientes urbanos e características de cidades para identificação de localização?",
         )
 
     ####################################################################
-    # Utility buttons
+    # Botões de utilidade
     ####################################################################
-    st.sidebar.markdown("#### 🛠️ Utilities")
+    st.sidebar.markdown("#### 🛠️ Utilitários")
     col1, col2 = st.sidebar.columns([1, 1])
 
     with col1:
-        if st.sidebar.button("🔄 New Analysis Session", use_container_width=True):
+        if st.sidebar.button("🔄 Nova Sessão de Análise", use_container_width=True):
             restart_geobuddy()
             st.rerun()
 
@@ -271,20 +271,20 @@ def main():
                 filename = "geobuddy_analysis_new.md"
 
             if st.sidebar.download_button(
-                "💾 Export Analysis",
+                "💾 Exportar Análise",
                 export_chat_history("GeoBuddy"),
                 file_name=filename,
                 mime="text/markdown",
                 use_container_width=True,
-                help=f"Export {len(st.session_state['messages'])} analysis results",
+                help=f"Exportar {len(st.session_state['messages'])} resultados de análise",
             ):
-                st.sidebar.success("Analysis exported!")
+                st.sidebar.success("Análise exportada!")
         else:
             st.sidebar.button(
-                "💾 Export Analysis",
+                "💾 Exportar Análise",
                 disabled=True,
                 use_container_width=True,
-                help="No analysis to export",
+                help="Nenhuma análise para exportar",
             )
 
     ####################################################################
@@ -318,7 +318,7 @@ def main():
     # About section
     ####################################################################
     about_section(
-        "This GeoBuddy agent analyzes images to predict geographical locations using advanced visual analysis of landmarks, architecture, and cultural clues."
+        "Este agente GeoBuddy analisa imagens para prever localizações geográficas usando análise visual avançada de marcos, arquitetura e pistas culturais."
     )
 
 

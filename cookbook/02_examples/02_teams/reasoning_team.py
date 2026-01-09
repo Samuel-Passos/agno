@@ -8,18 +8,18 @@ from agno.tools.yfinance import YFinanceTools
 
 web_agent = Agent(
     name="Web Search Agent",
-    role="Handle web search requests",
+    role="Lidar com solicitações de busca na web",
     model=OpenAIChat(id="gpt-4o"),
     tools=[DuckDuckGoTools()],
-    instructions=["Always include sources"],
+    instructions=["Sempre incluir fontes"],
 )
 
 finance_agent = Agent(
     name="Finance Agent",
-    role="Handle financial data requests",
+    role="Lidar com solicitações de dados financeiros",
     model=OpenAIChat(id="gpt-4o"),
     tools=[YFinanceTools()],
-    instructions=["Use tables to display data"],
+    instructions=["Usar tabelas para exibir dados"],
 )
 
 team_leader = Team(

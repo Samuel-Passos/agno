@@ -13,19 +13,19 @@ searcher_agent = Agent(
     model=Nebius(id="deepseek-ai/DeepSeek-V3-0324"),
     markdown=True,
     description=(
-        "You are ResearchBot-X, an expert at finding and extracting high-quality, "
-        "up-to-date information from the web. Your job is to gather comprehensive, "
-        "reliable, and diverse sources on the given topic."
+        "Você é ResearchBot-X, um especialista em encontrar e extrair informações de alta qualidade e "
+        "atualizadas da web. Seu trabalho é coletar fontes abrangentes, "
+        "confiáveis e diversas sobre o tópico fornecido."
     ),
     instructions=(
-        "1. Search for the most recent and authoritative sources on the topic\n"
-        "2. Extract key facts, statistics, and expert opinions from multiple sources\n"
-        "3. Cover different perspectives and highlight any disagreements or controversies\n"
-        "4. Include relevant data points and expert insights where possible\n"
-        "5. Organize findings in a clear, structured format\n"
-        "6. Always mention the references and sources of the content\n"
-        "7. Be comprehensive and detailed in your research\n"
-        "8. Focus on credible sources like news sites, official docs, research papers"
+        "1. Buscar as fontes mais recentes e autoritárias sobre o tópico\n"
+        "2. Extrair fatos-chave, estatísticas e opiniões de especialistas de múltiplas fontes\n"
+        "3. Cobrir diferentes perspectivas e destacar quaisquer desacordos ou controvérsias\n"
+        "4. Incluir pontos de dados relevantes e insights de especialistas quando possível\n"
+        "5. Organizar descobertas em um formato claro e estruturado\n"
+        "6. Sempre mencionar as referências e fontes do conteúdo\n"
+        "7. Ser abrangente e detalhado em sua pesquisa\n"
+        "8. Focar em fontes credíveis como sites de notícias, documentos oficiais, artigos de pesquisa"
     ),
 )
 
@@ -34,20 +34,20 @@ analyst_agent = Agent(
     model=Nebius(id="deepseek-ai/DeepSeek-V3-0324"),
     markdown=True,
     description=(
-        "You are AnalystBot-X, a critical thinker who synthesizes research findings "
-        "into actionable insights. Your job is to analyze, compare, and interpret the "
-        "information provided by the researcher."
+        "Você é AnalystBot-X, um pensador crítico que sintetiza descobertas de pesquisa "
+        "em insights acionáveis. Seu trabalho é analisar, comparar e interpretar as "
+        "informações fornecidas pelo pesquisador."
     ),
     instructions=(
-        "1. Identify key themes, trends, and patterns in the research\n"
-        "2. Highlight the most important findings and their implications\n"
-        "3. Note any contradictions or areas of uncertainty\n"
-        "4. Suggest areas for further investigation if gaps exist\n"
-        "5. Present analysis in a structured, easy-to-read format\n"
-        "6. Extract and list ONLY the reference links that were actually provided\n"
-        "7. Do NOT create, invent, or hallucinate any links or sources\n"
-        "8. If no references were provided, clearly state that\n"
-        "9. Focus on actionable insights and practical implications"
+        "1. Identificar temas-chave, tendências e padrões na pesquisa\n"
+        "2. Destacar as descobertas mais importantes e suas implicações\n"
+        "3. Notar quaisquer contradições ou áreas de incerteza\n"
+        "4. Sugerir áreas para investigação adicional se houver lacunas\n"
+        "5. Apresentar análise em um formato estruturado e fácil de ler\n"
+        "6. Extrair e listar APENAS os links de referência que foram realmente fornecidos\n"
+        "7. NÃO criar, inventar ou alucinar quaisquer links ou fontes\n"
+        "8. Se nenhuma referência foi fornecida, declarar isso claramente\n"
+        "9. Focar em insights acionáveis e implicações práticas"
     ),
 )
 
@@ -56,19 +56,19 @@ writer_agent = Agent(
     model=Nebius(id="deepseek-ai/DeepSeek-V3-0324"),
     markdown=True,
     description=(
-        "You are WriterBot-X, a professional technical writer. Your job is to craft "
-        "a clear, engaging, and well-structured report based on the analyst's summary."
+        "Você é WriterBot-X, um escritor técnico profissional. Seu trabalho é criar "
+        "um relatório claro, envolvente e bem estruturado com base no resumo do analista."
     ),
     instructions=(
-        "1. Write an engaging introduction that sets the context\n"
-        "2. Organize main findings into logical sections with clear headings\n"
-        "3. Use bullet points, tables, or lists for clarity where appropriate\n"
-        "4. Conclude with a summary and actionable recommendations\n"
-        "5. Include a References section ONLY if actual links were provided\n"
-        "6. Use ONLY the reference links that were explicitly provided by the analyst\n"
-        "7. Format references as clickable markdown links when available\n"
-        "8. Never add fake or made-up links - only use verified sources\n"
-        "9. Ensure the report is professional, clear, and actionable"
+        "1. Escrever uma introdução envolvente que estabeleça o contexto\n"
+        "2. Organizar descobertas principais em seções lógicas com cabeçalhos claros\n"
+        "3. Usar marcadores, tabelas ou listas para clareza quando apropriado\n"
+        "4. Concluir com um resumo e recomendações acionáveis\n"
+        "5. Incluir uma seção de Referências APENAS se links reais foram fornecidos\n"
+        "6. Usar APENAS os links de referência que foram explicitamente fornecidos pelo analista\n"
+        "7. Formatar referências como links markdown clicáveis quando disponíveis\n"
+        "8. Nunca adicionar links falsos ou inventados - apenas usar fontes verificadas\n"
+        "9. Garantir que o relatório seja profissional, claro e acionável"
     ),
 )
 
@@ -87,32 +87,32 @@ def deep_research_execution(
     """
 
     if not topic:
-        return "❌ No research topic provided. Please specify a topic."
+        return "❌ Nenhum tópico de pesquisa fornecido. Por favor, especifique um tópico."
 
-    logger.info(f"Running deep researcher workflow for topic: {topic}")
+    logger.info(f"Executando workflow de pesquisa profunda para tópico: {topic}")
 
-    # Step 1: Research
-    logger.info("Starting research phase")
+    # Passo 1: Pesquisa
+    logger.info("Iniciando fase de pesquisa")
     research_content = searcher_agent.run(topic)
 
     if not research_content or not research_content.content:
-        return f"❌ Failed to gather research information for topic: {topic}"
+        return f"❌ Falha ao coletar informações de pesquisa para tópico: {topic}"
 
-    # Step 2: Analysis
-    logger.info("Starting analysis phase")
+    # Passo 2: Análise
+    logger.info("Iniciando fase de análise")
     analysis = analyst_agent.run(research_content.content)
 
     if not analysis or not analysis.content:
-        return f"❌ Failed to analyze research findings for topic: {topic}"
+        return f"❌ Falha ao analisar descobertas de pesquisa para tópico: {topic}"
 
-    # Step 3: Report Writing
-    logger.info("Starting report writing phase")
+    # Passo 3: Escrita do Relatório
+    logger.info("Iniciando fase de escrita do relatório")
     report = writer_agent.run(analysis.content)
 
     if not report or not report.content:
-        return f"❌ Failed to generate final report for topic: {topic}"
+        return f"❌ Falha ao gerar relatório final para tópico: {topic}"
 
-    logger.info("Deep research workflow completed successfully")
+    logger.info("Workflow de pesquisa profunda concluído com sucesso")
     return report.content
 
 
@@ -122,11 +122,11 @@ def get_deep_researcher_workflow(
     user_id: Optional[str] = None,
     session_id: Optional[str] = None,
 ) -> Workflow:
-    """Get a Deep Researcher Workflow with multi-agent pipeline"""
+    """Obter um Workflow de Pesquisa Profunda com pipeline multi-agente"""
 
     return Workflow(
         name="Deep Researcher",
-        description="AI-powered research assistant with multi-agent workflow for comprehensive research, analysis, and report generation",
+        description="Assistente de pesquisa alimentado por IA com workflow multi-agente para pesquisa abrangente, análise e geração de relatórios",
         steps=deep_research_execution,
         session_state={},
     )

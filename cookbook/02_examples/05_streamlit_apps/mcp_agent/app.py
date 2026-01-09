@@ -38,7 +38,7 @@ MCP_SERVERS = {
 
 
 async def initialize_mcp_client(server_config: MCPServerConfig):
-    """Initialize MCP client and connect to server."""
+    """Inicializar cliente MCP e conectar ao servidor."""
     try:
         if (
             "mcp_client" not in st.session_state
@@ -55,12 +55,12 @@ async def initialize_mcp_client(server_config: MCPServerConfig):
 
         return mcp_tools
     except Exception as e:
-        st.error(f"Failed to connect to MCP server {server_config.id}: {str(e)}")
+        st.error(f"Falha ao conectar ao servidor MCP {server_config.id}: {str(e)}")
         return None
 
 
 def restart_agent(model_id: str = None, mcp_server: str = None):
-    """Restart agent with new configuration."""
+    """Reiniciar agente com nova configuração."""
     target_model = model_id or st.session_state.get("current_model", MODELS[0])
     target_server = mcp_server or st.session_state.get("current_mcp_server", "GitHub")
 
@@ -75,7 +75,7 @@ def restart_agent(model_id: str = None, mcp_server: str = None):
 
 
 def on_model_change():
-    """Handle model selection change."""
+    """Lidar com mudança de seleção de modelo."""
     selected_model = st.session_state.get("model_selector")
     if selected_model:
         if selected_model in MODELS:
@@ -84,13 +84,13 @@ def on_model_change():
                 try:
                     restart_agent(model_id=selected_model)
                 except Exception as e:
-                    st.sidebar.error(f"Error switching to {selected_model}: {str(e)}")
+                    st.sidebar.error(f"Erro ao mudar para {selected_model}: {str(e)}")
         else:
-            st.sidebar.error(f"Unknown model: {selected_model}")
+            st.sidebar.error(f"Modelo desconhecido: {selected_model}")
 
 
 def on_mcp_server_change():
-    """Handle MCP server selection change."""
+    """Lidar com mudança de seleção de servidor MCP."""
     selected_server = st.session_state.get("mcp_server_selector")
     if selected_server:
         current_server = st.session_state.get("current_mcp_server", "GitHub")
@@ -98,7 +98,7 @@ def on_mcp_server_change():
             try:
                 restart_agent(mcp_server=selected_server)
             except Exception as e:
-                st.sidebar.error(f"Error switching to {selected_server}: {str(e)}")
+                st.sidebar.error(f"Erro ao mudar para {selected_server}: {str(e)}")
 
 
 async def main():
@@ -106,18 +106,18 @@ async def main():
     # App header
     ####################################################################
     st.markdown(
-        "<h1 class='main-title'>Universal MCP Agent</h1>", unsafe_allow_html=True
+        "<h1 class='main-title'>Agente MCP Universal</h1>", unsafe_allow_html=True
     )
     st.markdown(
-        "<p class='subtitle'>Your intelligent interface to MCP servers powered by Agno</p>",
+        "<p class='subtitle'>Sua interface inteligente para servidores MCP alimentada por Agno</p>",
         unsafe_allow_html=True,
     )
 
     ####################################################################
-    # Model selector
+    # Seletor de modelo
     ####################################################################
     selected_model = st.sidebar.selectbox(
-        "Select Model",
+        "Selecionar Modelo",
         options=MODELS,
         index=0,
         key="model_selector",
@@ -125,10 +125,10 @@ async def main():
     )
 
     ####################################################################
-    # MCP Server selector
+    # Seletor de servidor MCP
     ####################################################################
     selected_mcp_server = st.sidebar.selectbox(
-        "Select MCP Server",
+        "Selecionar Servidor MCP",
         options=list(MCP_SERVERS.keys()),
         index=0,
         key="mcp_server_selector",
@@ -144,7 +144,7 @@ async def main():
     ####################################################################
     mcp_tools = await initialize_mcp_client(server_config)
     if not mcp_tools:
-        st.error("Failed to initialize MCP server. Please check the configuration.")
+        st.error("Falha ao inicializar servidor MCP. Por favor, verifique a configuração.")
         return
 
     ####################################################################
@@ -166,50 +166,50 @@ async def main():
 
     reset_session_state(mcp_agent)
 
-    if prompt := st.chat_input("✨ How can I help you with MCP?"):
+    if prompt := st.chat_input("✨ Como posso ajudá-lo com MCP?"):
         add_message("user", prompt)
 
     ####################################################################
-    # MCP Server Information
+    # Informações do Servidor MCP
     ####################################################################
-    st.sidebar.markdown("#### 🔗 MCP Server Info")
-    st.sidebar.info(f"**Connected to:** {server_config.id}")
-    st.sidebar.info(f"**Command:** {server_config.command}")
+    st.sidebar.markdown("#### 🔗 Informações do Servidor MCP")
+    st.sidebar.info(f"**Conectado a:** {server_config.id}")
+    st.sidebar.info(f"**Comando:** {server_config.command}")
     if server_config.args:
-        st.sidebar.info(f"**Args:** {' '.join(server_config.args)}")
+        st.sidebar.info(f"**Argumentos:** {' '.join(server_config.args)}")
 
     ####################################################################
-    # Sample Questions
+    # Perguntas de Exemplo
     ####################################################################
-    st.sidebar.markdown("#### ❓ Sample Questions")
+    st.sidebar.markdown("#### ❓ Perguntas de Exemplo")
 
     if current_server == "GitHub":
-        if st.sidebar.button("🔍 Search repositories"):
-            add_message("user", "Search for repositories related to machine learning")
-        if st.sidebar.button("📊 Repository info"):
-            add_message("user", "Tell me about a popular Python repository")
-        if st.sidebar.button("🗂️ List issues"):
-            add_message("user", "Show me recent issues in a repository")
+        if st.sidebar.button("🔍 Buscar repositórios"):
+            add_message("user", "Buscar repositórios relacionados a machine learning")
+        if st.sidebar.button("📊 Informações do repositório"):
+            add_message("user", "Conte-me sobre um repositório Python popular")
+        if st.sidebar.button("🗂️ Listar issues"):
+            add_message("user", "Mostrar-me issues recentes em um repositório")
 
     elif current_server == "Filesystem":
-        if st.sidebar.button("📁 List files"):
-            add_message("user", "List files in the current directory")
-        if st.sidebar.button("📄 Read file"):
-            add_message("user", "Show me the contents of a text file")
-        if st.sidebar.button("✍️ Create file"):
-            add_message("user", "Create a new file with some sample content")
+        if st.sidebar.button("📁 Listar arquivos"):
+            add_message("user", "Listar arquivos no diretório atual")
+        if st.sidebar.button("📄 Ler arquivo"):
+            add_message("user", "Mostrar-me o conteúdo de um arquivo de texto")
+        if st.sidebar.button("✍️ Criar arquivo"):
+            add_message("user", "Criar um novo arquivo com algum conteúdo de exemplo")
 
-    if st.sidebar.button("❓ What is MCP?"):
-        add_message("user", "What is the Model Context Protocol and how does it work?")
+    if st.sidebar.button("❓ O que é MCP?"):
+        add_message("user", "O que é o Model Context Protocol e como funciona?")
 
     ####################################################################
-    # Utility buttons
+    # Botões de utilidade
     ####################################################################
-    st.sidebar.markdown("#### 🛠️ Utilities")
+    st.sidebar.markdown("#### 🛠️ Utilitários")
     col1, col2 = st.sidebar.columns([1, 1])
 
     with col1:
-        if st.sidebar.button("🔄 New Chat", use_container_width=True):
+        if st.sidebar.button("🔄 Novo Chat", use_container_width=True):
             restart_agent()
             st.rerun()
 
@@ -228,20 +228,20 @@ async def main():
                 filename = "mcp_agent_chat_new.md"
 
             if st.sidebar.download_button(
-                "💾 Export Chat",
+                "💾 Exportar Chat",
                 export_chat_history("Universal MCP Agent"),
                 file_name=filename,
                 mime="text/markdown",
                 use_container_width=True,
-                help=f"Export {len(st.session_state['messages'])} messages",
+                help=f"Exportar {len(st.session_state['messages'])} mensagens",
             ):
-                st.sidebar.success("Chat history exported!")
+                st.sidebar.success("Histórico de chat exportado!")
         else:
             st.sidebar.button(
-                "💾 Export Chat",
+                "💾 Exportar Chat",
                 disabled=True,
                 use_container_width=True,
-                help="No messages to export",
+                help="Nenhuma mensagem para exportar",
             )
 
     ####################################################################
@@ -292,7 +292,7 @@ async def main():
                         add_message("assistant", response)
 
                 except Exception as e:
-                    st.error(f"Sorry, I encountered an error: {str(e)}")
+                    st.error(f"Desculpe, encontrei um erro: {str(e)}")
 
     ####################################################################
     # Session management widgets
@@ -303,12 +303,12 @@ async def main():
     # About section
     ####################################################################
     about_section(
-        "This Universal MCP Agent provides a unified interface for interacting with MCP servers, enabling seamless access to various data sources and tools."
+        "Este Agente MCP Universal fornece uma interface unificada para interagir com servidores MCP, permitindo acesso perfeito a várias fontes de dados e ferramentas."
     )
 
 
 def run_app():
-    """Run the async streamlit app."""
+    """Executar o aplicativo streamlit assíncrono."""
     asyncio.run(main())
 
 

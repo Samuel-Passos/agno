@@ -7,5 +7,5 @@ agent = Agent(
     timezone_identifier="Etc/UTC",
 )
 agent.print_response(
-    "What is the current date and time? What is the current time in NYC?"
+    "Qual é a data e hora atuais? Qual é a hora atual em NYC?"
 )

@@ -12,22 +12,22 @@ from agno.workflow import Step, StepInput, StepOutput, Workflow
 def cache_lookup_step(
     step_input: StepInput, session_state: Dict[str, Any]
 ) -> StepOutput:
-    """Step 1: Check if we have a cached solution for this query"""
+    """Passo 1: Verificar se temos uma solução em cache para esta consulta"""
     query = step_input.input
 
     cached_solution = session_state.get("solutions", {}).get(query)
     if cached_solution:
-        log_info(f"Cache hit! Returning cached solution for query: {query}")
+        log_info(f"Cache hit! Retornando solução em cache para consulta: {query}")
         return StepOutput(content=cached_solution, stop=True)
 
-    log_info(f"No cached solution found for query: {query}")
+    log_info(f"Nenhuma solução em cache encontrada para consulta: {query}")
     return StepOutput(
         content=query,
     )
 
 
 def triage_step(step_input: StepInput) -> StepOutput:
-    """Step 2: Classify and analyze the customer query"""
+    """Passo 2: Classificar e analisar a consulta do cliente"""
     query = step_input.input
 
     classification_response = triage_agent.run(query)
@@ -35,7 +35,7 @@ def triage_step(step_input: StepInput) -> StepOutput:
 
     assert isinstance(classification, SupportTicketClassification)
 
-    log_info(f"Classification: {classification.model_dump_json()}")
+    log_info(f"Classificação: {classification.model_dump_json()}")
 
     return StepOutput(
         content=classification,
@@ -45,25 +45,25 @@ def triage_step(step_input: StepInput) -> StepOutput:
 def cache_storage_step(
     step_input: StepInput, session_state: Dict[str, Any]
 ) -> StepOutput:
-    """Step 4: Cache the solution for future use"""
+    """Passo 4: Armazenar a solução em cache para uso futuro"""
     query = step_input.input
     solution = step_input.get_last_step_content()
 
-    # Initialize solutions cache if not exists
+    # Inicializar cache de soluções se não existir
     if "solutions" not in session_state:
         session_state["solutions"] = {}
 
-    # Cache the solution
+    # Armazenar a solução em cache
     session_state["solutions"][query] = solution
-    log_info(f"Cached solution for query: {query}")
+    log_info(f"Solução em cache para consulta: {query}")
 
     return StepOutput(content=solution)
 
 
-# Create the customer support workflow with multiple steps
+# Criar o workflow de suporte ao cliente com múltiplos passos
 customer_support_workflow = Workflow(
     name="Customer Support Resolution Pipeline",
-    description="AI-powered customer support with intelligent caching and multi-step processing",
+    description="Suporte ao cliente alimentado por IA com cache inteligente e processamento multi-passo",
     steps=[
         Step(name="Cache Lookup", executor=cache_lookup_step),
         Step(name="Query Triage", executor=triage_step),

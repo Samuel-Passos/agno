@@ -1,7 +1,7 @@
-"""Example of a Team using the `coordinate` mode to play the role of a News Agency.
+"""Exemplo de uma Equipe usando o modo `coordinate` para desempenhar o papel de uma Agência de Notícias.
 
-1. Run: `pip install openai ddgs newspaper4k lxml_html_clean agno` to install the dependencies
-2. Run: `python cookbook/examples/teams/coordinate_mode/news_agency_team.py` to run the agent
+1. Executar: `pip install openai ddgs newspaper4k lxml_html_clean agno` para instalar as dependências
+2. Executar: `python cookbook/examples/teams/coordinate_mode/news_agency_team.py` para executar o agente
 """
 
 from pathlib import Path
@@ -18,31 +18,31 @@ urls_file.parent.mkdir(parents=True, exist_ok=True)
 
 searcher = Agent(
     name="Searcher",
-    role="Searches the top URLs for a topic",
+    role="Busca as principais URLs para um tópico",
     instructions=[
-        "Given a topic, first generate a list of 3 search terms related to that topic.",
-        "For each search term, search the web and analyze the results.Return the 10 most relevant URLs to the topic.",
-        "You are writing for the New York Times, so the quality of the sources is important.",
+        "Dado um tópico, primeiro gerar uma lista de 3 termos de busca relacionados a esse tópico.",
+        "Para cada termo de busca, pesquisar na web e analisar os resultados. Retornar as 10 URLs mais relevantes para o tópico.",
+        "Você está escrevendo para o New York Times, então a qualidade das fontes é importante.",
     ],
     tools=[DuckDuckGoTools()],
     add_datetime_to_context=True,
 )
 writer = Agent(
     name="Writer",
-    role="Writes a high-quality article",
+    role="Escreve um artigo de alta qualidade",
     description=(
-        "You are a senior writer for the New York Times. Given a topic and a list of URLs, "
-        "your goal is to write a high-quality NYT-worthy article on the topic."
+        "Você é um escritor sênior do New York Times. Dado um tópico e uma lista de URLs, "
+        "seu objetivo é escrever um artigo de alta qualidade digno do NYT sobre o tópico."
     ),
     instructions=[
-        "First read all urls using `read_article`."
-        "Then write a high-quality NYT-worthy article on the topic."
-        "The article should be well-structured, informative, engaging and catchy.",
-        "Ensure the length is at least as long as a NYT cover story -- at a minimum, 15 paragraphs.",
-        "Ensure you provide a nuanced and balanced opinion, quoting facts where possible.",
-        "Focus on clarity, coherence, and overall quality.",
-        "Never make up facts or plagiarize. Always provide proper attribution.",
-        "Remember: you are writing for the New York Times, so the quality of the article is important.",
+        "Primeiro ler todas as URLs usando `read_article`."
+        "Depois escrever um artigo de alta qualidade digno do NYT sobre o tópico."
+        "O artigo deve ser bem estruturado, informativo, envolvente e cativante.",
+        "Garantir que o comprimento seja pelo menos tão longo quanto uma matéria de capa do NYT -- no mínimo, 15 parágrafos.",
+        "Garantir que você forneça uma opinião matizada e equilibrada, citando fatos sempre que possível.",
+        "Focar em clareza, coerência e qualidade geral.",
+        "Nunca inventar fatos ou plagiar. Sempre fornecer atribuição adequada.",
+        "Lembre-se: você está escrevendo para o New York Times, então a qualidade do artigo é importante.",
     ],
     tools=[Newspaper4kTools()],
     add_datetime_to_context=True,
@@ -52,14 +52,14 @@ editor = Team(
     name="Editor",
     model=OpenAIChat("gpt-4o"),
     members=[searcher, writer],
-    description="You are a senior NYT editor. Given a topic, your goal is to write a NYT worthy article.",
+    description="Você é um editor sênior do NYT. Dado um tópico, seu objetivo é escrever um artigo digno do NYT.",
     instructions=[
-        "First ask the search journalist to search for the most relevant URLs for that topic.",
-        "Then ask the writer to get an engaging draft of the article.",
-        "Edit, proofread, and refine the article to ensure it meets the high standards of the New York Times.",
-        "The article should be extremely articulate and well written. "
-        "Focus on clarity, coherence, and overall quality.",
-        "Remember: you are the final gatekeeper before the article is published, so make sure the article is perfect.",
+        "Primeiro pedir ao jornalista de busca para buscar as URLs mais relevantes para esse tópico.",
+        "Depois pedir ao escritor para obter um rascunho envolvente do artigo.",
+        "Editar, revisar e refinar o artigo para garantir que atenda aos altos padrões do New York Times.",
+        "O artigo deve ser extremamente articulado e bem escrito. "
+        "Focar em clareza, coerência e qualidade geral.",
+        "Lembre-se: você é o guardião final antes do artigo ser publicado, então certifique-se de que o artigo está perfeito.",
     ],
     add_datetime_to_context=True,
     markdown=True,

@@ -1,7 +1,7 @@
-# Vision AI Agent
+# Agente Vision AI
 
-**Vision AI** is a smart image analysis application that combines computer vision with large language models to provide intelligent visual understanding and interactive Q&A about images.
-It allows users to upload images, get comprehensive analysis, and ask follow-up questions with session persistence and chat history.
+**Vision AI** é uma aplicação inteligente de análise de imagem que combina visão computacional com modelos de linguagem grandes para fornecer compreensão visual inteligente e Q&A interativo sobre imagens.
+Permite que os usuários enviem imagens, obtenham análise abrangente e façam perguntas de acompanhamento com persistência de sessão e histórico de chat.
 
 > Note: Fork and clone this repository if needed
 

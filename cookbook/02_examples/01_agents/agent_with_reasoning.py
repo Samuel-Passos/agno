@@ -6,7 +6,7 @@ from agno.tools.reasoning import ReasoningTools
 reasoning_agent = Agent(
     model=Claude(id="claude-sonnet-4-5"),
     tools=[ParallelTools(), ReasoningTools(add_instructions=True)],
-    instructions="Only include the final answer in your response. No yapping.",
+    instructions="Inclua apenas a resposta final em sua resposta. Sem conversa fiada.",
     markdown=True,
 )
 

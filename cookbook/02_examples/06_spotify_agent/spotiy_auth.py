@@ -64,33 +64,33 @@ def exchange_code_for_token(code: str) -> dict:
 
 
 if __name__ == "__main__":
-    # 1) Open browser for user login + consent
+    # 1) Abrir navegador para login do usuário + consentimento
     url = build_auth_url()
-    print("\nOpening browser for Spotify authentication...\n")
+    print("\nAbrindo navegador para autenticação do Spotify...\n")
     webbrowser.open(url)
 
-    print("1. Log in and approve the permissions.")
-    print("2. After redirect, copy the FULL URL from your browser's address bar.")
-    print("   (Even if the page fails to load, the URL still contains '?code=...')\n")
+    print("1. Fazer login e aprovar as permissões.")
+    print("2. Após o redirecionamento, copiar a URL COMPLETA da barra de endereços do navegador.")
+    print("   (Mesmo que a página não carregue, a URL ainda contém '?code=...')\n")
 
-    redirect_url = input("Paste the full redirect URL here:\n> ").strip()
+    redirect_url = input("Colar a URL de redirecionamento completa aqui:\n> ").strip()
 
-    # 2) Extract ?code=... from the URL
+    # 2) Extrair ?code=... da URL
     code = extract_code(redirect_url)
     if not code:
-        print("\nCould not find 'code' in the URL. Did you paste it correctly?")
+        print("\nNão foi possível encontrar 'code' na URL. Você colou corretamente?")
         exit(1)
 
-    print("\nExchanging code for tokens...")
+    print("\nTrocando código por tokens...")
 
-    # 3) Exchange auth code for access + refresh tokens
+    # 3) Trocar código de autenticação por tokens de acesso + atualização
     tokens = exchange_code_for_token(code)
 
-    print("\n==================== SPOTIFY TOKEN ====================")
+    print("\n==================== TOKEN SPOTIFY ====================")
     print(f"SPOTIFY_TOKEN={tokens.get('access_token')}")
     print("========================================================\n")
 
-    print("\n==================== SPOTIFY TOKEN INFO ====================")
+    print("\n==================== INFORMAÇÕES DO TOKEN SPOTIFY ====================")
     print("token_type   :", tokens.get("token_type"))
     print("expires_in   :", tokens.get("expires_in"))
     print("scope        :", tokens.get("scope"))

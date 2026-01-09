@@ -9,33 +9,33 @@ from agno.utils.streamlit import get_model_from_id
 
 async def run_github_agent(message: str, model_id: str = "gpt-4o"):
     if not os.getenv("GITHUB_TOKEN"):
-        return "Error: GitHub token not provided"
+        return "Erro: Token do GitHub não fornecido"
 
     try:
-        # Initialize MCP toolkit
+        # Inicializar toolkit MCP
         async with MCPTools(
             command="npx -y @modelcontextprotocol/server-github"
         ) as mcp_tools:
             model = get_model_from_id(model_id)
 
-            # Create agent
+            # Criar agente
             agent = Agent(
                 tools=[mcp_tools],
                 model=model,
                 instructions=dedent("""\
-                    You are a GitHub assistant. Help users explore repositories and their activity.
-                    - Provide organized, concise insights about the repository
-                    - Focus on facts and data from the GitHub API
-                    - Use markdown formatting for better readability
-                    - Present numerical data in tables when appropriate
-                    - Include links to relevant GitHub pages when helpful
+                    Você é um assistente do GitHub. Ajudar usuários a explorar repositórios e sua atividade.
+                    - Fornecer insights organizados e concisos sobre o repositório
+                    - Focar em fatos e dados da API do GitHub
+                    - Usar formatação markdown para melhor legibilidade
+                    - Apresentar dados numéricos em tabelas quando apropriado
+                    - Incluir links para páginas relevantes do GitHub quando útil
                 """),
                 markdown=True,
             )
 
-            # Run agent
+            # Executar agente
             response = await agent.arun(message)
             return response.content
     except Exception as e:
-        logger.error(f"Error running GitHub MCP agent: {e}")
-        return f"Error: {str(e)}"
+        logger.error(f"Erro ao executar agente GitHub MCP: {e}")
+        return f"Erro: {str(e)}"

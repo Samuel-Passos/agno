@@ -1,90 +1,90 @@
 """
-This example demonstrates how to use additional_input with an Agent
-to teach proper response patterns through few-shot learning.
+Este exemplo demonstra como usar additional_input com um Agent
+para ensinar padrões de resposta adequados através de aprendizado few-shot.
 """
 
 from agno.agent import Agent
 from agno.models.message import Message
 from agno.models.openai.chat import OpenAIChat
 
-# Few-shot examples showing good support patterns
+# Exemplos few-shot mostrando bons padrões de suporte
 support_examples = [
-    # Example 1: Simple issue resolution
-    Message(role="user", content="I forgot my password and can't log in"),
+    # Exemplo 1: Resolução de problema simples
+    Message(role="user", content="Esqueci minha senha e não consigo fazer login"),
     Message(
         role="assistant",
         content="""
-    I'll help you reset your password right away.
+    Vou ajudá-lo a redefinir sua senha imediatamente.
 
-    **Steps to Reset Your Password:**
-    . Go to the login page and click "Forgot Password"
-    . Enter your email address
-    . Check your email for the reset link
-    . Follow the link to create a new password
-    . Use a strong password with uppercase, lowercase, numbers, and symbols
+    **Passos para Redefinir Sua Senha:**
+    . Ir para a página de login e clicar em "Esqueci a Senha"
+    . Digitar seu endereço de email
+    . Verificar seu email para o link de redefinição
+    . Seguir o link para criar uma nova senha
+    . Usar uma senha forte com maiúsculas, minúsculas, números e símbolos
 
-    f you don't receive the email within 5 minutes, please check your spam folder. Let me know if you need any assistance with these steps!
+    Se você não receber o email em 5 minutos, por favor verifique sua pasta de spam. Avise-me se precisar de ajuda com estes passos!
     """.strip(),
     ),
-    # Example 2: Billing issue pattern
+    # Exemplo 2: Padrão de problema de cobrança
     Message(
         role="user",
-        content="I've been charged twice for the same order and I'm frustrated!",
+        content="Fui cobrado duas vezes pelo mesmo pedido e estou frustrado!",
     ),
     Message(
         role="assistant",
         content="""
-    I sincerely apologize for the billing error and the frustration this has caused you.
+    Peço sinceras desculpas pelo erro de cobrança e pela frustração que isso causou.
 
-    **Immediate Action Plan:**
-    1. I'll investigate your account to confirm the duplicate charge
-    2. Process a full refund for the duplicate transaction
-    3. Ensure this doesn't happen again by checking your payment method settings
-    4. Provide you with a confirmation number once the refund is processed
+    **Plano de Ação Imediato:**
+    1. Vou investigar sua conta para confirmar a cobrança duplicada
+    2. Processar um reembolso completo para a transação duplicada
+    3. Garantir que isso não aconteça novamente verificando as configurações do seu método de pagamento
+    4. Fornecer um número de confirmação assim que o reembolso for processado
 
-    The refund typically takes 3-5 business days to appear on your statement. As an apology for this inconvenience, I'd also like to offer you a 10% discount on your next order.
+    O reembolso normalmente leva 3-5 dias úteis para aparecer em sua fatura. Como desculpa por este inconveniente, também gostaria de oferecer um desconto de 10% em seu próximo pedido.
 
-    Is there anything else I can help you with regarding this issue?
+    Há mais alguma coisa com que eu possa ajudá-lo em relação a este problema?
     """.strip(),
     ),
-    # Example 3: Technical support pattern
-    Message(role="user", content="Your app keeps crashing when I try to upload photos"),
+    # Exemplo 3: Padrão de suporte técnico
+    Message(role="user", content="Seu aplicativo continua travando quando tento enviar fotos"),
     Message(
         role="assistant",
         content="""
-    I'm sorry you're experiencing crashes with photo uploads. Let me help you troubleshoot this issue.
+    Sinto muito que você esteja enfrentando travamentos com o envio de fotos. Deixe-me ajudá-lo a solucionar este problema.
 
-    **Troubleshooting Steps:**
-    1. **Check App Version:** Ensure you have the latest version from the app store
-    2. **Restart the App:** Close completely and reopen the application
-    3. **Check Storage:** Make sure you have sufficient device storage (at least 1GB free)
-    4. **Photo Size:** Try uploading smaller photos (under 10MB each)
-    5. **Network Connection:** Ensure you have a stable internet connection
+    **Passos de Solução de Problemas:**
+    1. **Verificar Versão do App:** Certifique-se de ter a versão mais recente da loja de aplicativos
+    2. **Reiniciar o App:** Fechar completamente e reabrir o aplicativo
+    3. **Verificar Armazenamento:** Certifique-se de ter armazenamento suficiente no dispositivo (pelo menos 1GB livre)
+    4. **Tamanho da Foto:** Tentar enviar fotos menores (menos de 10MB cada)
+    5. **Conexão de Rede:** Certificar-se de ter uma conexão de internet estável
 
-    **If the issue persists:**
-    - Try uploading one photo at a time instead of multiple
-    - Clear the app cache in your device settings
-    - Restart your device
+    **Se o problema persistir:**
+    - Tentar enviar uma foto por vez em vez de múltiplas
+    - Limpar o cache do app nas configurações do dispositivo
+    - Reiniciar seu dispositivo
 
-    If none of these steps resolve the issue, please let me know your device type and OS version, and I'll escalate this to our technical team for further investigation.
+    Se nenhum destes passos resolver o problema, por favor me informe o tipo de dispositivo e versão do SO, e vou escalar isso para nossa equipe técnica para investigação adicional.
     """.strip(),
     ),
 ]
 
 if __name__ == "__main__":
-    # Create agent with few-shot learning
+    # Criar agente com aprendizado few-shot
     agent = Agent(
         name="Customer Support Specialist",
         model=OpenAIChat(id="gpt-4o-mini"),
         add_name_to_context=True,
-        additional_input=support_examples,  # few-shot learning examples
+        additional_input=support_examples,  # exemplos de aprendizado few-shot
         instructions=[
-            "You are an expert customer support specialist.",
-            "Always be empathetic, professional, and solution-oriented.",
-            "Provide clear, actionable steps to resolve customer issues.",
-            "Follow the established patterns for consistent, high-quality support.",
+            "Você é um especialista em suporte ao cliente.",
+            "Sempre ser empático, profissional e orientado a soluções.",
+            "Fornecer passos claros e acionáveis para resolver problemas do cliente.",
+            "Seguir os padrões estabelecidos para suporte consistente e de alta qualidade.",
         ],
         markdown=True,
     )
 
-    agent.print_response("I want to enable two-factor authentication for my account.")
+    agent.print_response("Quero habilitar autenticação de dois fatores para minha conta.")

@@ -7,20 +7,20 @@ from pydantic import BaseModel, Field
 
 
 class ResearchTopic(BaseModel):
-    """Structured research topic with specific requirements"""
+    """Tópico de pesquisa estruturado com requisitos específicos"""
 
     topic: str
-    focus_areas: List[str] = Field(description="Specific areas to focus on")
-    target_audience: str = Field(description="Who this research is for")
-    sources_required: int = Field(description="Number of sources needed", default=5)
+    focus_areas: List[str] = Field(description="Áreas específicas para focar")
+    target_audience: str = Field(description="Para quem esta pesquisa é")
+    sources_required: int = Field(description="Número de fontes necessárias", default=5)
 
 
-# Define agents
+# Definir agentes
 hackernews_agent = Agent(
     name="Hackernews Agent",
     model=OpenAIChat(id="gpt-4o-mini"),
     tools=[HackerNewsTools()],
-    role="Extract key insights and content from Hackernews posts",
+    role="Extrair insights-chave e conteúdo de posts do Hackernews",
 )
 
 hackernews_agent.print_response(

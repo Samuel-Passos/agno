@@ -1,4 +1,4 @@
-"""Minimal demo of the AgentOS."""
+"""Demonstração mínima do AgentOS."""
 
 from pathlib import Path
 
@@ -18,12 +18,12 @@ from teams.finance_team import finance_team
 from workflows.research_workflow import research_workflow
 
 # ============================================================================
-# AgentOS Config
+# Configuração do AgentOS
 # ============================================================================
 config_path = str(Path(__file__).parent.joinpath("config.yaml"))
 
 # ============================================================================
-# Create AgentOS
+# Criar AgentOS
 # ============================================================================
 agent_os = AgentOS(
     agents=[
@@ -47,8 +47,8 @@ agent_os = AgentOS(
 app = agent_os.get_app()
 
 # ============================================================================
-# Run AgentOS
+# Executar AgentOS
 # ============================================================================
 if __name__ == "__main__":
-    # Serves a FastAPI app exposed by AgentOS. Use reload=True for local dev.
+    # Serve um app FastAPI exposto pelo AgentOS. Use reload=True para desenvolvimento local.
     agent_os.serve(app="run:app", reload=True)

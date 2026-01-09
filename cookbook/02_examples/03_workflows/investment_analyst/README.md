@@ -1,63 +1,63 @@
-# 🚀 Investment Analysis Workflow
+# 🚀 Workflow de Análise de Investimentos
 
-A sophisticated investment analysis system for advanced research capabilities using workflows.
+Um sistema sofisticado de análise de investimentos para capacidades de pesquisa avançadas usando workflows.
 
-## 📋 **Overview**
+## 📋 **Visão Geral**
 
-This workflow demonstrates how to build a comprehensive investment analysis workflow. It combines 8 specialized agents in an adaptive and intelligent analysis workflow that can handle everything from simple stock evaluations to complex multi-company investment decisions.
+Este workflow demonstra como construir um workflow abrangente de análise de investimentos. Ele combina 8 agentes especializados em um workflow de análise adaptativo e inteligente que pode lidar com tudo, desde avaliações simples de ações até decisões complexas de investimento multi-empresa.
 
-## 🚀 **Getting Started**
+## 🚀 **Começando**
 
-### **Prerequisites**
-- A Supabase API key. You can get one from https://supabase.com/dashboard/account/tokens.
-- OpenAI API key
+### **Pré-requisitos**
+- Uma chave de API Supabase. Você pode obter uma em https://supabase.com/dashboard/account/tokens.
+- Chave de API OpenAI
 
-### **Setup**
+### **Configuração**
 ```bash
 export SUPABASE_ACCESS_TOKEN="your-supabase-token"
 export OPENAI_API_KEY="your-openai-key"
 ```
 
-Install packages
+Instalar pacotes
 ```
 pip install agno mcp openai
 ```
 
 
-## 🏗️ **Analysis Flow**
+## 🏗️ **Fluxo de Análise**
 
-This workflow is designed like a sophisticated investment firm's research process. Here are the steps:
+Este workflow é projetado como o processo de pesquisa de uma empresa de investimentos sofisticada. Aqui estão os passos:
 
 ```
-Investment Analysis Journey
-├── 🗄️  Database Setup (Always first)
-│   └── Creates Supabase project & schema
-├── 🔍 Company Research (Foundation)
-│   └── Gathers basic company data
-├── 🔀 Multi-Company Smart Pipeline
-│   └── If analyzing multiple companies:
-│       ├── 🔄 Iterative Company Loop (up to 5 rounds)
-│       └── ⚡ Parallel Comparative Analysis
-├── 🎯 Risk Assessment Routing
-│   └── Picks specialized risk framework
-├── 💰 Valuation Strategy Selection
-│   └── Chooses valuation approach by investment type
-├── ⚠️  High-Risk Deep Dive
-│   └── If high-risk investment detected:
-│       ├── ⚡ Parallel Risk Modeling
-│       └── 🔄 Risk Refinement Loop (up to 3 rounds)
-├── 🏢 Large Investment Due Diligence
-│   └── If $50M+ investment:
-│       └── ⚡ Parallel regulatory, market & management analysis
-├── 🌱 ESG Analysis Pipeline
-│   └── If ESG analysis requested:
-│       └── Sequential ESG assessment & integration
-├── 📊 Market Context Analysis
-│   └── If market analysis needed:
-│       └── ⚡ Parallel market & sector analysis
-└── 📝 Investment Decision & Reporting
-    ├── 🔄 Consensus Building Loop (up to 2 rounds)
-    └── 📊 Final Report Synthesis
+Jornada de Análise de Investimentos
+├── 🗄️  Configuração de Banco de Dados (Sempre primeiro)
+│   └── Cria projeto e esquema Supabase
+├── 🔍 Pesquisa de Empresas (Fundação)
+│   └── Coleta dados básicos da empresa
+├── 🔀 Pipeline Inteligente Multi-Empresa
+│   └── Se analisando múltiplas empresas:
+│       ├── 🔄 Loop Iterativo de Empresas (até 5 rodadas)
+│       └── ⚡ Análise Comparativa Paralela
+├── 🎯 Roteamento de Avaliação de Risco
+│   └── Escolhe estrutura de risco especializada
+├── 💰 Seleção de Estratégia de Avaliação
+│   └── Escolhe abordagem de avaliação por tipo de investimento
+├── ⚠️  Análise Profunda de Alto Risco
+│   └── Se investimento de alto risco detectado:
+│       ├── ⚡ Modelagem de Risco Paralela
+│       └── 🔄 Loop de Refinamento de Risco (até 3 rodadas)
+├── 🏢 Due Diligence de Investimento Grande
+│   └── Se investimento de $50M+:
+│       └── ⚡ Análise paralela regulatória, de mercado e de gestão
+├── 🌱 Pipeline de Análise ESG
+│   └── Se análise ESG solicitada:
+│       └── Avaliação e integração ESG sequencial
+├── 📊 Análise de Contexto de Mercado
+│   └── Se análise de mercado necessária:
+│       └── ⚡ Análise paralela de mercado e setor
+└── 📝 Decisão de Investimento e Relatório
+    ├── 🔄 Loop de Construção de Consenso (até 2 rodadas)
+    └── 📊 Síntese de Relatório Final
 ```
 
-The workflow is adaptive. For e.g when Analyzing a single blue-chip stock a simple streamlined path is followed but for complex evaluations involving multiple companies the workflow automatically triggers deeper analysis.
+O workflow é adaptativo. Por exemplo, ao analisar uma única ação blue-chip, um caminho simples e direto é seguido, mas para avaliações complexas envolvendo múltiplas empresas, o workflow aciona automaticamente análises mais profundas.

@@ -298,34 +298,34 @@ def main():
     ####################################################################
     # App header
     ####################################################################
-    st.markdown("<h1 class='main-title'>Chess Team Battle</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 class='main-title'>Batalha de Equipe de Xadrez</h1>", unsafe_allow_html=True)
     st.markdown(
-        "<p class='subtitle'>Watch AI agents compete in strategic chess matches</p>",
+        "<p class='subtitle'>Assista agentes de IA competirem em partidas estratégicas de xadrez</p>",
         unsafe_allow_html=True,
     )
 
     ####################################################################
-    # Model selectors
+    # Seletores de modelo
     ####################################################################
-    st.sidebar.markdown("#### ♔ White Player")
+    st.sidebar.markdown("#### ♔ Jogador Branco")
     selected_white = st.sidebar.selectbox(
-        "Select White Player Model",
+        "Selecionar Modelo do Jogador Branco",
         options=MODELS,
         index=0,
         key="white_selector",
     )
 
-    st.sidebar.markdown("#### ♚ Black Player")
+    st.sidebar.markdown("#### ♚ Jogador Preto")
     selected_black = st.sidebar.selectbox(
-        "Select Black Player Model",
+        "Selecionar Modelo do Jogador Preto",
         options=MODELS,
         index=1 if len(MODELS) > 1 else 0,
         key="black_selector",
     )
 
-    st.sidebar.markdown("#### 🧠 Game Master")
+    st.sidebar.markdown("#### 🧠 Mestre do Jogo")
     selected_master = st.sidebar.selectbox(
-        "Select Game Master Model",
+        "Selecionar Modelo do Mestre do Jogo",
         options=MODELS,
         index=0,
         key="master_selector",
@@ -350,14 +350,14 @@ def main():
         reset_session_state(chess_team)
 
     ####################################################################
-    # Game Controls
+    # Controles do Jogo
     ####################################################################
-    st.sidebar.markdown("#### 🎮 Game Controls")
+    st.sidebar.markdown("#### 🎮 Controles do Jogo")
 
     col1, col2 = st.sidebar.columns([1, 1])
     with col1:
         if not st.session_state.game_started:
-            if st.sidebar.button("▶️ Start Game", use_container_width=True):
+            if st.sidebar.button("▶️ Iniciar Jogo", use_container_width=True):
                 restart_chess_game(selected_white, selected_black, selected_master)
                 st.rerun()
         else:
@@ -367,9 +367,9 @@ def main():
 
             if not game_over:
                 if st.sidebar.button(
-                    "⏸️ Pause"
+                    "⏸️ Pausar"
                     if not st.session_state.get("game_paused", False)
-                    else "▶️ Resume",
+                    else "▶️ Retomar",
                     use_container_width=True,
                 ):
                     st.session_state.game_paused = not st.session_state.get(
@@ -379,16 +379,16 @@ def main():
 
     with col2:
         if st.session_state.game_started:
-            if st.sidebar.button("🔄 New Game", use_container_width=True):
+            if st.sidebar.button("🔄 Novo Jogo", use_container_width=True):
                 restart_chess_game(selected_white, selected_black, selected_master)
                 st.rerun()
 
     ####################################################################
-    # Sample Actions
+    # Ações de Exemplo
     ####################################################################
     if st.session_state.game_started:
-        st.sidebar.markdown("#### 🎯 Quick Actions")
-        if st.sidebar.button("📊 Analyze Position"):
+        st.sidebar.markdown("#### 🎯 Ações Rápidas")
+        if st.sidebar.button("📊 Analisar Posição"):
             if "chess_board" in st.session_state:
                 fen = st.session_state.chess_board.get_fen()
                 board_state = st.session_state.chess_board.get_board_state()
@@ -409,32 +409,32 @@ def main():
                 """
                 add_message("user", analysis_prompt)
 
-        if st.sidebar.button("📈 Game Summary"):
+        if st.sidebar.button("📈 Resumo do Jogo"):
             if st.session_state.get("move_history", []):
                 moves = st.session_state.move_history
                 summary_prompt = f"""
-                Provide a summary of this chess game:
+                Fornecer um resumo desta partida de xadrez:
                 
-                Total moves: {len(moves)}
-                Recent moves: {", ".join([m["move"] for m in moves[-5:]])}
+                Total de jogadas: {len(moves)}
+                Jogadas recentes: {", ".join([m["move"] for m in moves[-5:]])}
                 
-                Please analyze:
-                - Opening played
-                - Key turning points
-                - Current position assessment
-                - Game progression
+                Por favor, analisar:
+                - Abertura jogada
+                - Pontos de virada principais
+                - Avaliação da posição atual
+                - Progressão do jogo
                 """
                 add_message("user", summary_prompt)
 
     ####################################################################
-    # Utility buttons
+    # Botões de utilidade
     ####################################################################
     if st.session_state.game_started:
-        st.sidebar.markdown("#### 🛠️ Utilities")
+        st.sidebar.markdown("#### 🛠️ Utilitários")
         col1, col2 = st.sidebar.columns([1, 1])
 
         with col1:
-            if st.sidebar.button("🔄 New Chat", use_container_width=True):
+            if st.sidebar.button("🔄 Novo Chat", use_container_width=True):
                 restart_chess_game(selected_white, selected_black, selected_master)
                 st.rerun()
 
@@ -449,20 +449,20 @@ def main():
                 filename = f"chess_game_{session_id or 'new'}.md"
 
                 if st.sidebar.download_button(
-                    "💾 Export Game",
+                    "💾 Exportar Jogo",
                     export_chat_history("Chess Team Battle"),
                     file_name=filename,
                     mime="text/markdown",
                     use_container_width=True,
-                    help=f"Export game with {len(st.session_state.move_history)} moves",
+                    help=f"Exportar jogo com {len(st.session_state.move_history)} jogadas",
                 ):
-                    st.sidebar.success("Game exported!")
+                    st.sidebar.success("Jogo exportado!")
             else:
                 st.sidebar.button(
-                    "💾 Export Game",
+                    "💾 Exportar Jogo",
                     disabled=True,
                     use_container_width=True,
-                    help="No moves to export",
+                    help="Nenhuma jogada para exportar",
                 )
 
     ####################################################################
@@ -500,7 +500,7 @@ def main():
     # About section
     ####################################################################
     about_section(
-        "This Chess Team Battle showcases AI agents competing in strategic chess matches. Watch different models play against each other with real-time move analysis and game coordination."
+        "Esta Batalha de Equipe de Xadrez mostra agentes de IA competindo em partidas estratégicas de xadrez. Assista diferentes modelos jogarem uns contra os outros com análise de jogadas em tempo real e coordenação do jogo."
     )
 
     ####################################################################
@@ -654,7 +654,7 @@ Do not include any other text in your response."""
                 except Exception as e:
                     st.error(f"Error getting move: {str(e)}")
     else:
-        st.info("👈 Press 'Start Game' to begin the chess match!")
+        st.info("👈 Pressione 'Iniciar Jogo' para começar a partida de xadrez!")
 
 
 if __name__ == "__main__":

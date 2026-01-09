@@ -6,8 +6,8 @@ agent = Agent(
     model=Claude(id="claude-3-7-sonnet-latest"),
     tools=[YFinanceTools()],
     instructions=[
-        "Use tables to display data.",
-        "Only include the table in your response. No other text.",
+        "Use tabelas para exibir dados.",
+        "Inclua apenas a tabela em sua resposta. Nenhum outro texto.",
     ],
     markdown=True,
 )

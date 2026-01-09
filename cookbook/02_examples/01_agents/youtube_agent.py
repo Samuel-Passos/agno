@@ -1,17 +1,17 @@
-"""🎥 YouTube Agent - Your Video Content Expert!
+"""🎥 YouTube Agent - Seu Especialista em Conteúdo de Vídeo!
 
-This example shows how to create an intelligent YouTube content analyzer that provides
-detailed video breakdowns, timestamps, and summaries. Perfect for content creators,
-researchers, and viewers who want to efficiently navigate video content.
+Este exemplo mostra como criar um analisador de conteúdo do YouTube inteligente que fornece
+quebras detalhadas de vídeo, timestamps e resumos. Perfeito para criadores de conteúdo,
+pesquisadores e espectadores que querem navegar eficientemente pelo conteúdo de vídeo.
 
-Example prompts to try:
+Exemplos de prompts para tentar:
 - "Analyze this tech review: [video_url]"
 - "Get timestamps for this coding tutorial: [video_url]"
 - "Break down the key points of this lecture: [video_url]"
 - "Summarize the main topics in this documentary: [video_url]"
 - "Create a study guide from this educational video: [video_url]"
 
-Run: `pip install openai youtube_transcript_api agno` to install the dependencies
+Execute: `pip install openai youtube_transcript_api agno` para instalar as dependências
 """
 
 from textwrap import dedent
@@ -25,73 +25,73 @@ youtube_agent = Agent(
     model=OpenAIChat(id="gpt-4o"),
     tools=[YouTubeTools()],
     instructions=dedent("""\
-        You are an expert YouTube content analyst with a keen eye for detail! 🎓
-        Follow these steps for comprehensive video analysis:
-        1. Video Overview
-           - Check video length and basic metadata
-           - Identify video type (tutorial, review, lecture, etc.)
-           - Note the content structure
-        2. Timestamp Creation
-           - Create precise, meaningful timestamps
-           - Focus on major topic transitions
-           - Highlight key moments and demonstrations
-           - Format: [start_time, end_time, detailed_summary]
-        3. Content Organization
-           - Group related segments
-           - Identify main themes
-           - Track topic progression
+        Você é um analista especialista de conteúdo do YouTube com olho afiado para detalhes! 🎓
+        Siga estes passos para análise abrangente de vídeo:
+        1. Visão Geral do Vídeo
+           - Verificar duração do vídeo e metadados básicos
+           - Identificar tipo de vídeo (tutorial, review, palestra, etc.)
+           - Observar a estrutura do conteúdo
+        2. Criação de Timestamps
+           - Criar timestamps precisos e significativos
+           - Focar em transições principais de tópicos
+           - Destacar momentos-chave e demonstrações
+           - Formato: [start_time, end_time, detailed_summary]
+        3. Organização de Conteúdo
+           - Agrupar segmentos relacionados
+           - Identificar temas principais
+           - Rastrear progressão de tópicos
 
-        Your analysis style:
-        - Begin with a video overview
-        - Use clear, descriptive segment titles
-        - Include relevant emojis for content types:
-          📚 Educational
-          💻 Technical
-          🎮 Gaming
-          📱 Tech Review
-          🎨 Creative
-        - Highlight key learning points
-        - Note practical demonstrations
-        - Mark important references
+        Seu estilo de análise:
+        - Comece com uma visão geral do vídeo
+        - Use títulos de segmentos claros e descritivos
+        - Inclua emojis relevantes para tipos de conteúdo:
+          📚 Educacional
+          💻 Técnico
+          🎮 Jogos
+          📱 Review de Tecnologia
+          🎨 Criativo
+        - Destaque pontos-chave de aprendizado
+        - Observe demonstrações práticas
+        - Marque referências importantes
 
-        Quality Guidelines:
-        - Verify timestamp accuracy
-        - Avoid timestamp hallucination
-        - Ensure comprehensive coverage
-        - Maintain consistent detail level
-        - Focus on valuable content markers
+        Diretrizes de Qualidade:
+        - Verificar precisão dos timestamps
+        - Evitar alucinação de timestamps
+        - Garantir cobertura abrangente
+        - Manter nível de detalhe consistente
+        - Focar em marcadores de conteúdo valiosos
     """),
     add_datetime_to_context=True,
     markdown=True,
 )
 
-# Example usage with different types of videos
+# Exemplo de uso com diferentes tipos de vídeos
 youtube_agent.print_response(
     "Analyze this video: https://www.youtube.com/watch?v=zjkBMFhNj_g",
     stream=True,
 )
 
-# More example prompts to explore:
+# Mais exemplos de prompts para explorar:
 """
-Tutorial Analysis:
+Análise de Tutoriais:
 1. "Break down this Python tutorial with focus on code examples"
 2. "Create a learning path from this web development course"
 3. "Extract all practical exercises from this programming guide"
 4. "Identify key concepts and implementation examples"
 
-Educational Content:
+Conteúdo Educacional:
 1. "Create a study guide with timestamps for this math lecture"
 2. "Extract main theories and examples from this science video"
 3. "Break down this historical documentary into key events"
 4. "Summarize the main arguments in this academic presentation"
 
-Tech Reviews:
+Reviews de Tecnologia:
 1. "List all product features mentioned with timestamps"
 2. "Compare pros and cons discussed in this review"
 3. "Extract technical specifications and benchmarks"
 4. "Identify key comparison points and conclusions"
 
-Creative Content:
+Conteúdo Criativo:
 1. "Break down the techniques shown in this art tutorial"
 2. "Create a timeline of project steps in this DIY video"
 3. "List all tools and materials mentioned with timestamps"

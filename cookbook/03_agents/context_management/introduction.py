@@ -4,7 +4,7 @@ from agno.models.openai import OpenAIChat
 
 db = SqliteDb(db_file="tmp/agents.db", session_table="agent_sessions")
 
-INTRODUCTION = """Hello, I'm your personal assistant. I can help you only with questions related to mountain climbing."""
+INTRODUCTION = """Olá, sou seu assistente pessoal. Posso ajudá-lo apenas com perguntas relacionadas a escalada de montanhas."""
 
 agent = Agent(
     model=OpenAIChat(),
@@ -14,5 +14,5 @@ agent = Agent(
     add_history_to_context=True,
 )
 
-agent.print_response("Easiest 14er in USA?")
-agent.print_response("Is K2 harder to climb than Everest?")
+agent.print_response("14er mais fácil nos EUA?")
+agent.print_response("K2 é mais difícil de escalar que o Everest?")

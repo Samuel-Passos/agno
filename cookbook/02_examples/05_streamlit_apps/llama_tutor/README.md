@@ -1,7 +1,7 @@
-# Llama Tutor
+# Tutor Llama
 
-**Llama Tutor** is an intelligent educational assistant that provides personalized tutoring across all education levels.
-It adapts explanations to your specific education level and uses real-time search to provide accurate, up-to-date information.
+**Tutor Llama** é um assistente educacional inteligente que fornece tutoria personalizada em todos os níveis educacionais.
+Adapta explicações ao seu nível educacional específico e usa busca em tempo real para fornecer informações precisas e atualizadas.
 
 > Note: Fork and clone this repository if needed
 

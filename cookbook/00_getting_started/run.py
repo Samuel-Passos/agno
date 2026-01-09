@@ -15,12 +15,12 @@ from multi_agent_team import multi_agent_team
 from sequential_workflow import sequential_workflow
 
 # ============================================================================
-# AgentOS Config
+# Configuração do AgentOS
 # ============================================================================
 config_path = str(Path(__file__).parent.joinpath("config.yaml"))
 
 # ============================================================================
-# Create AgentOS
+# Criar AgentOS
 # ============================================================================
 agent_os = AgentOS(
     id="Getting Started AgentOS",
@@ -44,7 +44,7 @@ agent_os = AgentOS(
 app = agent_os.get_app()
 
 # ============================================================================
-# Run AgentOS
+# Executar AgentOS
 # ============================================================================
 if __name__ == "__main__":
     agent_os.serve(app="run:app", reload=True)

@@ -5,23 +5,23 @@ from pydantic import BaseModel, Field
 
 class ProcurementAnalysisRequest(BaseModel):
     companies: List[str] = Field(
-        ..., min_length=1, max_length=5, description="List of 1-5 companies to analyze"
+        ..., min_length=1, max_length=5, description="Lista de 1-5 empresas para analisar"
     )
     category_name: str = Field(
-        ..., min_length=1, description="Category name for analysis"
+        ..., min_length=1, description="Nome da categoria para análise"
     )
     analyses_requested: List[str] = Field(
-        ..., min_length=1, description="List of analysis types to perform"
+        ..., min_length=1, description="Lista de tipos de análise para realizar"
     )
     buyer_org_url: Optional[str] = Field(
-        default=None, description="Buyer organization URL for context"
+        default=None, description="URL da organização compradora para contexto"
     )
     annual_spend: Optional[float] = Field(
-        default=None, description="Annual spend amount for context"
+        default=None, description="Valor de gasto anual para contexto"
     )
-    region: Optional[str] = Field(default=None, description="Regional context")
+    region: Optional[str] = Field(default=None, description="Contexto regional")
     incumbent_suppliers: List[str] = Field(
-        default_factory=list, description="Current/incumbent suppliers"
+        default_factory=list, description="Fornecedores atuais/incumbentes"
     )
 
 
@@ -40,94 +40,94 @@ class ProcurementAnalysisResponse(BaseModel):
 
 
 class AnalysisConfig(BaseModel):
-    analysis_type: str = Field(..., description="Type of analysis to perform")
+    analysis_type: str = Field(..., description="Tipo de análise para realizar")
     max_companies: int = Field(
-        default=5, description="Maximum number of companies to analyze"
+        default=5, description="Número máximo de empresas para analisar"
     )
     include_market_data: bool = Field(
-        default=True, description="Whether to include market data in analysis"
+        default=True, description="Se deve incluir dados de mercado na análise"
     )
     include_financial_data: bool = Field(
-        default=True, description="Whether to include financial data in analysis"
+        default=True, description="Se deve incluir dados financeiros na análise"
     )
 
 
 class CompanyProfile(BaseModel):
-    name: str = Field(..., description="Company name")
-    legal_name: Optional[str] = Field(default=None, description="Full legal name")
-    industry: Optional[str] = Field(default=None, description="Industry/sector")
-    founded_year: Optional[int] = Field(default=None, description="Year founded")
+    name: str = Field(..., description="Nome da empresa")
+    legal_name: Optional[str] = Field(default=None, description="Nome legal completo")
+    industry: Optional[str] = Field(default=None, description="Indústria/setor")
+    founded_year: Optional[int] = Field(default=None, description="Ano de fundação")
     headquarters: Optional[str] = Field(
-        default=None, description="Headquarters location"
+        default=None, description="Localização da sede"
     )
     annual_revenue: Optional[float] = Field(
-        default=None, description="Annual revenue in USD"
+        default=None, description="Receita anual em USD"
     )
     employee_count: Optional[int] = Field(
-        default=None, description="Number of employees"
+        default=None, description="Número de funcionários"
     )
     market_cap: Optional[float] = Field(
-        default=None, description="Market capitalization in USD"
+        default=None, description="Capitalização de mercado em USD"
     )
-    website: Optional[str] = Field(default=None, description="Company website")
-    description: Optional[str] = Field(default=None, description="Company description")
+    website: Optional[str] = Field(default=None, description="Site da empresa")
+    description: Optional[str] = Field(default=None, description="Descrição da empresa")
 
 
 class SupplierProfile(BaseModel):
-    name: str = Field(..., description="Supplier name")
-    website: Optional[str] = Field(default=None, description="Supplier website")
+    name: str = Field(..., description="Nome do fornecedor")
+    website: Optional[str] = Field(default=None, description="Site do fornecedor")
     headquarters: Optional[str] = Field(
-        default=None, description="Headquarters location"
+        default=None, description="Localização da sede"
     )
     geographic_coverage: List[str] = Field(
-        default_factory=list, description="Geographic coverage areas"
+        default_factory=list, description="Áreas de cobertura geográfica"
     )
     technical_capabilities: List[str] = Field(
-        default_factory=list, description="Technical capabilities"
+        default_factory=list, description="Capacidades técnicas"
     )
     certifications: List[str] = Field(
-        default_factory=list, description="Quality certifications"
+        default_factory=list, description="Certificações de qualidade"
     )
     annual_revenue: Optional[float] = Field(
-        default=None, description="Annual revenue in USD"
+        default=None, description="Receita anual em USD"
     )
     employee_count: Optional[int] = Field(
-        default=None, description="Number of employees"
+        default=None, description="Número de funcionários"
     )
     key_differentiators: List[str] = Field(
-        default_factory=list, description="Key competitive advantages"
+        default_factory=list, description="Principais vantagens competitivas"
     )
     financial_stability_score: Optional[int] = Field(
-        default=None, ge=1, le=10, description="Financial stability score (1-10)"
+        default=None, ge=1, le=10, description="Pontuação de estabilidade financeira (1-10)"
     )
     suitability_score: Optional[int] = Field(
         default=None,
         ge=1,
         le=10,
-        description="Suitability score for requirements (1-10)",
+        description="Pontuação de adequação aos requisitos (1-10)",
     )
 
 
 class AnalysisResult(BaseModel):
-    analysis_type: str = Field(..., description="Type of analysis performed")
-    company_name: str = Field(..., description="Company analyzed")
-    category_name: str = Field(..., description="Category analyzed")
+    analysis_type: str = Field(..., description="Tipo de análise realizada")
+    company_name: str = Field(..., description="Empresa analisada")
+    category_name: str = Field(..., description="Categoria analisada")
     score: Optional[int] = Field(
-        default=None, ge=1, le=9, description="Overall score (1-9 scale)"
+        default=None, ge=1, le=9, description="Pontuação geral (escala 1-9)"
     )
-    summary: Optional[str] = Field(default=None, description="Analysis summary")
+    summary: Optional[str] = Field(default=None, description="Resumo da análise")
     detailed_findings: Optional[str] = Field(
-        default=None, description="Detailed analysis findings"
+        default=None, description="Achados detalhados da análise"
     )
     recommendations: List[str] = Field(
-        default_factory=list, description="Key recommendations"
+        default_factory=list, description="Principais recomendações"
     )
     risk_factors: List[str] = Field(
-        default_factory=list, description="Identified risk factors"
+        default_factory=list, description="Fatores de risco identificados"
     )
     success: bool = Field(
-        default=True, description="Whether analysis completed successfully"
+        default=True, description="Se a análise foi concluída com sucesso"
     )
     error_message: Optional[str] = Field(
-        default=None, description="Error message if analysis failed"
+        default=None, description="Mensagem de erro se a análise falhou"
     )

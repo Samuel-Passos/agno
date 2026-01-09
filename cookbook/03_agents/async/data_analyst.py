@@ -1,4 +1,4 @@
-"""Run `pip install duckdb` to install dependencies."""
+"""Executar `pip install duckdb` para instalar dependências."""
 
 import asyncio
 from textwrap import dedent
@@ -18,8 +18,8 @@ agent = Agent(
     tools=[duckdb_tools],
     markdown=True,
     additional_context=dedent("""\
-    You have access to the following tables:
-    - movies: contains information about movies from IMDB.
+    Você tem acesso às seguintes tabelas:
+    - movies: contém informações sobre filmes do IMDB.
     """),
 )
-asyncio.run(agent.aprint_response("What is the average rating of movies?"))
+asyncio.run(agent.aprint_response("Qual é a classificação média dos filmes?"))

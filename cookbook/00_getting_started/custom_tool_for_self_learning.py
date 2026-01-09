@@ -1,21 +1,21 @@
 """
-Custom Tool for Self-Learning - Write Your Own Tools
-=====================================================
-This example shows how to write custom tools for your agent.
-A tool is just a Python function — the agent calls it when needed.
+Ferramenta Personalizada para Autoaprendizado - Escreva Suas Próprias Ferramentas
+===================================================================================
+Este exemplo mostra como escrever ferramentas personalizadas para seu agente.
+Uma ferramenta é apenas uma função Python — o agente a chama quando necessário.
 
-We'll build a self-learning agent that can save insights to a knowledge base.
-The key concept: any function can become a tool.
+Vamos construir um agente de autoaprendizado que pode salvar insights em uma base de conhecimento.
+O conceito-chave: qualquer função pode se tornar uma ferramenta.
 
-Key concepts:
-- Tools are Python functions with docstrings (the docstring tells the agent what the tool does)
-- The agent decides when to call your tool based on the conversation
-- Return a string to communicate results back to the agent
+Conceitos-chave:
+- Ferramentas são funções Python com docstrings (a docstring diz ao agente o que a ferramenta faz)
+- O agente decide quando chamar sua ferramenta com base na conversa
+- Retorne uma string para comunicar resultados de volta ao agente
 
-Example prompts to try:
-- "What's a good P/E ratio for tech stocks? Save that insight."
-- "Remember that NVDA's data center revenue is the key growth driver"
-- "What learnings do we have saved?"
+Exemplos de prompts para testar:
+- "Qual é uma boa relação P/E para ações de tecnologia? Salve esse insight."
+- "Lembre-se que a receita de data center da NVDA é o principal driver de crescimento"
+- "Quais aprendizados temos salvos?"
 """
 
 import json
@@ -32,12 +32,12 @@ from agno.vectordb.chroma import ChromaDb
 from agno.vectordb.search import SearchType
 
 # ============================================================================
-# Storage Configuration
+# Configuração de Armazenamento
 # ============================================================================
 agent_db = SqliteDb(db_file="tmp/agents.db")
 
 # ============================================================================
-# Knowledge Base for Learnings
+# Base de Conhecimento para Aprendizados
 # ============================================================================
 learnings_kb = Knowledge(
     name="Agent Learnings",
@@ -56,33 +56,33 @@ learnings_kb = Knowledge(
 
 
 # ============================================================================
-# Custom Tool: Save Learning
+# Ferramenta Personalizada: Salvar Aprendizado
 # ============================================================================
 def save_learning(title: str, learning: str) -> str:
     """
-    Save a reusable insight to the knowledge base for future reference.
+    Salva um insight reutilizável na base de conhecimento para referência futura.
 
     Args:
-        title: Short descriptive title (e.g., "Tech stock P/E benchmarks")
-        learning: The insight to save — be specific and actionable
+        title: Título descritivo curto (ex: "Benchmarks P/E de ações de tecnologia")
+        learning: O insight a salvar — seja específico e acionável
 
     Returns:
-        Confirmation message
+        Mensagem de confirmação
     """
-    # Validate inputs
+    # Validar entradas
     if not title or not title.strip():
-        return "Cannot save: title is required"
+        return "Não é possível salvar: título é obrigatório"
     if not learning or not learning.strip():
-        return "Cannot save: learning content is required"
+        return "Não é possível salvar: conteúdo do aprendizado é obrigatório"
 
-    # Build the payload
+    # Construir o payload
     payload = {
         "title": title.strip(),
         "learning": learning.strip(),
         "saved_at": datetime.now(timezone.utc).isoformat(),
     }
 
-    # Save to knowledge base
+    # Salvar na base de conhecimento
     learnings_kb.add_content(
         name=payload["title"],
         text_content=json.dumps(payload, ensure_ascii=False),
@@ -90,56 +90,56 @@ def save_learning(title: str, learning: str) -> str:
         skip_if_exists=True,
     )
 
-    return f"Saved: '{title}'"
+    return f"Salvo: '{title}'"
 
 
 # ============================================================================
-# Agent Instructions
+# Instruções do Agente
 # ============================================================================
 instructions = """\
-You are a Finance Agent that learns and improves over time.
+Você é um Agente Financeiro que aprende e melhora com o tempo.
 
-You have two special abilities:
-1. Search your knowledge base for previously saved learnings
-2. Save new insights using the save_learning tool
+Você tem duas habilidades especiais:
+1. Pesquisar sua base de conhecimento por aprendizados previamente salvos
+2. Salvar novos insights usando a ferramenta save_learning
 
-## Workflow
+## Fluxo de Trabalho
 
-1. Check Knowledge First
-   - Before answering, search for relevant prior learnings
-   - Apply any relevant insights to your response
+1. Verificar Conhecimento Primeiro
+   - Antes de responder, pesquisar aprendizados anteriores relevantes
+   - Aplicar quaisquer insights relevantes à sua resposta
 
-2. Gather Information
-   - Use YFinance tools for market data
-   - Combine with your knowledge base insights
+2. Coletar Informações
+   - Usar ferramentas YFinance para dados de mercado
+   - Combinar com insights da sua base de conhecimento
 
-3. Propose Learnings
-   - After answering, consider: is there a reusable insight here?
-   - If yes, propose it in this format:
+3. Propor Aprendizados
+   - Após responder, considere: há um insight reutilizável aqui?
+   - Se sim, proponha neste formato:
 
 ---
-**Proposed Learning**
+**Aprendizado Proposto**
 
-Title: [concise title]
-Learning: [the insight — specific and actionable]
+Título: [título conciso]
+Aprendizado: [o insight — específico e acionável]
 
-Save this? (yes/no)
+Salvar isso? (sim/não)
 ---
 
-- Only call save_learning AFTER the user says "yes"
-- If user says "no", acknowledge and move on
+- Apenas chamar save_learning DEPOIS que o usuário disser "sim"
+- Se o usuário disser "não", reconhecer e continuar
 
-## What Makes a Good Learning
+## O que Faz um Bom Aprendizado
 
-- Specific: "Tech P/E ratios typically range 20-35x" not "P/E varies"
-- Actionable: Can be applied to future questions
-- Reusable: Useful beyond this one conversation
+- Específico: "Relações P/E de tecnologia geralmente variam 20-35x" não "P/E varia"
+- Acionável: Pode ser aplicado a perguntas futuras
+- Reutilizável: Útil além desta conversa
 
-Don't save: Raw data, one-off facts, or obvious information.\
+Não salvar: Dados brutos, fatos únicos ou informações óbvias.\
 """
 
 # ============================================================================
-# Create the Agent
+# Criar o Agente
 # ============================================================================
 self_learning_agent = Agent(
     name="Self-Learning Agent",
@@ -147,7 +147,7 @@ self_learning_agent = Agent(
     instructions=instructions,
     tools=[
         YFinanceTools(),
-        save_learning,  # Our custom tool — just a Python function!
+        save_learning,  # Nossa ferramenta personalizada — apenas uma função Python!
     ],
     knowledge=learnings_kb,
     search_knowledge=True,
@@ -159,56 +159,56 @@ self_learning_agent = Agent(
 )
 
 # ============================================================================
-# Run the Agent
+# Executar o Agente
 # ============================================================================
 if __name__ == "__main__":
-    # Ask a question that might produce a learning
+    # Fazer uma pergunta que pode produzir um aprendizado
     self_learning_agent.print_response(
-        "What's a healthy P/E ratio for tech stocks?",
+        "Qual é uma relação P/E saudável para ações de tecnologia?",
         stream=True,
     )
 
-    # If the agent proposed a learning, approve it
+    # Se o agente propôs um aprendizado, aprová-lo
     self_learning_agent.print_response(
-        "yes",
+        "sim",
         stream=True,
     )
 
-    # Later, the agent can recall the learning
+    # Depois, o agente pode recuperar o aprendizado
     self_learning_agent.print_response(
-        "What learnings do we have saved?",
+        "Quais aprendizados temos salvos?",
         stream=True,
     )
 
 # ============================================================================
-# More Examples
+# Mais Exemplos
 # ============================================================================
 """
-Writing custom tools:
+Escrevendo ferramentas personalizadas:
 
-1. Define a function with type hints and a docstring
+1. Defina uma função com type hints e docstring
    def my_tool(param: str) -> str:
-       '''Description of what this tool does.
+       '''Descrição do que esta ferramenta faz.
 
        Args:
-           param: What this parameter is for
+           param: Para que este parâmetro serve
 
        Returns:
-           What the tool returns
+           O que a ferramenta retorna
        '''
-       # Your logic here
-       return "Result"
+       # Sua lógica aqui
+       return "Resultado"
 
-2. Add it to the agent's tools list
+2. Adicione à lista de ferramentas do agente
    agent = Agent(
        tools=[my_tool],
        ...
    )
 
-The docstring is critical — it tells the agent:
-- What the tool does
-- What parameters it needs
-- What it returns
+A docstring é crítica — ela diz ao agente:
+- O que a ferramenta faz
+- Quais parâmetros ela precisa
+- O que ela retorna
 
-The agent uses this to decide when and how to call your tool.
+O agente usa isso para decidir quando e como chamar sua ferramenta.
 """

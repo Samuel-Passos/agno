@@ -9,32 +9,32 @@ from rich.pretty import pprint
 
 
 class ContentSection(BaseModel):
-    """Represents a section of content from the webpage."""
+    """Representa uma seção de conteúdo da página web."""
 
-    heading: Optional[str] = Field(None, description="Section heading")
-    content: str = Field(..., description="Section content text")
+    heading: Optional[str] = Field(None, description="Cabeçalho da seção")
+    content: str = Field(..., description="Texto do conteúdo da seção")
 
 
 class PageInformation(BaseModel):
-    """Structured representation of a webpage."""
+    """Representação estruturada de uma página web."""
 
-    url: str = Field(..., description="URL of the page")
-    title: str = Field(..., description="Title of the page")
+    url: str = Field(..., description="URL da página")
+    title: str = Field(..., description="Título da página")
     description: Optional[str] = Field(
-        None, description="Meta description or summary of the page"
+        None, description="Meta descrição ou resumo da página"
     )
-    features: Optional[List[str]] = Field(None, description="Key feature list")
+    features: Optional[List[str]] = Field(None, description="Lista de recursos principais")
     content_sections: Optional[List[ContentSection]] = Field(
-        None, description="Main content sections of the page"
+        None, description="Seções principais de conteúdo da página"
     )
     links: Optional[Dict[str, str]] = Field(
-        None, description="Important links found on the page with description"
+        None, description="Links importantes encontrados na página com descrição"
     )
     contact_info: Optional[Dict[str, str]] = Field(
-        None, description="Contact information if available"
+        None, description="Informações de contato se disponíveis"
     )
     metadata: Optional[Dict[str, str]] = Field(
-        None, description="Important metadata from the page"
+        None, description="Metadados importantes da página"
     )
 
 
@@ -42,16 +42,16 @@ agent = Agent(
     model=OpenAIChat(id="gpt-4.1"),
     tools=[FirecrawlTools(enable_scrape=True, enable_crawl=True)],
     instructions=dedent("""
-        You are an expert web researcher and content extractor. Extract comprehensive, structured information
-        from the provided webpage. Focus on:
+        Você é um pesquisador web especialista e extrator de conteúdo. Extrair informações abrangentes e estruturadas
+        da página web fornecida. Focar em:
 
-        1. Accurately capturing the page title, description, and key features
-        2. Identifying and extracting main content sections with their headings
-        3. Finding important links to related pages or resources
-        4. Locating contact information if available
-        5. Extracting relevant metadata that provides context about the site
+        1. Capturar com precisão o título da página, descrição e recursos principais
+        2. Identificar e extrair seções principais de conteúdo com seus cabeçalhos
+        3. Encontrar links importantes para páginas ou recursos relacionados
+        4. Localizar informações de contato se disponíveis
+        5. Extrair metadados relevantes que fornecem contexto sobre o site
 
-        Be thorough but concise. If the page has extensive content, prioritize the most important information.
+        Seja minucioso mas conciso. Se a página tiver conteúdo extenso, priorizar as informações mais importantes.
     """).strip(),
     output_schema=PageInformation,
 )

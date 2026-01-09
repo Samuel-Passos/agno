@@ -8,13 +8,13 @@ from agno.vectordb.pgvector import PgVector, SearchType
 db_url = "postgresql+psycopg://ai:ai@localhost:5532/ai"
 agent_db = PostgresDb(db_url=db_url)
 
-# Create a knowledge base with Agno documentation
+# Criar uma base de conhecimento com a documentação do Agno
 knowledge = Knowledge(
     vector_db=PgVector(
         table_name="vectors",
         db_url=db_url,
         search_type=SearchType.hybrid,
-        # Use OpenAI for embeddings
+        # Usar OpenAI para embeddings
         embedder=OpenAIEmbedder(id="text-embedding-3-small", dimensions=1536),
     ),
 )
@@ -29,8 +29,8 @@ agent = Agent(
 )
 
 if __name__ == "__main__":
-    # Load Agno documentation into the knowledge base
+    # Carregar documentação do Agno na base de conhecimento
     knowledge.add_content(name="Agno Docs", url="https://docs.agno.com/introduction.md")
 
-    # Ask the agent about Agno
+    # Perguntar ao agente sobre Agno
     agent.print_response("What is Agno?", stream=True)

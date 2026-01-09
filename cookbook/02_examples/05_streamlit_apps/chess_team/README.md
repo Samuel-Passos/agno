@@ -1,6 +1,6 @@
-# Chess Team Battle
+# Batalha de Equipe de Xadrez
 
-An interactive game where different language models compete against each other in strategic matches. This example demonstrates advanced multi-agent coordination, real-time game state management, and sophisticated turn-based gameplay.
+Um jogo interativo onde diferentes modelos de linguagem competem entre si em partidas estratégicas. Este exemplo demonstra coordenação multi-agente avançada, gerenciamento de estado de jogo em tempo real e jogabilidade baseada em turnos sofisticada.
 
 ## ✨ Features
 

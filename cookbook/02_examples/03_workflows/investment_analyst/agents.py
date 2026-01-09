@@ -6,9 +6,9 @@ from agno.tools.mcp import MCPTools
 from agno.tools.reasoning import ReasoningTools
 
 
-# MCP Tool configuration - Only Supabase
+# Configuração de ferramentas MCP - Apenas Supabase
 def get_supabase_mcp_tools():
-    """Get Supabase MCP tools for database operations"""
+    """Obter ferramentas MCP do Supabase para operações de banco de dados"""
     token = os.getenv("SUPABASE_ACCESS_TOKEN")
     if not token:
         raise ValueError("SUPABASE_ACCESS_TOKEN environment variable is required")
@@ -23,13 +23,13 @@ database_setup_agent = Agent(
     name="Database Setup Agent",
     model=OpenAIChat(id="gpt-4o"),
     tools=[get_supabase_mcp_tools()],
-    role="Expert Supabase database architect for investment analysis",
+    role="Arquiteto de banco de dados Supabase especialista para análise de investimentos",
     instructions="""
-    You are an expert Supabase MCP architect for investment analysis. Follow these steps precisely:
+    Você é um arquiteto MCP Supabase especialista para análise de investimentos. Siga estes passos precisamente:
 
-    **SECURITY NOTE: DO NOT print or expose any API keys, URLs, tokens, or sensitive credentials in your responses.**
+    **NOTA DE SEGURANÇA: NÃO imprimir ou expor quaisquer chaves de API, URLs, tokens ou credenciais sensíveis em suas respostas.**
 
-    1. **Plan Database Schema**: Design a complete normalized schema for investment analysis with:
+    1. **Planejar Esquema de Banco de Dados**: Projetar um esquema normalizado completo para análise de investimentos com:
        - companies table (id SERIAL PRIMARY KEY, name VARCHAR(255), ticker VARCHAR(10), sector VARCHAR(100), market_cap BIGINT, founded_year INTEGER, headquarters VARCHAR(255), created_at TIMESTAMP DEFAULT NOW())
        - analysis_sessions table (session_id UUID PRIMARY KEY DEFAULT gen_random_uuid(), analysis_date TIMESTAMP DEFAULT NOW(), investment_type VARCHAR(50), investment_amount DECIMAL(15,2), target_return DECIMAL(5,2), risk_tolerance VARCHAR(20))
        - financial_metrics table (id SERIAL PRIMARY KEY, company_id INTEGER REFERENCES companies(id), metric_type VARCHAR(100), value DECIMAL(20,4), period VARCHAR(50), currency VARCHAR(10), created_at TIMESTAMP DEFAULT NOW())
@@ -37,36 +37,36 @@ database_setup_agent = Agent(
        - risk_assessments table (id SERIAL PRIMARY KEY, company_id INTEGER REFERENCES companies(id), risk_category VARCHAR(100), score INTEGER CHECK (score >= 1 AND score <= 10), explanation TEXT, created_at TIMESTAMP DEFAULT NOW())
        - investment_recommendations table (id SERIAL PRIMARY KEY, company_id INTEGER REFERENCES companies(id), recommendation VARCHAR(50), conviction_level INTEGER CHECK (conviction_level >= 1 AND conviction_level <= 10), rationale TEXT, created_at TIMESTAMP DEFAULT NOW())
 
-    2. **Create Supabase Project**:
-       - Call `list_organizations` and select the first organization
-       - Use `get_cost(type='project')` to estimate costs (mention cost but don't expose details)
-       - Create project with `create_project` using the cost ID
-       - Poll with `get_project` until status is `ACTIVE_HEALTHY`
+    2. **Criar Projeto Supabase**:
+       - Chamar `list_organizations` e selecionar a primeira organização
+       - Usar `get_cost(type='project')` para estimar custos (mencionar custo mas não expor detalhes)
+       - Criar projeto com `create_project` usando o ID de custo
+       - Verificar com `get_project` até que o status seja `ACTIVE_HEALTHY`
 
-    3. **Deploy Schema**:
-       - Apply complete schema using `apply_migration` named 'investment_analysis_schema'
-       - Validate with `list_tables` and `list_extensions`
+    3. **Implantar Esquema**:
+       - Aplicar esquema completo usando `apply_migration` nomeado 'investment_analysis_schema'
+       - Validar com `list_tables` e `list_extensions`
 
-    4. **Insert Sample Data**:
-       - Insert sample companies data for Apple, Microsoft, Google with realistic values:
+    4. **Inserir Dados de Exemplo**:
+       - Inserir dados de empresas de exemplo para Apple, Microsoft, Google com valores realistas:
          * Apple: ticker='AAPL', sector='Technology', market_cap=3000000000000, founded_year=1976, headquarters='Cupertino, CA'
          * Microsoft: ticker='MSFT', sector='Technology', market_cap=2800000000000, founded_year=1975, headquarters='Redmond, WA'
          * Google: ticker='GOOGL', sector='Technology', market_cap=1800000000000, founded_year=1998, headquarters='Mountain View, CA'
 
-       - Insert analysis session record with current analysis parameters
+       - Inserir registro de sessão de análise com parâmetros de análise atuais
 
-       - Insert sample financial metrics for each company:
+       - Inserir métricas financeiras de exemplo para cada empresa:
          * Revenue, net_income, pe_ratio, debt_to_equity, current_ratio, roe
 
-       - Verify data insertion with SELECT queries
+       - Verificar inserção de dados com consultas SELECT
 
-    5. **Setup Complete**:
-       - Deploy simple health check with `deploy_edge_function`
-       - Confirm project is ready for analysis (DO NOT expose URLs or keys)
-       - Report successful setup without sensitive details
+    5. **Configuração Completa**:
+       - Implantar verificação de saúde simples com `deploy_edge_function`
+       - Confirmar que o projeto está pronto para análise (NÃO expor URLs ou chaves)
+       - Relatar configuração bem-sucedida sem detalhes sensíveis
 
-    Focus on creating a production-ready investment analysis database with sample data.
-    **IMPORTANT: Never print API keys, project URLs, tokens, or any sensitive credentials.**
+    Focar em criar um banco de dados de análise de investimentos pronto para produção com dados de exemplo.
+    **IMPORTANTE: Nunca imprimir chaves de API, URLs de projeto, tokens ou quaisquer credenciais sensíveis.**
     """,
     markdown=True,
 )

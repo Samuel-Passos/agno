@@ -1,25 +1,25 @@
-"""🔍 Competitor Analysis Agent - Your AI-Powered Market Intelligence System!
+"""🔍 Competitor Analysis Agent - Seu Sistema de Inteligência de Mercado Alimentado por IA!
 
-This example demonstrates how to build a sophisticated competitor analysis agent that combines powerful search and scraping capabilities with advanced reasoning tools to provide
-comprehensive competitive intelligence. The agent performs deep analysis of competitors including
-market positioning, product offerings, and strategic insights.
+Este exemplo demonstra como construir um agente de análise de concorrentes sofisticado que combina capacidades poderosas de busca e scraping com ferramentas de raciocínio avançadas para fornecer
+inteligência competitiva abrangente. O agente realiza análise profunda de concorrentes incluindo
+posicionamento de mercado, ofertas de produtos e insights estratégicos.
 
-Key capabilities:
-- Company discovery using Firecrawl search
-- Website scraping and content analysis
-- Competitive intelligence gathering
-- SWOT analysis with reasoning
-- Strategic recommendations
-- Structured thinking and analysis
+Capacidades principais:
+- Descoberta de empresas usando busca Firecrawl
+- Scraping de sites e análise de conteúdo
+- Coleta de inteligência competitiva
+- Análise SWOT com raciocínio
+- Recomendações estratégicas
+- Pensamento e análise estruturados
 
-Example queries to try:
+Exemplos de consultas para tentar:
 - "Analyze OpenAI's main competitors in the LLM space"
 - "Compare Uber vs Lyft in the ride-sharing market"
 - "Analyze Tesla's competitive position vs traditional automakers"
 - "Research fintech competitors to Stripe"
 - "Analyze Nike vs Adidas in the athletic apparel market"
 
-Dependencies: `pip install openai firecrawl-py agno`
+Dependências: `pip install openai firecrawl-py agno`
 """
 
 from textwrap import dedent
@@ -47,146 +47,146 @@ competitor_analysis_agent = Agent(
         ),
     ],
     instructions=[
-        "1. Initial Research & Discovery:",
-        "   - Use search tool to find information about the target company",
-        "   - Search for '[company name] competitors', 'companies like [company name]'",
-        "   - Search for industry reports and market analysis",
-        "   - Use the think tool to plan your research approach",
-        "2. Competitor Identification:",
-        "   - Search for each identified competitor using Firecrawl",
-        "   - Find their official websites and key information sources",
-        "   - Map out the competitive landscape",
-        "3. Website Analysis:",
-        "   - Scrape competitor websites using Firecrawl",
-        "   - Map their site structure to understand their offerings",
-        "   - Extract product information, pricing, and value propositions",
-        "   - Look for case studies and customer testimonials",
-        "4. Deep Competitive Analysis:",
-        "   - Use the analyze tool after gathering information on each competitor",
-        "   - Compare features, pricing, and market positioning",
-        "   - Identify patterns and competitive dynamics",
-        "   - Think through the implications of your findings",
-        "5. Strategic Synthesis:",
-        "   - Conduct SWOT analysis for each major competitor",
-        "   - Use reasoning to identify competitive advantages",
-        "   - Analyze market trends and opportunities",
-        "   - Develop strategic recommendations",
-        "- Always use the think tool before starting major research phases",
-        "- Use the analyze tool to process findings and draw insights",
-        "- Search for multiple perspectives on each competitor",
-        "- Verify information by checking multiple sources",
-        "- Be thorough but focused in your analysis",
-        "- Provide evidence-based recommendations",
+        "1. Pesquisa e Descoberta Inicial:",
+        "   - Usar ferramenta de busca para encontrar informações sobre a empresa-alvo",
+        "   - Buscar por '[nome da empresa] competitors', 'companies like [nome da empresa]'",
+        "   - Buscar relatórios da indústria e análise de mercado",
+        "   - Usar a ferramenta think para planejar sua abordagem de pesquisa",
+        "2. Identificação de Concorrentes:",
+        "   - Buscar cada concorrente identificado usando Firecrawl",
+        "   - Encontrar seus sites oficiais e fontes de informação-chave",
+        "   - Mapear o cenário competitivo",
+        "3. Análise de Website:",
+        "   - Fazer scraping dos sites dos concorrentes usando Firecrawl",
+        "   - Mapear a estrutura do site para entender suas ofertas",
+        "   - Extrair informações de produtos, preços e propostas de valor",
+        "   - Procurar estudos de caso e depoimentos de clientes",
+        "4. Análise Competitiva Profunda:",
+        "   - Usar a ferramenta analyze após coletar informações sobre cada concorrente",
+        "   - Comparar recursos, preços e posicionamento de mercado",
+        "   - Identificar padrões e dinâmicas competitivas",
+        "   - Pensar nas implicações de suas descobertas",
+        "5. Síntese Estratégica:",
+        "   - Realizar análise SWOT para cada concorrente principal",
+        "   - Usar raciocínio para identificar vantagens competitivas",
+        "   - Analisar tendências de mercado e oportunidades",
+        "   - Desenvolver recomendações estratégicas",
+        "- Sempre usar a ferramenta think antes de iniciar fases principais de pesquisa",
+        "- Usar a ferramenta analyze para processar descobertas e extrair insights",
+        "- Buscar múltiplas perspectivas sobre cada concorrente",
+        "- Verificar informações verificando múltiplas fontes",
+        "- Ser minucioso mas focado em sua análise",
+        "- Fornecer recomendações baseadas em evidências",
     ],
     expected_output=dedent("""\
-    # Competitive Analysis Report: {Target Company}
+    # Relatório de Análise Competitiva: {Target Company}
 
-    ## Executive Summary
-    {High-level overview of competitive landscape and key findings}
+    ## Resumo Executivo
+    {Visão geral de alto nível do cenário competitivo e principais descobertas}
 
-    ## Research Methodology
-    - Search queries used
-    - Websites analyzed
-    - Key information sources
+    ## Metodologia de Pesquisa
+    - Consultas de busca usadas
+    - Sites analisados
+    - Fontes de informação-chave
 
-    ## Market Overview
-    ### Industry Context
-    - Market size and growth rate
-    - Key trends and drivers
-    - Regulatory environment
+    ## Visão Geral do Mercado
+    ### Contexto da Indústria
+    - Tamanho do mercado e taxa de crescimento
+    - Tendências e drivers-chave
+    - Ambiente regulatório
 
-    ### Competitive Landscape
-    - Major players identified
-    - Market segmentation
-    - Competitive dynamics
+    ### Cenário Competitivo
+    - Principais players identificados
+    - Segmentação de mercado
+    - Dinâmicas competitivas
 
-    ## Competitor Analysis
+    ## Análise de Concorrentes
 
-    ### Competitor 1: {Name}
-    #### Company Overview
+    ### Concorrente 1: {Name}
+    #### Visão Geral da Empresa
     - Website: {URL}
-    - Founded: {Year}
-    - Headquarters: {Location}
-    - Company size: {Employees/Revenue if available}
+    - Fundada: {Year}
+    - Sede: {Location}
+    - Tamanho da empresa: {Employees/Revenue if available}
 
-    #### Products & Services
-    - Core offerings
-    - Key features and capabilities
-    - Pricing model and tiers
-    - Target market segments
+    #### Produtos e Serviços
+    - Ofertas principais
+    - Recursos e capacidades-chave
+    - Modelo de preços e níveis
+    - Segmentos de mercado-alvo
 
-    #### Digital Presence Analysis
-    - Website structure and user experience
-    - Key messaging and value propositions
-    - Content strategy and resources
-    - Customer proof points
+    #### Análise de Presença Digital
+    - Estrutura do site e experiência do usuário
+    - Mensagens-chave e propostas de valor
+    - Estratégia de conteúdo e recursos
+    - Prova social de clientes
 
-    #### SWOT Analysis
-    **Strengths:**
-    - {Evidence-based strengths}
+    #### Análise SWOT
+    **Pontos Fortes:**
+    - {Pontos fortes baseados em evidências}
 
-    **Weaknesses:**
-    - {Identified weaknesses}
+    **Pontos Fracos:**
+    - {Pontos fracos identificados}
 
-    **Opportunities:**
-    - {Market opportunities}
+    **Oportunidades:**
+    - {Oportunidades de mercado}
 
-    **Threats:**
-    - {Competitive threats}
+    **Ameaças:**
+    - {Ameaças competitivas}
 
-    ### Competitor 2: {Name}
-    {Similar structure as above}
+    ### Concorrente 2: {Name}
+    {Estrutura similar à acima}
 
-    ### Competitor 3: {Name}
-    {Similar structure as above}
+    ### Concorrente 3: {Name}
+    {Estrutura similar à acima}
 
-    ## Comparative Analysis
+    ## Análise Comparativa
 
-    ### Feature Comparison Matrix
-    | Feature | {Target} | Competitor 1 | Competitor 2 | Competitor 3 |
+    ### Matriz de Comparação de Recursos
+    | Recurso | {Target} | Concorrente 1 | Concorrente 2 | Concorrente 3 |
     |---------|----------|--------------|--------------|--------------|
     | {Feature 1} | ✓/✗ | ✓/✗ | ✓/✗ | ✓/✗ |
     | {Feature 2} | ✓/✗ | ✓/✗ | ✓/✗ | ✓/✗ |
 
-    ### Pricing Comparison
-    | Company | Entry Level | Professional | Enterprise |
+    ### Comparação de Preços
+    | Empresa | Nível de Entrada | Profissional | Enterprise |
     |---------|-------------|--------------|------------|
-    | {Pricing details extracted from websites} |
+    | {Detalhes de preços extraídos dos sites} |
 
-    ### Market Positioning Analysis
-    {Analysis of how each competitor positions themselves}
+    ### Análise de Posicionamento de Mercado
+    {Análise de como cada concorrente se posiciona}
 
-    ## Strategic Insights
+    ## Insights Estratégicos
 
-    ### Key Findings
-    1. {Major insight with evidence}
-    2. {Competitive dynamics observed}
-    3. {Market gaps identified}
+    ### Principais Descobertas
+    1. {Insight principal com evidências}
+    2. {Dinâmicas competitivas observadas}
+    3. {Lacunas de mercado identificadas}
 
-    ### Competitive Advantages
-    - {Target company's advantages}
-    - {Unique differentiators}
+    ### Vantagens Competitivas
+    - {Vantagens da empresa-alvo}
+    - {Diferenciadores únicos}
 
-    ### Competitive Risks
-    - {Main threats from competitors}
-    - {Market challenges}
+    ### Riscos Competitivos
+    - {Principais ameaças dos concorrentes}
+    - {Desafios de mercado}
 
-    ## Strategic Recommendations
+    ## Recomendações Estratégicas
 
-    ### Immediate Actions (0-3 months)
-    1. {Quick competitive responses}
-    2. {Low-hanging fruit opportunities}
+    ### Ações Imediatas (0-3 meses)
+    1. {Respostas competitivas rápidas}
+    2. {Oportunidades de baixo esforço}
 
-    ### Short-term Strategy (3-12 months)
-    1. {Product/service enhancements}
-    2. {Market positioning adjustments}
+    ### Estratégia de Curto Prazo (3-12 meses)
+    1. {Melhorias de produtos/serviços}
+    2. {Ajustes de posicionamento de mercado}
 
-    ### Long-term Strategy (12+ months)
-    1. {Sustainable differentiation}
-    2. {Market expansion opportunities}
+    ### Estratégia de Longo Prazo (12+ meses)
+    1. {Diferenciação sustentável}
+    2. {Oportunidades de expansão de mercado}
 
-    ## Conclusion
-    {Summary of competitive position and strategic imperatives}
+    ## Conclusão
+    {Resumo da posição competitiva e imperativos estratégicos}
     """),
     markdown=True,
     add_datetime_to_context=True,

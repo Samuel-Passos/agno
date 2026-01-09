@@ -3,14 +3,14 @@ from agno.agent import Agent
 from agno.db.in_memory import InMemoryDb
 from agno.models.openai.chat import OpenAIChat
 
-# Global variables
+# Variáveis globais
 agent = None
 
 
 @cl.on_chat_start
 async def on_chat_start():
-    """Initialize the agent when a new chat session starts."""
-    # Create a unique database per session
+    """Inicializar o agente quando uma nova sessão de chat começa."""
+    # Criar um banco de dados único por sessão
     db = InMemoryDb()
 
     agent = Agent(
@@ -25,13 +25,13 @@ async def on_chat_start():
         telemetry=False,
     )
 
-    # Store the agent in the session
+    # Armazenar o agente na sessão
     cl.user_session.set("agent", agent)
 
 
 @cl.on_message
 async def on_message(message: cl.Message):
-    # Get the agent from the session
+    # Obter o agente da sessão
     agent = cl.user_session.get("agent")
 
     response_msg = cl.Message(content="")

@@ -54,16 +54,16 @@ def get_paperpal_agents(
     session_id: Optional[str] = None,
     arxiv_download_dir: Optional[Path] = None,
 ):
-    """Get Paperpal research agents with tools"""
+    """Obter agentes de pesquisa Paperpal com ferramentas"""
 
-    # Set up ArXiv download directory
+    # Configurar diretório de download do ArXiv
     if not arxiv_download_dir:
         arxiv_download_dir = Path(__file__).parent.parent.parent.parent.joinpath(
             "tmp", "arxiv_pdfs"
         )
         arxiv_download_dir.mkdir(parents=True, exist_ok=True)
 
-    # Initialize tools
+    # Inicializar ferramentas
     arxiv_toolkit = ArxivTools(download_dir=arxiv_download_dir)
     exa_tools = ExaTools()
 
@@ -73,7 +73,7 @@ def get_paperpal_agents(
         db_schema="ai",
     )
 
-    # Search Term Generator Agent
+    # Agente Gerador de Termos de Busca
     search_term_generator = Agent(
         name="Search Term Generator",
         model=get_model_with_provider(model_id),
@@ -83,27 +83,27 @@ def get_paperpal_agents(
         session_id=session_id,
         output_schema=SearchTerms,
         instructions=dedent("""
-            You are an expert research strategist specializing in generating strategic search terms 
-            for comprehensive research coverage.
+            Você é um estrategista de pesquisa especializado em gerar termos de busca estratégicos 
+            para cobertura abrangente de pesquisa.
 
-            Your task is to:
-            1. Analyze the given research topic to identify key concepts and aspects
-            2. Generate 2-3 specific and distinct search terms that capture different dimensions
-            3. Ensure terms are optimized for both academic and web search effectiveness
+            Sua tarefa é:
+            1. Analisar o tópico de pesquisa fornecido para identificar conceitos-chave e aspectos
+            2. Gerar 2-3 termos de busca específicos e distintos que capturem diferentes dimensões
+            3. Garantir que os termos sejam otimizados para eficácia tanto em busca acadêmica quanto na web
                             
-            Focus on terms that will help find:
-            - Recent research papers and theoretical developments
-            - Industry applications and real-world implementations
-            - Current challenges and future directions
-            - Cross-disciplinary connections and emerging trends
+            Focar em termos que ajudarão a encontrar:
+            - Artigos de pesquisa recentes e desenvolvimentos teóricos
+            - Aplicações da indústria e implementações do mundo real
+            - Desafios atuais e direções futuras
+            - Conexões interdisciplinares e tendências emergentes
 
-            Provide terms as a structured list optimized for research databases and web search.
+            Fornecer termos como uma lista estruturada otimizada para bancos de dados de pesquisa e busca na web.
         """),
         markdown=True,
         debug_mode=True,
     )
 
-    # ArXiv Search Agent
+    # Agente de Busca ArXiv
     arxiv_search_agent = Agent(
         name="ArXiv Research Agent",
         model=get_model_with_provider(model_id),
@@ -114,31 +114,31 @@ def get_paperpal_agents(
         tools=[arxiv_toolkit],
         output_schema=ArxivSearchResults,
         instructions=dedent("""
-            You are an expert in academic research with access to ArXiv's database.
+            Você é um especialista em pesquisa acadêmica com acesso ao banco de dados do ArXiv.
 
-            Your task is to:
-            1. Search ArXiv for the top 10 papers related to the provided search term.
-            2. Select the 3 most relevant research papers based on:
-                - Direct relevance to the search term.
-                - Scientific impact (e.g., citations, journal reputation).
-                - Recency of publication.
+            Sua tarefa é:
+            1. Buscar no ArXiv os 10 principais artigos relacionados ao termo de busca fornecido.
+            2. Selecionar os 3 artigos de pesquisa mais relevantes com base em:
+                - Relevância direta ao termo de busca.
+                - Impacto científico (ex: citações, reputação do periódico).
+                - Recenticidade da publicação.
 
-            For each selected paper, the output should be in json structure have these details:
+            Para cada artigo selecionado, a saída deve estar em estrutura json com estes detalhes:
                 - title
                 - id
                 - authors
-                - a concise summary
-                - the PDF link of the research paper
-                - links related to the research paper
-                - reasoning for why the paper was chosen
+                - um resumo conciso
+                - o link PDF do artigo de pesquisa
+                - links relacionados ao artigo de pesquisa
+                - raciocínio para por que o artigo foi escolhido
 
-            Ensure the selected research papers directly address the topic and offer valuable insights.
+            Garantir que os artigos de pesquisa selecionados abordem diretamente o tópico e ofereçam insights valiosos.
         """),
         markdown=True,
         debug_mode=True,
     )
 
-    # Web Search Agent
+    # Agente de Busca Web
     exa_search_agent = Agent(
         name="Web Research Agent",
         model=get_model_with_provider(model_id),
@@ -149,27 +149,27 @@ def get_paperpal_agents(
         tools=[exa_tools],
         output_schema=WebSearchResults,
         instructions=dedent("""
-            You are a web search expert specializing in extracting high-quality information.
+            Você é um especialista em busca web especializado em extrair informações de alta qualidade.
 
-            Your task is to:
-            1. Given a topic, search Exa for the top 10 articles about that topic.
-            2. Select the 3 most relevant articles based on:
-                - Source credibility.
-                - Content depth and relevance.
+            Sua tarefa é:
+            1. Dado um tópico, buscar no Exa os 10 principais artigos sobre esse tópico.
+            2. Selecionar os 3 artigos mais relevantes com base em:
+                - Credibilidade da fonte.
+                - Profundidade e relevância do conteúdo.
 
-            For each selected article, the output should have:
+            Para cada artigo selecionado, a saída deve ter:
                 - title
-                - a concise summary
-                - related links to the article
-                - reasoning for why the article was chosen and how it contributes to understanding the topic.
+                - um resumo conciso
+                - links relacionados ao artigo
+                - raciocínio para por que o artigo foi escolhido e como contribui para entender o tópico.
 
-            Ensure the selected articles are credible, relevant, and provide significant insights into the topic.
+            Garantir que os artigos selecionados sejam credíveis, relevantes e forneçam insights significativos sobre o tópico.
         """),
         markdown=True,
         debug_mode=True,
     )
 
-    # Research Editor Agent
+    # Agente Editor de Pesquisa
     research_editor = Agent(
         name="Research Editor",
         model=get_model_with_provider(model_id),
@@ -178,16 +178,16 @@ def get_paperpal_agents(
         user_id=user_id,
         session_id=session_id,
         instructions=dedent("""
-            You are a senior research editor specializing in breaking complex topics and information into understandable, engaging, high-quality blogs.
+            Você é um editor de pesquisa sênior especializado em dividir tópicos e informações complexas em blogs compreensíveis, envolventes e de alta qualidade.
 
-            Your task is to:
-            1. Create a detailed blog within 1000 words based on the given topic.
-            2. The blog should be of max 7-8 paragraphs, understandable, intuitive, making things easy to understand for the reader.
-            3. Highlight key findings and provide a clear, high-level overview of the topic.
-            4. At the end add the supporting articles link, paper link or any findings you think is necessary to add.
+            Sua tarefa é:
+            1. Criar um blog detalhado dentro de 1000 palavras com base no tópico fornecido.
+            2. O blog deve ter no máximo 7-8 parágrafos, compreensível, intuitivo, tornando as coisas fáceis de entender para o leitor.
+            3. Destacar achados-chave e fornecer uma visão geral clara e de alto nível do tópico.
+            4. No final adicionar o link dos artigos de apoio, link do artigo ou quaisquer achados que você acha necessário adicionar.
 
-            The blog should help the reader in getting a decent understanding of the topic.
-            The blog should be in markdown format.
+            O blog deve ajudar o leitor a obter uma compreensão decente do tópico.
+            O blog deve estar em formato markdown.
         """),
         markdown=True,
         debug_mode=True,

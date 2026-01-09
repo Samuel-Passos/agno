@@ -1,62 +1,62 @@
 
 {
   "table_name": "race_results",
-  "table_description": "Holds comprehensive race data for each Formula 1 race from 1950-2020, including positions, drivers, teams, and points.",
+  "table_description": "Contém dados abrangentes de corrida para cada corrida de Fórmula 1 de 1950-2020, incluindo posições, pilotos, equipes e pontos.",
   "table_columns": [
       {
           "name": "index",
           "type": "int",
-          "description": "Unique index for each entry."
+          "description": "Índice único para cada entrada."
       },
       {
           "name": "year",
           "type": "int",
-          "description": "The year of the race."
+          "description": "O ano da corrida."
       },
       {
           "name": "position",
           "type": "text",
-          "description": "The finishing position of the driver."
+          "description": "A posição de chegada do piloto."
       },
       {
           "name": "driver_no",
           "type": "int",
-          "description": "Driver number."
+          "description": "Número do piloto."
       },
       {
           "name": "venue",
           "type": "text",
-          "description": "Location of the race."
+          "description": "Localização da corrida."
       },
       {
           "name": "name",
           "type": "text",
-          "description": "Name of the driver."
+          "description": "Nome do piloto."
       },
       {
           "name": "name_tag",
           "type": "text",
-          "description": "Abbreviated tag of the driver's name."
+          "description": "Tag abreviada do nome do piloto."
       },
       {
           "name": "team",
           "type": "text",
-          "description": "The racing team of the driver."
+          "description": "A equipe de corrida do piloto."
       },
       {
           "name": "laps",
           "type": "float",
-          "description": "Number of laps completed."
+          "description": "Número de voltas completadas."
       },
       {
           "name": "time",
           "type": "text",
-          "description": "Finishing time or gap to the leader."
+          "description": "Tempo de chegada ou diferença para o líder."
       },
       {
           "name": "points",
           "type": "float",
-          "description": "Points earned in the race."
+          "description": "Pontos ganhos na corrida."
       }
   ]
 }

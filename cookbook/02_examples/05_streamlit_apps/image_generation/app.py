@@ -54,13 +54,13 @@ def on_model_change():
             if current_model and current_model != new_model_id:
                 try:
                     st.session_state["is_loading_session"] = False
-                    # Start new chat
+                    # Iniciar novo chat
                     restart_agent(model_id=new_model_id)
 
                 except Exception as e:
-                    st.sidebar.error(f"Error switching to {selected_model}: {str(e)}")
+                    st.sidebar.error(f"Erro ao mudar para {selected_model}: {str(e)}")
         else:
-            st.sidebar.error(f"Unknown model: {selected_model}")
+            st.sidebar.error(f"Modelo desconhecido: {selected_model}")
 
 
 def main():
@@ -68,18 +68,18 @@ def main():
     # App header
     ####################################################################
     st.markdown(
-        "<h1 class='main-title'>Recipe Image Generator</h1>", unsafe_allow_html=True
+        "<h1 class='main-title'>Gerador de Imagem de Receita</h1>", unsafe_allow_html=True
     )
     st.markdown(
-        "<p class='subtitle'>Your AI cooking companion - Upload recipes or use defaults, then get visual step-by-step cooking guides!</p>",
+        "<p class='subtitle'>Seu companheiro de culinária de IA - Envie receitas ou use padrões, depois obtenha guias visuais passo a passo de culinária!</p>",
         unsafe_allow_html=True,
     )
 
     ####################################################################
-    # Model selector
+    # Seletor de modelo
     ####################################################################
     selected_model = st.sidebar.selectbox(
-        "Select Model",
+        "Selecionar Modelo",
         options=MODELS,
         index=0,
         key="model_selector",
@@ -87,67 +87,67 @@ def main():
     )
 
     ####################################################################
-    # Initialize Agent and Session
+    # Inicializar Agente e Sessão
     ####################################################################
     recipe_image_agent = initialize_agent(selected_model, get_recipe_image_agent)
     reset_session_state(recipe_image_agent)
 
-    if prompt := st.chat_input("👋 Ask me for a recipe (e.g., 'Recipe for Pad Thai')"):
+    if prompt := st.chat_input("👋 Pergunte-me uma receita (ex: 'Receita de Pad Thai')"):
         add_message("user", prompt)
 
     ####################################################################
-    # Recipe Management
+    # Gerenciamento de Receitas
     ####################################################################
-    st.sidebar.markdown("#### 📚 Recipe Management")
+    st.sidebar.markdown("#### 📚 Gerenciamento de Receitas")
     knowledge_base_info_widget(recipe_image_agent)
 
-    # File upload
+    # Upload de arquivo
     uploaded_file = st.sidebar.file_uploader(
-        "Upload Recipe PDF (.pdf)", type=["pdf"], key="recipe_upload"
+        "Enviar PDF de Receita (.pdf)", type=["pdf"], key="recipe_upload"
     )
     if uploaded_file and not prompt:
-        alert = st.sidebar.info("Processing recipe PDF...", icon="ℹ️")
+        alert = st.sidebar.info("Processando PDF de receita...", icon="ℹ️")
         try:
             with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as tmp_file:
                 tmp_file.write(uploaded_file.read())
                 tmp_path = tmp_file.name
 
             recipe_image_agent.knowledge.add_content(
-                name=f"Uploaded Recipe: {uploaded_file.name}",
+                name=f"Receita Enviada: {uploaded_file.name}",
                 path=tmp_path,
-                description=f"Custom recipe PDF: {uploaded_file.name}",
+                description=f"PDF de receita personalizado: {uploaded_file.name}",
             )
 
             unlink(tmp_path)
-            st.sidebar.success(f"{uploaded_file.name} added to recipe collection")
+            st.sidebar.success(f"{uploaded_file.name} adicionado à coleção de receitas")
         except Exception as e:
-            st.sidebar.error(f"Error processing recipe PDF: {str(e)}")
+            st.sidebar.error(f"Erro ao processar PDF de receita: {str(e)}")
         finally:
             alert.empty()
 
-    if st.sidebar.button("Clear Recipe Collection"):
+    if st.sidebar.button("Limpar Coleção de Receitas"):
         if recipe_image_agent.knowledge.vector_db:
             recipe_image_agent.knowledge.vector_db.delete()
-        st.sidebar.success("Recipe collection cleared")
+        st.sidebar.success("Coleção de receitas limpa")
 
     ###############################################################
-    # Sample Recipes
+    # Receitas de Exemplo
     ###############################################################
-    st.sidebar.markdown("#### 🍜 Sample Recipes")
-    if st.sidebar.button("🍝 Recipe for Pad Thai"):
-        add_message("user", "Recipe for Pad Thai with visual steps")
-    if st.sidebar.button("🥗 Recipe for Som Tum"):
-        add_message("user", "Recipe for Som Tum (Papaya Salad)")
-    if st.sidebar.button("🍲 Recipe for Tom Kha Gai"):
-        add_message("user", "Recipe for Tom Kha Gai soup")
+    st.sidebar.markdown("#### 🍜 Receitas de Exemplo")
+    if st.sidebar.button("🍝 Receita de Pad Thai"):
+        add_message("user", "Receita de Pad Thai com passos visuais")
+    if st.sidebar.button("🥗 Receita de Som Tum"):
+        add_message("user", "Receita de Som Tum (Salada de Mamão)")
+    if st.sidebar.button("🍲 Receita de Tom Kha Gai"):
+        add_message("user", "Receita de sopa Tom Kha Gai")
 
     ###############################################################
-    # Utility buttons
+    # Botões de utilidade
     ###############################################################
-    st.sidebar.markdown("#### 🛠️ Utilities")
+    st.sidebar.markdown("#### 🛠️ Utilitários")
     col1, col2 = st.sidebar.columns([1, 1])
     with col1:
-        if st.sidebar.button("🔄 New Chat", use_container_width=True):
+        if st.sidebar.button("🔄 Novo Chat", use_container_width=True):
             restart_agent()
             st.rerun()
 
@@ -171,20 +171,20 @@ def main():
                 filename = "recipe_chat_new.md"
 
             if st.sidebar.download_button(
-                "💾 Export Chat",
+                "💾 Exportar Chat",
                 export_chat_history("Recipe Image Generator"),
                 file_name=filename,
                 mime="text/markdown",
                 use_container_width=True,
-                help=f"Export {len(st.session_state['messages'])} messages",
+                help=f"Exportar {len(st.session_state['messages'])} mensagens",
             ):
-                st.sidebar.success("Chat history exported!")
+                st.sidebar.success("Histórico de chat exportado!")
         else:
             st.sidebar.button(
-                "💾 Export Chat",
+                "💾 Exportar Chat",
                 disabled=True,
                 use_container_width=True,
-                help="No messages to export",
+                help="Nenhuma mensagem para exportar",
             )
 
     ####################################################################
@@ -242,18 +242,18 @@ def main():
                                     image = Image.open(io.BytesIO(img.content))
                                     st.image(
                                         image,
-                                        caption=f"Step-by-step cooking guide {i + 1}",
+                                        caption=f"Guia de culinária passo a passo {i + 1}",
                                         use_container_width=True,
                                     )
                                 elif hasattr(img, "url") and img.url:
                                     st.image(
                                         img.url,
-                                        caption=f"Step-by-step cooking guide {i + 1}",
+                                        caption=f"Guia de culinária passo a passo {i + 1}",
                                         use_container_width=True,
                                     )
                             except Exception as img_error:
                                 st.warning(
-                                    f"Could not display image {i + 1}: {str(img_error)}"
+                                    f"Não foi possível exibir imagem {i + 1}: {str(img_error)}"
                                 )
 
                     # Add message with tools
@@ -270,7 +270,7 @@ def main():
                         add_message("assistant", response)
 
                 except Exception as e:
-                    error_message = f"Sorry, I encountered an error: {str(e)}"
+                    error_message = f"Desculpe, encontrei um erro: {str(e)}"
                     add_message("assistant", error_message)
                     st.error(error_message)
 
@@ -283,7 +283,7 @@ def main():
     # About section
     ####################################################################
     about_section(
-        "This Recipe Image Generator creates visual step-by-step cooking guides from recipe collections. Upload your own recipes or use the built-in Thai recipe collection."
+        "Este Gerador de Imagem de Receita cria guias visuais passo a passo de culinária a partir de coleções de receitas. Envie suas próprias receitas ou use a coleção de receitas tailandesas integrada."
     )
 
 

@@ -14,9 +14,9 @@ from agno.workflow.types import StepInput, StepOutput
 from models import InvestmentAnalysisRequest, InvestmentType, RiskLevel
 
 
-### Evaluators
+### Avaliadores
 def should_run_analysis(analysis_type: str) -> callable:
-    """Create conditional evaluator for analysis types"""
+    """Criar avaliador condicional para tipos de análise"""
 
     def evaluator(step_input: StepInput) -> bool:
         request_data = step_input.input
@@ -28,7 +28,7 @@ def should_run_analysis(analysis_type: str) -> callable:
 
 
 def is_high_risk_investment(step_input: StepInput) -> bool:
-    """Check if this is a high-risk investment requiring additional analysis"""
+    """Verificar se este é um investimento de alto risco que requer análise adicional"""
     request_data = step_input.input
     if isinstance(request_data, InvestmentAnalysisRequest):
         return (
@@ -42,7 +42,7 @@ def is_high_risk_investment(step_input: StepInput) -> bool:
 
 
 def is_large_investment(step_input: StepInput) -> bool:
-    """Check if this is a large investment requiring additional due diligence"""
+    """Verificar se este é um investimento grande que requer due diligence adicional"""
     request_data = step_input.input
     if isinstance(request_data, InvestmentAnalysisRequest):
         return (
@@ -53,7 +53,7 @@ def is_large_investment(step_input: StepInput) -> bool:
 
 
 def requires_esg_analysis(step_input: StepInput) -> bool:
-    """Check if ESG analysis is required"""
+    """Verificar se análise ESG é necessária"""
     request_data = step_input.input
     if isinstance(request_data, InvestmentAnalysisRequest):
         return "esg_analysis" in request_data.analyses_requested
@@ -61,16 +61,16 @@ def requires_esg_analysis(step_input: StepInput) -> bool:
 
 
 def is_multi_company_analysis(step_input: StepInput) -> bool:
-    """Check if analyzing multiple companies"""
+    """Verificar se está analisando múltiplas empresas"""
     request_data = step_input.input
     if isinstance(request_data, InvestmentAnalysisRequest):
         return len(request_data.companies) > 1
     return False
 
 
-### Routers
+### Roteadores
 def select_valuation_approach(step_input: StepInput) -> Step:
-    """Router to select appropriate valuation approach based on investment type"""
+    """Roteador para selecionar abordagem de avaliação apropriada com base no tipo de investimento"""
     request_data = step_input.input
     if isinstance(request_data, InvestmentAnalysisRequest):
         if request_data.investment_type in [
@@ -80,13 +80,13 @@ def select_valuation_approach(step_input: StepInput) -> Step:
             return Step(
                 name="Venture Valuation",
                 agent=valuation_agent,
-                description="Specialized valuation for venture/growth investments",
+                description="Avaliação especializada para investimentos venture/crescimento",
             )
         elif request_data.investment_type == InvestmentType.DEBT:
             return Step(
                 name="Credit Analysis",
                 agent=financial_analysis_agent,
-                description="Credit-focused analysis for debt investments",
+                description="Análise focada em crédito para investimentos em dívida",
             )
         else:
             return valuation_step
@@ -94,14 +94,14 @@ def select_valuation_approach(step_input: StepInput) -> Step:
 
 
 def select_risk_framework(step_input: StepInput) -> Step:
-    """Router to select risk assessment framework"""
+    """Roteador para selecionar estrutura de avaliação de risco"""
     request_data = step_input.input
     if isinstance(request_data, InvestmentAnalysisRequest):
         if request_data.investment_type == InvestmentType.VENTURE:
             return Step(
                 name="Venture Risk Assessment",
                 agent=risk_assessment_agent,
-                description="Venture-specific risk assessment framework",
+                description="Estrutura de avaliação de risco específica para venture",
             )
         elif (
             request_data.investment_amount
@@ -110,7 +110,7 @@ def select_risk_framework(step_input: StepInput) -> Step:
             return Step(
                 name="Enterprise Risk Assessment",
                 agent=risk_assessment_agent,
-                description="Enterprise-level risk assessment for large investments",
+                description="Avaliação de risco em nível empresarial para investimentos grandes",
             )
         else:
             return risk_assessment_step
@@ -118,11 +118,11 @@ def select_risk_framework(step_input: StepInput) -> Step:
 
 
 def analysis_quality_check(step_outputs: list[StepOutput]) -> bool:
-    """End condition: Check if analysis quality is sufficient"""
+    """Condição de fim: Verificar se a qualidade da análise é suficiente"""
     if not step_outputs:
         return False
 
-    # Check if latest output indicates high confidence
+    # Verificar se a saída mais recente indica alta confiança
     latest_output = step_outputs[-1]
     if hasattr(latest_output, "content") and latest_output.content:
         content_lower = latest_output.content.lower()
@@ -135,11 +135,11 @@ def analysis_quality_check(step_outputs: list[StepOutput]) -> bool:
 
 
 def risk_assessment_complete(step_outputs: list[StepOutput]) -> bool:
-    """End condition: Check if risk assessment is comprehensive"""
+    """Condição de fim: Verificar se a avaliação de risco é abrangente"""
     if len(step_outputs) < 2:
         return False
 
-    # Check if we have both financial and operational risk scores
+    # Verificar se temos pontuações de risco financeiro e operacional
     has_financial_risk = any(
         "financial risk" in output.content.lower()
         for output in step_outputs
@@ -154,65 +154,65 @@ def risk_assessment_complete(step_outputs: list[StepOutput]) -> bool:
     return has_financial_risk and has_operational_risk
 
 
-### Steps
+### Passos
 database_setup_step = Step(
     name="Database Setup",
     agent=database_setup_agent,
-    description="Create and configure Supabase database for investment analysis",
+    description="Criar e configurar banco de dados Supabase para análise de investimentos",
 )
 
 company_research_step = Step(
     name="Company Research",
     agent=company_research_agent,
-    description="Company research and data storage using Supabase MCP",
+    description="Pesquisa de empresas e armazenamento de dados usando Supabase MCP",
 )
 
 financial_analysis_step = Step(
     name="Financial Analysis",
     agent=financial_analysis_agent,
-    description="Financial analysis with Supabase database operations",
+    description="Análise financeira com operações de banco de dados Supabase",
 )
 
 valuation_step = Step(
     name="Valuation Analysis",
     agent=valuation_agent,
-    description="Valuation modeling using Supabase database storage",
+    description="Modelagem de avaliação usando armazenamento de banco de dados Supabase",
 )
 
 risk_assessment_step = Step(
     name="Risk Assessment",
     agent=risk_assessment_agent,
-    description="Risk analysis and scoring with Supabase database",
+    description="Análise e pontuação de risco com banco de dados Supabase",
 )
 
 market_analysis_step = Step(
     name="Market Analysis",
     agent=market_analysis_agent,
-    description="Market dynamics analysis using Supabase operations",
+    description="Análise de dinâmicas de mercado usando operações Supabase",
 )
 
 esg_analysis_step = Step(
     name="ESG Analysis",
     agent=esg_analysis_agent,
-    description="ESG assessment and scoring with Supabase database",
+    description="Avaliação e pontuação ESG com banco de dados Supabase",
 )
 
 investment_recommendation_step = Step(
     name="Investment Recommendation",
     agent=investment_recommendation_agent,
-    description="Data-driven investment recommendations using Supabase queries",
+    description="Recomendações de investimento baseadas em dados usando consultas Supabase",
 )
 
 report_synthesis_step = Step(
     name="Report Synthesis",
     agent=report_synthesis_agent,
-    description="Comprehensive report generation from Supabase database",
+    description="Geração de relatório abrangente a partir do banco de dados Supabase",
 )
 
 
 investment_analysis_workflow = Workflow(
     name="Enhanced Investment Analysis Workflow",
-    description="Comprehensive investment analysis using workflow v2 primitives with Supabase MCP tools",
+    description="Análise abrangente de investimentos usando primitivas de workflow v2 com ferramentas Supabase MCP",
     steps=[
         database_setup_step,
         company_research_step,

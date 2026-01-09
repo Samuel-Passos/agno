@@ -1,18 +1,18 @@
 """
-Agent with Tools - Finance Agent
-=================================
-Your first Agno agent: a data-driven financial analyst that retrieves
-market data, computes key metrics, and delivers concise insights.
+Agente com Ferramentas - Agente Financeiro
+===========================================
+Seu primeiro agente Agno: um analista financeiro orientado por dados que recupera
+dados de mercado, calcula métricas-chave e entrega insights concisos.
 
-This example shows how to give an agent tools to interact with external
-data sources. The agent uses YFinanceTools to fetch real-time market data.
+Este exemplo mostra como dar a um agente ferramentas para interagir com fontes
+de dados externas. O agente usa YFinanceTools para buscar dados de mercado em tempo real.
 
-Example prompts to try:
-- "What's the current price of AAPL?"
-- "Compare NVDA and AMD — which looks stronger?"
-- "Give me a quick investment brief on Microsoft"
-- "What's Tesla's P/E ratio and how does it compare to the industry?"
-- "Show me the key metrics for the FAANG stocks"
+Exemplos de prompts para testar:
+- "Qual é o preço atual da AAPL?"
+- "Compare NVDA e AMD — qual parece mais forte?"
+- "Me dê um resumo rápido de investimento sobre a Microsoft"
+- "Qual é a relação P/E da Tesla e como ela se compara à indústria?"
+- "Mostre-me as métricas-chave para as ações FAANG"
 """
 
 from agno.agent import Agent
@@ -20,42 +20,42 @@ from agno.models.google import Gemini
 from agno.tools.yfinance import YFinanceTools
 
 # ============================================================================
-# Agent Instructions
+# Instruções do Agente
 # ============================================================================
 instructions = """\
-You are a Finance Agent — a data-driven analyst who retrieves market data,
-computes key ratios, and produces concise, decision-ready insights.
+Você é um Agente Financeiro — um analista orientado por dados que recupera dados de mercado,
+calcula relações-chave e produz insights concisos e prontos para decisão.
 
-## Workflow
+## Fluxo de Trabalho
 
-1. Clarify
-   - Identify tickers from company names (e.g., Apple → AAPL)
-   - If ambiguous, ask
+1. Esclarecer
+   - Identificar tickers a partir de nomes de empresas (ex: Apple → AAPL)
+   - Se ambíguo, perguntar
 
-2. Retrieve
-   - Fetch: price, change %, market cap, P/E, EPS, 52-week range
-   - For comparisons, pull the same fields for each ticker
+2. Recuperar
+   - Buscar: preço, variação %, capitalização de mercado, P/E, EPS, faixa de 52 semanas
+   - Para comparações, buscar os mesmos campos para cada ticker
 
-3. Analyze
-   - Compute ratios (P/E, P/S, margins) when not already provided
-   - Key drivers and risks — 2-3 bullets max
-   - Facts only, no speculation
+3. Analisar
+   - Calcular relações (P/E, P/S, margens) quando não fornecidas
+   - Principais drivers e riscos — máximo de 2-3 pontos
+   - Apenas fatos, sem especulação
 
-4. Present
-   - Lead with a one-line summary
-   - Use tables for multi-stock comparisons
-   - Keep it tight
+4. Apresentar
+   - Começar com um resumo de uma linha
+   - Usar tabelas para comparações de múltiplas ações
+   - Manter conciso
 
-## Rules
+## Regras
 
-- Source: Yahoo Finance. Always note the timestamp.
-- Missing data? Say "N/A" and move on.
-- No personalized advice — add disclaimer when relevant.
-- No emojis.\
+- Fonte: Yahoo Finance. Sempre anotar o timestamp.
+- Dados faltando? Diga "N/A" e continue.
+- Sem conselhos personalizados — adicione aviso quando relevante.
+- Sem emojis.\
 """
 
 # ============================================================================
-# Create the Agent
+# Criar o Agente
 # ============================================================================
 agent_with_tools = Agent(
     name="Agent with Tools",
@@ -67,31 +67,31 @@ agent_with_tools = Agent(
 )
 
 # ============================================================================
-# Run the Agent
+# Executar o Agente
 # ============================================================================
 if __name__ == "__main__":
     agent_with_tools.print_response(
-        "Give me a quick investment brief on NVIDIA", stream=True
+        "Me dê um resumo rápido de investimento sobre a NVIDIA", stream=True
     )
 
 # ============================================================================
-# More Examples
+# Mais Exemplos
 # ============================================================================
 """
-Try these prompts:
+Teste estes prompts:
 
-1. Single Stock Analysis
-   "What's Apple's current valuation? Is it expensive?"
+1. Análise de Ação Única
+   "Qual é a avaliação atual da Apple? Está cara?"
 
-2. Comparison
-   "Compare Google and Microsoft as investments"
+2. Comparação
+   "Compare Google e Microsoft como investimentos"
 
-3. Sector Overview
-   "Show me key metrics for the top AI stocks: NVDA, AMD, GOOGL, MSFT"
+3. Visão Geral do Setor
+   "Mostre-me as métricas-chave para as principais ações de IA: NVDA, AMD, GOOGL, MSFT"
 
-4. Quick Check
-   "What's Tesla trading at today?"
+4. Verificação Rápida
+   "A que preço a Tesla está negociando hoje?"
 
-5. Deep Dive
-   "Break down Amazon's financials — revenue, margins, and growth"
+5. Análise Profunda
+   "Detalhe as finanças da Amazon — receita, margens e crescimento"
 """

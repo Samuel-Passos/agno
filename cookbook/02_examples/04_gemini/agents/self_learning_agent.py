@@ -1,16 +1,16 @@
 """
-Self-Learning Agent
-====================
-GPU Poor Continuous Learning: System-level learning without fine-tuning.
+Agente de Auto-Aprendizado
+==========================
+Aprendizado Contínuo GPU Poor: Aprendizado em nível de sistema sem fine-tuning.
 
-The loop:
-1. Search knowledge base for relevant learnings
-2. Gather fresh information (search, APIs)
-3. Synthesize answer using both
-4. Identify reusable insight
-5. Save with user approval
+O loop:
+1. Buscar base de conhecimento por aprendizados relevantes
+2. Coletar informações novas (busca, APIs)
+3. Sintetizar resposta usando ambos
+4. Identificar insight reutilizável
+5. Salvar com aprovação do usuário
 
-Built with Agno + Gemini 3 Flash
+Construído com Agno + Gemini 3 Flash
 """
 
 import json
@@ -28,7 +28,7 @@ from agno.vectordb.pgvector import PgVector, SearchType
 from db import db_url, gemini_agents_db
 
 # ============================================================================
-# Knowledge Base: stores successful learnings
+# Base de Conhecimento: armazena aprendizados bem-sucedidos
 # ============================================================================
 agent_knowledge = Knowledge(
     name="Agent Learnings",
@@ -44,7 +44,7 @@ agent_knowledge = Knowledge(
 
 
 # ============================================================================
-# Tool: Save Learning
+# Ferramenta: Salvar Aprendizado
 # ============================================================================
 def save_learning(
     title: str,
@@ -54,31 +54,31 @@ def save_learning(
     type: str = "rule",
 ) -> str:
     """
-    Save a reusable learning from a successful run.
+    Salvar um aprendizado reutilizável de uma execução bem-sucedida.
 
     Args:
-        title: Short descriptive title (e.g., "API rate limit handling")
-        context: When/why this learning applies (e.g., "When calling external APIs...")
-        learning: The actual reusable insight (be specific and actionable)
+        title: Título descritivo curto (ex: "Tratamento de limite de taxa de API")
+        context: Quando/por que este aprendizado se aplica (ex: "Ao chamar APIs externas...")
+        learning: O insight reutilizável real (seja específico e acionável)
         confidence: low | medium | high
         type: rule | heuristic | source | process | constraint
 
     Returns:
-        Status message indicating what happened
+        Mensagem de status indicando o que aconteceu
     """
-    # Validate inputs
+    # Validar entradas
     if not title or not title.strip():
-        return "Cannot save: title is required"
+        return "Não é possível salvar: título é obrigatório"
     if not learning or not learning.strip():
-        return "Cannot save: learning content is required"
+        return "Não é possível salvar: conteúdo do aprendizado é obrigatório"
     if len(learning.strip()) < 20:
-        return "Cannot save: learning is too short to be useful. Be more specific."
+        return "Não é possível salvar: aprendizado é muito curto para ser útil. Seja mais específico."
     if confidence not in ("low", "medium", "high"):
-        return f"Cannot save: confidence must be low|medium|high, got '{confidence}'"
+        return f"Não é possível salvar: confiança deve ser low|medium|high, recebido '{confidence}'"
     if type not in ("rule", "heuristic", "source", "process", "constraint"):
-        return f"Cannot save: type must be rule|heuristic|source|process|constraint, got '{type}'"
+        return f"Não é possível salvar: tipo deve ser rule|heuristic|source|process|constraint, recebido '{type}'"
 
-    # Build the learning payload
+    # Construir o payload do aprendizado
     payload = {
         "title": title.strip(),
         "context": context.strip() if context else "",
@@ -88,7 +88,7 @@ def save_learning(
         "created_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
     }
 
-    # Save to knowledge base
+    # Salvar na base de conhecimento
     try:
         agent_knowledge.add_content(
             name=payload["title"],
@@ -97,67 +97,67 @@ def save_learning(
             skip_if_exists=True,
         )
     except Exception as e:
-        logger.error(f"[Learning] Failed to save: {e}")
-        return f"Failed to save learning: {e}"
+        logger.error(f"[Learning] Falha ao salvar: {e}")
+        return f"Falha ao salvar aprendizado: {e}"
 
-    logger.info(f"[Learning] Saved: {payload['title']}")
-    return f"Learning saved: '{payload['title']}'"
+    logger.info(f"[Learning] Salvo: {payload['title']}")
+    return f"Aprendizado salvo: '{payload['title']}'"
 
 
 # ============================================================================
-# Instructions
+# Instruções
 # ============================================================================
 instructions = """\
-You are a Self-Learning Agent that improves over time by capturing and reusing successful patterns.
+Você é um Agente de Auto-Aprendizado que melhora com o tempo capturando e reutilizando padrões bem-sucedidos.
 
-You build institutional memory: successful insights get saved to a knowledge base and retrieved on future runs. The model stays fixed, but the system gets smarter.
+Você constrói memória institucional: insights bem-sucedidos são salvos em uma base de conhecimento e recuperados em execuções futuras. O modelo permanece fixo, mas o sistema fica mais inteligente.
 
-## Tools
+## Ferramentas
 
-| Tool | Use For |
-|------|---------|
-| search_knowledge | Retrieve relevant prior learnings |
-| parallel_search | Web search, current information |
-| yfinance | Market data, financials, company info |
-| save_learning | Store a reusable insight (requires user approval) |
+| Ferramenta | Usar Para |
+|------------|-----------|
+| search_knowledge | Recuperar aprendizados anteriores relevantes |
+| parallel_search | Busca web, informações atuais |
+| yfinance | Dados de mercado, financeiros, informações de empresas |
+| save_learning | Armazenar um insight reutilizável (requer aprovação do usuário) |
 
-## Workflow
+## Fluxo de Trabalho
 
-For every request:
+Para cada solicitação:
 
-1. SEARCH KNOWLEDGE FIRST — Always call `search_knowledge` before anything else. Extract key concepts from the user's query and search for relevant learnings. If nothing relevant is found, proceed without prior context.
-2. RESEARCH — Use `parallel_search` or `yfinance` to gather fresh information as needed.
-3. SYNTHESIZE — Combine prior learnings (if any) with new information. When applying a prior learning, reference it naturally: "Based on a previous pattern..." or "A prior learning suggests..."
-4. REFLECT — After answering, consider: did this task reveal a reusable insight? Most queries will not produce a learning. Only flag genuine discoveries.
-5. PROPOSE (if applicable) — If you identified something worth saving, propose it at the end of your response. Never call save_learning without explicit user approval.
+1. BUSCAR CONHECIMENTO PRIMEIRO — Sempre chamar `search_knowledge` antes de qualquer coisa. Extrair conceitos-chave da consulta do usuário e buscar aprendizados relevantes. Se nada relevante for encontrado, prosseguir sem contexto anterior.
+2. PESQUISAR — Usar `parallel_search` ou `yfinance` para coletar informações novas conforme necessário.
+3. SINTETIZAR — Combinar aprendizados anteriores (se houver) com novas informações. Ao aplicar um aprendizado anterior, referenciá-lo naturalmente: "Com base em um padrão anterior..." ou "Um aprendizado anterior sugere..."
+4. REFLETIR — Após responder, considerar: esta tarefa revelou um insight reutilizável? A maioria das consultas não produzirá um aprendizado. Apenas sinalizar descobertas genuínas.
+5. PROPOR (se aplicável) — Se você identificou algo que vale a pena salvar, propor no final de sua resposta. Nunca chamar save_learning sem aprovação explícita do usuário.
 
-## What Makes a Good Learning
+## O Que Faz um Bom Aprendizado
 
-A learning is worth saving if it is:
-- Specific: "When comparing ETFs, check expense ratio AND tracking error" not "Look at ETF metrics"
-- Actionable: Can be directly applied in future similar queries
-- Generalizable: Useful beyond this specific question
+Um aprendizado vale a pena salvar se for:
+- Específico: "Ao comparar ETFs, verificar taxa de despesa E erro de rastreamento" não "Olhar métricas de ETF"
+- Acionável: Pode ser aplicado diretamente em consultas futuras semelhantes
+- Generalizável: Útil além desta questão específica
 
-Do not save: raw facts, one-off answers, summaries, speculation, or anything unlikely to recur.
+Não salvar: fatos brutos, respostas pontuais, resumos, especulação ou qualquer coisa improvável de recorrer.
 
-Most tasks will not produce a learning. That's expected.
+A maioria das tarefas não produzirá um aprendizado. Isso é esperado.
 
-## Proposing a Learning
+## Propondo um Aprendizado
 
-When you have a genuine insight worth saving, end your response with:
+Quando você tiver um insight genuíno que vale a pena salvar, terminar sua resposta com:
 
 ---
-Proposed Learning
+Aprendizado Proposto
 
-Title: [concise title]
-Type: rule | heuristic | source | process | constraint
-Context: [when to apply this]
-Learning: [the insight — specific and actionable]
+Título: [título conciso]
+Tipo: rule | heuristic | source | process | constraint
+Contexto: [quando aplicar isso]
+Aprendizado: [o insight — específico e acionável]
 
-Save this? (yes/no)
+Salvar isso? (sim/não)
 ---
 
-If the user declines, acknowledge and move on. Do not re-propose the same learning.
+Se o usuário recusar, reconhecer e seguir em frente. Não repropor o mesmo aprendizado.
 """
 
 
@@ -175,17 +175,17 @@ self_learning_agent = Agent(
         YFinanceTools(),
         save_learning,
     ],
-    # Enable the agent to remember user information and preferences
+    # Habilitar o agente para lembrar informações e preferências do usuário
     enable_agentic_memory=True,
-    # Enable the agent to search the knowledge base (i.e previous research snapshots)
+    # Habilitar o agente para buscar a base de conhecimento (ex: snapshots de pesquisa anteriores)
     search_knowledge=True,
-    # Add the current date and time to the context
+    # Adicionar a data e hora atuais ao contexto
     add_datetime_to_context=True,
-    # Add the history of the agent's runs to the context
+    # Adicionar o histórico das execuções do agente ao contexto
     add_history_to_context=True,
-    # Number of historical runs to include in the context
+    # Número de execuções históricas para incluir no contexto
     num_history_runs=5,
-    # Give the agent a tool to read chat history beyond the last 5 messages
+    # Dar ao agente uma ferramenta para ler histórico de chat além das últimas 5 mensagens
     read_chat_history=True,
     markdown=True,
 )
@@ -202,16 +202,16 @@ if __name__ == "__main__":
         self_learning_agent.print_response(query, stream=True)
     else:
         print("=" * 60)
-        print("🧠 Self-Learning Agent")
-        print("   GPU Poor Continuous Learning with Gemini 3 Flash")
+        print("🧠 Agente de Auto-Aprendizado")
+        print("   Aprendizado Contínuo GPU Poor com Gemini 3 Flash")
         print("=" * 60)
-        print("\nType 'quit' to exit.\n")
+        print("\nDigite 'quit' para sair.\n")
 
         while True:
             try:
-                user_input = input("You: ").strip()
+                user_input = input("Você: ").strip()
                 if user_input.lower() in ("quit", "exit", "q"):
-                    print("\n👋 Goodbye!")
+                    print("\n👋 Até logo!")
                     break
                 if not user_input:
                     continue
@@ -221,5 +221,5 @@ if __name__ == "__main__":
                 print()
 
             except KeyboardInterrupt:
-                print("\n\n👋 Goodbye!")
+                print("\n\n👋 Até logo!")
                 break

@@ -9,14 +9,14 @@ readme_gen_agent = Agent(
     tools=[GithubTools(), LocalFileSystemTools()],
     markdown=True,
     instructions=[
-        "You are readme generator agent",
-        "You'll be given repository url or repository name from user."
-        "You'll use the `get_repository` tool to get the repository details."
-        "You have to pass the repo_name as argument to the tool. It should be in the format of owner/repo_name. If given url extract owner/repo_name from it."
-        "Also call the `get_repository_languages` tool to get the languages used in the repository."
-        "Write a useful README for a open source project, including how to clone and install the project, run the project etc. Also add badges for the license, size of the repo, etc"
-        "Don't include the project's languages-used in the README"
-        "Write the produced README to the local filesystem",
+        "Você é um agente gerador de README",
+        "Você receberá uma URL de repositório ou nome de repositório do usuário."
+        "Você usará a ferramenta `get_repository` para obter os detalhes do repositório."
+        "Você deve passar o repo_name como argumento para a ferramenta. Deve estar no formato owner/repo_name. Se fornecida uma URL, extrair owner/repo_name dela."
+        "Também chamar a ferramenta `get_repository_languages` para obter os idiomas usados no repositório."
+        "Escrever um README útil para um projeto de código aberto, incluindo como clonar e instalar o projeto, executar o projeto, etc. Também adicionar badges para a licença, tamanho do repo, etc"
+        "Não incluir os idiomas usados do projeto no README"
+        "Escrever o README produzido no sistema de arquivos local",
     ],
 )
 

@@ -1,18 +1,18 @@
-"""🎓 Research Scholar Agent - Your AI Academic Research Assistant!
+"""🎓 Research Scholar Agent - Seu Assistente de Pesquisa Acadêmica de IA!
 
-This example shows how to create a sophisticated research agent that combines
-academic search capabilities with scholarly writing expertise. The agent performs
-thorough research using Exa's academic search, analyzes recent publications, and delivers
-well-structured, academic-style reports on any topic.
+Este exemplo mostra como criar um agente de pesquisa sofisticado que combina
+capacidades de busca acadêmica com expertise em escrita acadêmica. O agente realiza
+pesquisa completa usando busca acadêmica do Exa, analisa publicações recentes e entrega
+relatórios bem estruturados, no estilo acadêmico, sobre qualquer tópico.
 
-Key capabilities:
-- Advanced academic literature search
-- Recent publication analysis
-- Cross-disciplinary synthesis
-- Academic writing expertise
-- Citation management
+Capacidades principais:
+- Busca avançada de literatura acadêmica
+- Análise de publicações recentes
+- Síntese interdisciplinar
+- Expertise em escrita acadêmica
+- Gerenciamento de citações
 
-Example prompts to try:
+Exemplos de prompts para tentar:
 - "Explore recent advances in quantum machine learning"
 - "Analyze the current state of fusion energy research"
 - "Investigate the latest developments in CRISPR gene editing"
@@ -27,7 +27,7 @@ from agno.agent import Agent
 from agno.models.openai import OpenAIChat
 from agno.tools.exa import ExaTools
 
-# Initialize the academic research agent with scholarly capabilities
+# Inicializar o agente de pesquisa acadêmica com capacidades acadêmicas
 research_scholar = Agent(
     model=OpenAIChat(id="gpt-4o"),
     tools=[
@@ -36,120 +36,120 @@ research_scholar = Agent(
         )
     ],
     description=dedent("""\
-        You are a distinguished research scholar with expertise in multiple disciplines.
-        Your academic credentials include: 📚
+        Você é um pesquisador distinto com expertise em múltiplas disciplinas.
+        Suas credenciais acadêmicas incluem: 📚
 
-        - Advanced research methodology
-        - Cross-disciplinary synthesis
-        - Academic literature analysis
-        - Scientific writing excellence
-        - Peer review experience
-        - Citation management
-        - Data interpretation
-        - Technical communication
-        - Research ethics
-        - Emerging trends analysis\
+        - Metodologia de pesquisa avançada
+        - Síntese interdisciplinar
+        - Análise de literatura acadêmica
+        - Excelência em escrita científica
+        - Experiência em revisão por pares
+        - Gerenciamento de citações
+        - Interpretação de dados
+        - Comunicação técnica
+        - Ética em pesquisa
+        - Análise de tendências emergentes\
     """),
     instructions=dedent("""\
-        1. Research Methodology 🔍
-           - Conduct 3 distinct academic searches
-           - Focus on peer-reviewed publications
-           - Prioritize recent breakthrough findings
-           - Identify key researchers and institutions
+        1. Metodologia de Pesquisa 🔍
+           - Realizar 3 buscas acadêmicas distintas
+           - Focar em publicações revisadas por pares
+           - Priorizar descobertas de avanços recentes
+           - Identificar pesquisadores e instituições-chave
 
-        2. Analysis Framework 📊
-           - Synthesize findings across sources
-           - Evaluate research methodologies
-           - Identify consensus and controversies
-           - Assess practical implications
+        2. Estrutura de Análise 📊
+           - Sintetizar achados entre fontes
+           - Avaliar metodologias de pesquisa
+           - Identificar consenso e controvérsias
+           - Avaliar implicações práticas
 
-        3. Report Structure 📝
-           - Create an engaging academic title
-           - Write a compelling abstract
-           - Present methodology clearly
-           - Discuss findings systematically
-           - Draw evidence-based conclusions
+        3. Estrutura do Relatório 📝
+           - Criar um título acadêmico envolvente
+           - Escrever um resumo convincente
+           - Apresentar metodologia claramente
+           - Discutir achados sistematicamente
+           - Tirar conclusões baseadas em evidências
 
-        4. Quality Standards ✓
-           - Ensure accurate citations
-           - Maintain academic rigor
-           - Present balanced perspectives
-           - Highlight future research directions\
+        4. Padrões de Qualidade ✓
+           - Garantir citações precisas
+           - Manter rigor acadêmico
+           - Apresentar perspectivas equilibradas
+           - Destacar direções futuras de pesquisa\
     """),
     expected_output=dedent("""\
-        # {Engaging Title} 📚
+        # {Título Envolvente} 📚
 
-        ## Abstract
-        {Concise overview of the research and key findings}
+        ## Resumo
+        {Visão geral concisa da pesquisa e principais achados}
 
-        ## Introduction
-        {Context and significance}
-        {Research objectives}
+        ## Introdução
+        {Contexto e significância}
+        {Objetivos da pesquisa}
 
-        ## Methodology
-        {Search strategy}
-        {Selection criteria}
+        ## Metodologia
+        {Estratégia de busca}
+        {Critérios de seleção}
 
-        ## Literature Review
-        {Current state of research}
-        {Key findings and breakthroughs}
-        {Emerging trends}
+        ## Revisão de Literatura
+        {Estado atual da pesquisa}
+        {Principais achados e avanços}
+        {Tendências emergentes}
 
-        ## Analysis
-        {Critical evaluation}
-        {Cross-study comparisons}
-        {Research gaps}
+        ## Análise
+        {Avaliação crítica}
+        {Comparações entre estudos}
+        {Lacunas de pesquisa}
 
-        ## Future Directions
-        {Emerging research opportunities}
-        {Potential applications}
-        {Open questions}
+        ## Direções Futuras
+        {Oportunidades de pesquisa emergentes}
+        {Aplicações potenciais}
+        {Questões em aberto}
 
-        ## Conclusions
-        {Summary of key findings}
-        {Implications for the field}
+        ## Conclusões
+        {Resumo dos principais achados}
+        {Implicações para o campo}
 
-        ## References
-        {Properly formatted academic citations}
+        ## Referências
+        {Citações acadêmicas formatadas adequadamente}
 
         ---
-        Research conducted by AI Academic Scholar
-        Published: {current_date}
-        Last Updated: {current_time}\
+        Pesquisa conduzida por Acadêmico de IA
+        Publicado: {current_date}
+        Última Atualização: {current_time}\
     """),
     markdown=True,
     add_datetime_to_context=True,
     save_response_to_file="tmp/{message}.md",
 )
 
-# Example usage with academic research request
+# Exemplo de uso com solicitação de pesquisa acadêmica
 if __name__ == "__main__":
     research_scholar.print_response(
         "Analyze recent developments in quantum computing architectures",
         stream=True,
     )
 
-# Advanced research topics to explore:
+# Tópicos de pesquisa avançados para explorar:
 """
-Quantum Science & Computing:
+Ciência e Computação Quântica:
 1. "Investigate recent breakthroughs in quantum error correction"
 2. "Analyze the development of topological quantum computing"
 3. "Research quantum machine learning algorithms and applications"
 4. "Explore advances in quantum sensing technologies"
 
-Biotechnology & Medicine:
+Biotecnologia e Medicina:
 1. "Examine recent developments in mRNA vaccine technology"
 2. "Analyze breakthroughs in organoid research"
 3. "Investigate advances in precision medicine"
 4. "Research developments in neurotechnology"
 
-Materials Science:
+Ciência dos Materiais:
 1. "Explore recent advances in metamaterials"
 2. "Analyze developments in 2D materials beyond graphene"
 3. "Research progress in self-healing materials"
 4. "Investigate new battery technologies"
 
-Artificial Intelligence:
+Inteligência Artificial:
 1. "Examine recent advances in foundation models"
 2. "Analyze developments in AI safety research"
 3. "Research progress in neuromorphic computing"

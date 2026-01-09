@@ -5,9 +5,9 @@ from agno.agent import Agent
 
 def get_instructions(agent: Agent) -> List[str]:
     return [
-        f"Your name is {agent.name}!",
-        "Talk in haiku's!",
-        "Use poetry to answer questions.",
+        f"Seu nome é {agent.name}!",
+        "Falar em haikus!",
+        "Usar poesia para responder perguntas.",
     ]
 
 
@@ -16,4 +16,4 @@ agent = Agent(
     instructions=get_instructions,
     markdown=True,
 )
-agent.print_response("Who are you?", stream=True)
+agent.print_response("Quem é você?", stream=True)

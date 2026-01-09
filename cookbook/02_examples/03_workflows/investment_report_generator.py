@@ -1,29 +1,28 @@
-"""💰 Investment Report Generator - Your AI Financial Analysis Studio!
+"""💰 Gerador de Relatório de Investimento - Seu Estúdio de Análise Financeira de IA!
 
-This advanced example demonstrates how to build a sophisticated investment analysis system that combines
-market research, financial analysis, and portfolio management. The workflow uses a three-stage
-approach:
-1. Comprehensive stock analysis and market research
-2. Investment potential evaluation and ranking
-3. Strategic portfolio allocation recommendations
+Este exemplo avançado demonstra como construir um sistema sofisticado de análise de investimento que combina
+pesquisa de mercado, análise financeira e gerenciamento de portfólio. O workflow usa uma abordagem de três estágios:
+1. Análise abrangente de ações e pesquisa de mercado
+2. Avaliação e classificação de potencial de investimento
+3. Recomendações estratégicas de alocação de portfólio
 
-Key capabilities:
-- Real-time market data analysis
-- Professional financial research
-- Investment risk assessment
-- Portfolio allocation strategy
-- Detailed investment rationale
+Capacidades principais:
+- Análise de dados de mercado em tempo real
+- Pesquisa financeira profissional
+- Avaliação de risco de investimento
+- Estratégia de alocação de portfólio
+- Racional de investimento detalhado
 
-Example companies to analyze:
-- "AAPL, MSFT, GOOGL" (Tech Giants)
-- "NVDA, AMD, INTC" (Semiconductor Leaders)
-- "TSLA, F, GM" (Automotive Innovation)
-- "JPM, BAC, GS" (Banking Sector)
-- "AMZN, WMT, TGT" (Retail Competition)
-- "PFE, JNJ, MRNA" (Healthcare Focus)
-- "XOM, CVX, BP" (Energy Sector)
+Exemplos de empresas para analisar:
+- "AAPL, MSFT, GOOGL" (Gigantes da Tecnologia)
+- "NVDA, AMD, INTC" (Líderes de Semicondutores)
+- "TSLA, F, GM" (Inovação Automotiva)
+- "JPM, BAC, GS" (Setor Bancário)
+- "AMZN, WMT, TGT" (Competição de Varejo)
+- "PFE, JNJ, MRNA" (Foco em Saúde)
+- "XOM, CVX, BP" (Setor de Energia)
 
-Run `pip install openai yfinance agno` to install dependencies.
+Executar `pip install openai yfinance agno` para instalar dependências.
 """
 
 import asyncio
@@ -42,7 +41,7 @@ from agno.workflow.workflow import Workflow
 from pydantic import BaseModel
 
 
-# --- Response models ---
+# --- Modelos de Resposta ---
 class StockAnalysisResult(BaseModel):
     company_symbols: str
     market_analysis: str
@@ -65,7 +64,7 @@ class PortfolioAllocation(BaseModel):
     final_recommendations: str
 
 
-# --- File management ---
+# --- Gerenciamento de Arquivos ---
 reports_dir = Path(__file__).parent.joinpath("reports", "investment")
 if reports_dir.is_dir():
     rmtree(path=reports_dir, ignore_errors=True)
@@ -76,7 +75,7 @@ research_analyst_report = str(reports_dir.joinpath("research_analyst_report.md")
 investment_report = str(reports_dir.joinpath("investment_report.md"))
 
 
-# --- Agents ---
+# --- Agentes ---
 stock_analyst = Agent(
     name="Stock Analyst",
     model=OpenAIChat(id="gpt-4o"),
@@ -86,32 +85,32 @@ stock_analyst = Agent(
         )
     ],
     description=dedent("""\
-    You are MarketMaster-X, an elite Senior Investment Analyst at Goldman Sachs with expertise in:
+    Você é MarketMaster-X, um Analista de Investimentos Sênior de elite no Goldman Sachs com expertise em:
 
-    - Comprehensive market analysis
-    - Financial statement evaluation
-    - Industry trend identification
-    - News impact assessment
-    - Risk factor analysis
-    - Growth potential evaluation\
+    - Análise abrangente de mercado
+    - Avaliação de demonstrações financeiras
+    - Identificação de tendências da indústria
+    - Avaliação de impacto de notícias
+    - Análise de fatores de risco
+    - Avaliação de potencial de crescimento\
     """),
     instructions=dedent("""\
-    1. Market Research 📊
-       - Analyze company fundamentals and metrics
-       - Review recent market performance
-       - Evaluate competitive positioning
-       - Assess industry trends and dynamics
-    2. Financial Analysis 💹
-       - Examine key financial ratios
-       - Review analyst recommendations
-       - Analyze recent news impact
-       - Identify growth catalysts
-    3. Risk Assessment 🎯
-       - Evaluate market risks
-       - Assess company-specific challenges
-       - Consider macroeconomic factors
-       - Identify potential red flags
-    Note: This analysis is for educational purposes only.\
+    1. Pesquisa de Mercado 📊
+       - Analisar fundamentos e métricas da empresa
+       - Revisar desempenho recente do mercado
+       - Avaliar posicionamento competitivo
+       - Avaliar tendências e dinâmicas da indústria
+    2. Análise Financeira 💹
+       - Examinar índices financeiros-chave
+       - Revisar recomendações de analistas
+       - Analisar impacto de notícias recentes
+       - Identificar catalisadores de crescimento
+    3. Avaliação de Risco 🎯
+       - Avaliar riscos de mercado
+       - Avaliar desafios específicos da empresa
+       - Considerar fatores macroeconômicos
+       - Identificar possíveis sinais de alerta
+    Nota: Esta análise é apenas para fins educacionais.\
     """),
     output_schema=StockAnalysisResult,
 )
@@ -120,30 +119,30 @@ research_analyst = Agent(
     name="Research Analyst",
     model=OpenAIChat(id="gpt-4o"),
     description=dedent("""\
-    You are ValuePro-X, an elite Senior Research Analyst at Goldman Sachs specializing in:
+    Você é ValuePro-X, um Analista de Pesquisa Sênior de elite no Goldman Sachs especializado em:
 
-    - Investment opportunity evaluation
-    - Comparative analysis
-    - Risk-reward assessment
-    - Growth potential ranking
-    - Strategic recommendations\
+    - Avaliação de oportunidades de investimento
+    - Análise comparativa
+    - Avaliação risco-recompensa
+    - Classificação de potencial de crescimento
+    - Recomendações estratégicas\
     """),
     instructions=dedent("""\
-    1. Investment Analysis 🔍
-       - Evaluate each company's potential
-       - Compare relative valuations
-       - Assess competitive advantages
-       - Consider market positioning
-    2. Risk Evaluation 📈
-       - Analyze risk factors
-       - Consider market conditions
-       - Evaluate growth sustainability
-       - Assess management capability
-    3. Company Ranking 🏆
-       - Rank based on investment potential
-       - Provide detailed rationale
-       - Consider risk-adjusted returns
-       - Explain competitive advantages\
+    1. Análise de Investimento 🔍
+       - Avaliar o potencial de cada empresa
+       - Comparar avaliações relativas
+       - Avaliar vantagens competitivas
+       - Considerar posicionamento de mercado
+    2. Avaliação de Risco 📈
+       - Analisar fatores de risco
+       - Considerar condições de mercado
+       - Avaliar sustentabilidade do crescimento
+       - Avaliar capacidade de gestão
+    3. Classificação de Empresas 🏆
+       - Classificar com base no potencial de investimento
+       - Fornecer racional detalhado
+       - Considerar retornos ajustados ao risco
+       - Explicar vantagens competitivas\
     """),
     output_schema=InvestmentRanking,
 )
@@ -152,54 +151,54 @@ investment_lead = Agent(
     name="Investment Lead",
     model=OpenAIChat(id="gpt-4o"),
     description=dedent("""\
-    You are PortfolioSage-X, a distinguished Senior Investment Lead at Goldman Sachs expert in:
+    Você é PortfolioSage-X, um Líder de Investimentos Sênior distinto no Goldman Sachs especialista em:
 
-    - Portfolio strategy development
-    - Asset allocation optimization
-    - Risk management
-    - Investment rationale articulation
-    - Client recommendation delivery\
+    - Desenvolvimento de estratégia de portfólio
+    - Otimização de alocação de ativos
+    - Gerenciamento de risco
+    - Articulação de racional de investimento
+    - Entrega de recomendações ao cliente\
     """),
     instructions=dedent("""\
-    1. Portfolio Strategy 💼
-       - Develop allocation strategy
-       - Optimize risk-reward balance
-       - Consider diversification
-       - Set investment timeframes
-    2. Investment Rationale 📝
-       - Explain allocation decisions
-       - Support with analysis
-       - Address potential concerns
-       - Highlight growth catalysts
-    3. Recommendation Delivery 📊
-       - Present clear allocations
-       - Explain investment thesis
-       - Provide actionable insights
-       - Include risk considerations\
+    1. Estratégia de Portfólio 💼
+       - Desenvolver estratégia de alocação
+       - Otimizar equilíbrio risco-recompensa
+       - Considerar diversificação
+       - Definir prazos de investimento
+    2. Racional de Investimento 📝
+       - Explicar decisões de alocação
+       - Apoiar com análise
+       - Abordar preocupações potenciais
+       - Destacar catalisadores de crescimento
+    3. Entrega de Recomendações 📊
+       - Apresentar alocações claras
+       - Explicar tese de investimento
+       - Fornecer insights acionáveis
+       - Incluir considerações de risco\
     """),
     output_schema=PortfolioAllocation,
 )
 
 
-# --- Execution function ---
+# --- Função de Execução ---
 async def investment_analysis_execution(
     execution_input: WorkflowExecutionInput,
     companies: str,
 ) -> str:
-    """Execute the complete investment analysis workflow"""
+    """Executar o workflow completo de análise de investimento"""
 
-    # Get inputs
+    # Obter entradas
     message: str = execution_input.input
     company_symbols: str = companies
 
     if not company_symbols:
-        return "❌ No company symbols provided"
+        return "❌ Nenhum símbolo de empresa fornecido"
 
-    print(f"🚀 Starting investment analysis for companies: {company_symbols}")
-    print(f"💼 Analysis request: {message}")
+    print(f"🚀 Iniciando análise de investimento para empresas: {company_symbols}")
+    print(f"💼 Solicitação de análise: {message}")
 
-    # Phase 1: Stock Analysis
-    print("\n📊 PHASE 1: COMPREHENSIVE STOCK ANALYSIS")
+    # Fase 1: Análise de Ações
+    print("\n📊 FASE 1: ANÁLISE ABRANGENTE DE AÇÕES")
     print("=" * 60)
 
     analysis_prompt = f"""
@@ -216,121 +215,121 @@ async def investment_analysis_execution(
     Companies to analyze: {company_symbols}
     """
 
-    print("🔍 Analyzing market data and fundamentals...")
+    print("🔍 Analisando dados de mercado e fundamentos...")
     stock_analysis_result = await stock_analyst.arun(analysis_prompt)
     stock_analysis = stock_analysis_result.content
 
-    # Save to file
+    # Salvar em arquivo
     with open(stock_analyst_report, "w") as f:
-        f.write("# Stock Analysis Report\n\n")
-        f.write(f"**Companies:** {stock_analysis.company_symbols}\n\n")
-        f.write(f"## Market Analysis\n{stock_analysis.market_analysis}\n\n")
-        f.write(f"## Financial Metrics\n{stock_analysis.financial_metrics}\n\n")
-        f.write(f"## Risk Assessment\n{stock_analysis.risk_assessment}\n\n")
-        f.write(f"## Recommendations\n{stock_analysis.recommendations}\n")
+        f.write("# Relatório de Análise de Ações\n\n")
+        f.write(f"**Empresas:** {stock_analysis.company_symbols}\n\n")
+        f.write(f"## Análise de Mercado\n{stock_analysis.market_analysis}\n\n")
+        f.write(f"## Métricas Financeiras\n{stock_analysis.financial_metrics}\n\n")
+        f.write(f"## Avaliação de Risco\n{stock_analysis.risk_assessment}\n\n")
+        f.write(f"## Recomendações\n{stock_analysis.recommendations}\n")
 
-    print(f"✅ Stock analysis completed and saved to {stock_analyst_report}")
+    print(f"✅ Análise de ações concluída e salva em {stock_analyst_report}")
 
-    # Phase 2: Investment Ranking
-    print("\n🏆 PHASE 2: INVESTMENT POTENTIAL RANKING")
+    # Fase 2: Classificação de Investimento
+    print("\n🏆 FASE 2: CLASSIFICAÇÃO DE POTENCIAL DE INVESTIMENTO")
     print("=" * 60)
 
     ranking_prompt = f"""
-    Based on the comprehensive stock analysis below, please rank these companies by investment potential.
-    STOCK ANALYSIS:
-    - Market Analysis: {stock_analysis.market_analysis}
-    - Financial Metrics: {stock_analysis.financial_metrics}
-    - Risk Assessment: {stock_analysis.risk_assessment}
-    - Initial Recommendations: {stock_analysis.recommendations}
-    Please provide:
-    1. Detailed ranking of companies from best to worst investment potential
-    2. Investment rationale for each company
-    3. Risk evaluation and mitigation strategies
-    4. Growth potential assessment
+    Com base na análise abrangente de ações abaixo, por favor classifique essas empresas por potencial de investimento.
+    ANÁLISE DE AÇÕES:
+    - Análise de Mercado: {stock_analysis.market_analysis}
+    - Métricas Financeiras: {stock_analysis.financial_metrics}
+    - Avaliação de Risco: {stock_analysis.risk_assessment}
+    - Recomendações Iniciais: {stock_analysis.recommendations}
+    Por favor forneça:
+    1. Classificação detalhada de empresas do melhor ao pior potencial de investimento
+    2. Racional de investimento para cada empresa
+    3. Avaliação de risco e estratégias de mitigação
+    4. Avaliação de potencial de crescimento
     """
 
-    print("📈 Ranking companies by investment potential...")
+    print("📈 Classificando empresas por potencial de investimento...")
     ranking_result = await research_analyst.arun(ranking_prompt)
     ranking_analysis = ranking_result.content
 
-    # Save to file
+    # Salvar em arquivo
     with open(research_analyst_report, "w") as f:
-        f.write("# Investment Ranking Report\n\n")
-        f.write(f"## Company Rankings\n{ranking_analysis.ranked_companies}\n\n")
-        f.write(f"## Investment Rationale\n{ranking_analysis.investment_rationale}\n\n")
-        f.write(f"## Risk Evaluation\n{ranking_analysis.risk_evaluation}\n\n")
-        f.write(f"## Growth Potential\n{ranking_analysis.growth_potential}\n")
+        f.write("# Relatório de Classificação de Investimento\n\n")
+        f.write(f"## Classificações de Empresas\n{ranking_analysis.ranked_companies}\n\n")
+        f.write(f"## Racional de Investimento\n{ranking_analysis.investment_rationale}\n\n")
+        f.write(f"## Avaliação de Risco\n{ranking_analysis.risk_evaluation}\n\n")
+        f.write(f"## Potencial de Crescimento\n{ranking_analysis.growth_potential}\n")
 
-    print(f"✅ Investment ranking completed and saved to {research_analyst_report}")
+    print(f"✅ Classificação de investimento concluída e salva em {research_analyst_report}")
 
-    # Phase 3: Portfolio Allocation Strategy
-    print("\n💼 PHASE 3: PORTFOLIO ALLOCATION STRATEGY")
+    # Fase 3: Estratégia de Alocação de Portfólio
+    print("\n💼 FASE 3: ESTRATÉGIA DE ALOCAÇÃO DE PORTFÓLIO")
     print("=" * 60)
 
     portfolio_prompt = f"""
-    Based on the investment ranking and analysis below, create a strategic portfolio allocation.
-    INVESTMENT RANKING:
-    - Company Rankings: {ranking_analysis.ranked_companies}
-    - Investment Rationale: {ranking_analysis.investment_rationale}
-    - Risk Evaluation: {ranking_analysis.risk_evaluation}
-    - Growth Potential: {ranking_analysis.growth_potential}
-    Please provide:
-    1. Specific allocation percentages for each company
-    2. Investment thesis and strategic rationale
-    3. Risk management approach
-    4. Final actionable recommendations
+    Com base na classificação e análise de investimento abaixo, criar uma alocação estratégica de portfólio.
+    CLASSIFICAÇÃO DE INVESTIMENTO:
+    - Classificações de Empresas: {ranking_analysis.ranked_companies}
+    - Racional de Investimento: {ranking_analysis.investment_rationale}
+    - Avaliação de Risco: {ranking_analysis.risk_evaluation}
+    - Potencial de Crescimento: {ranking_analysis.growth_potential}
+    Por favor forneça:
+    1. Percentuais de alocação específicos para cada empresa
+    2. Tese de investimento e racional estratégico
+    3. Abordagem de gerenciamento de risco
+    4. Recomendações finais acionáveis
     """
 
-    print("💰 Developing portfolio allocation strategy...")
+    print("💰 Desenvolvendo estratégia de alocação de portfólio...")
     portfolio_result = await investment_lead.arun(portfolio_prompt)
     portfolio_strategy = portfolio_result.content
 
-    # Save to file
+    # Salvar em arquivo
     with open(investment_report, "w") as f:
-        f.write("# Investment Portfolio Report\n\n")
-        f.write(f"## Allocation Strategy\n{portfolio_strategy.allocation_strategy}\n\n")
-        f.write(f"## Investment Thesis\n{portfolio_strategy.investment_thesis}\n\n")
-        f.write(f"## Risk Management\n{portfolio_strategy.risk_management}\n\n")
+        f.write("# Relatório de Portfólio de Investimento\n\n")
+        f.write(f"## Estratégia de Alocação\n{portfolio_strategy.allocation_strategy}\n\n")
+        f.write(f"## Tese de Investimento\n{portfolio_strategy.investment_thesis}\n\n")
+        f.write(f"## Gerenciamento de Risco\n{portfolio_strategy.risk_management}\n\n")
         f.write(
-            f"## Final Recommendations\n{portfolio_strategy.final_recommendations}\n"
+            f"## Recomendações Finais\n{portfolio_strategy.final_recommendations}\n"
         )
 
-    print(f"✅ Portfolio strategy completed and saved to {investment_report}")
+    print(f"✅ Estratégia de portfólio concluída e salva em {investment_report}")
 
-    # Final summary
+    # Resumo final
     summary = f"""
-    🎉 INVESTMENT ANALYSIS WORKFLOW COMPLETED!
+    🎉 WORKFLOW DE ANÁLISE DE INVESTIMENTO CONCLUÍDO!
 
-    📊 Analysis Summary:
-    • Companies Analyzed: {company_symbols}
-    • Market Analysis: ✅ Completed
-    • Investment Ranking: ✅ Completed
-    • Portfolio Strategy: ✅ Completed
+    📊 Resumo da Análise:
+    • Empresas Analisadas: {company_symbols}
+    • Análise de Mercado: ✅ Concluída
+    • Classificação de Investimento: ✅ Concluída
+    • Estratégia de Portfólio: ✅ Concluída
 
-    📁 Reports Generated:
-    • Stock Analysis: {stock_analyst_report}
-    • Investment Ranking: {research_analyst_report}
-    • Portfolio Strategy: {investment_report}
+    📁 Relatórios Gerados:
+    • Análise de Ações: {stock_analyst_report}
+    • Classificação de Investimento: {research_analyst_report}
+    • Estratégia de Portfólio: {investment_report}
 
-    💡 Key Insights:
+    💡 Principais Insights:
     {portfolio_strategy.allocation_strategy[:200]}...
 
-    ⚠️ Disclaimer: This analysis is for educational purposes only and should not be considered as financial advice.
+    ⚠️ Aviso: Esta análise é apenas para fins educacionais e não deve ser considerada como aconselhamento financeiro.
     """
 
     return summary
 
 
-# --- Workflow definition ---
+# --- Definição do Workflow ---
 investment_workflow = Workflow(
     name="Investment Report Generator",
-    description="Automated investment analysis with market research and portfolio allocation",
+    description="Análise de investimento automatizada com pesquisa de mercado e alocação de portfólio",
     db=SqliteDb(
         session_table="workflow_session",
         db_file="tmp/workflows.db",
     ),
     steps=investment_analysis_execution,
-    session_state={},  # Initialize empty workflow session state
+    session_state={},  # Inicializar estado de sessão do workflow vazio
 )
 
 
@@ -339,25 +338,25 @@ if __name__ == "__main__":
     async def main():
         from rich.prompt import Prompt
 
-        # Example investment scenarios to showcase the analyzer's capabilities
+        # Cenários de investimento de exemplo para mostrar as capacidades do analisador
         example_scenarios = [
-            "AAPL, MSFT, GOOGL",  # Tech Giants
-            "NVDA, AMD, INTC",  # Semiconductor Leaders
-            "TSLA, F, GM",  # Automotive Innovation
-            "JPM, BAC, GS",  # Banking Sector
-            "AMZN, WMT, TGT",  # Retail Competition
-            "PFE, JNJ, MRNA",  # Healthcare Focus
-            "XOM, CVX, BP",  # Energy Sector
+            "AAPL, MSFT, GOOGL",  # Gigantes da Tecnologia
+            "NVDA, AMD, INTC",  # Líderes de Semicondutores
+            "TSLA, F, GM",  # Inovação Automotiva
+            "JPM, BAC, GS",  # Setor Bancário
+            "AMZN, WMT, TGT",  # Competição de Varejo
+            "PFE, JNJ, MRNA",  # Foco em Saúde
+            "XOM, CVX, BP",  # Setor de Energia
         ]
 
-        # Get companies from user with example suggestion
+        # Obter empresas do usuário com sugestão de exemplo
         companies = Prompt.ask(
-            "[bold]Enter company symbols (comma-separated)[/bold] "
-            "(or press Enter for a suggested portfolio)\n✨",
+            "[bold]Digite símbolos de empresas (separados por vírgula)[/bold] "
+            "(ou pressione Enter para um portfólio sugerido)\n✨",
             default=random.choice(example_scenarios),
         )
 
-        print("🧪 Testing Investment Report Generator with New Workflow Structure")
+        print("🧪 Testando Gerador de Relatório de Investimento com Nova Estrutura de Workflow")
         print("=" * 70)
 
         result = await investment_workflow.arun(

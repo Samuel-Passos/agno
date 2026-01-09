@@ -1,22 +1,22 @@
 """
-Agent with Memory - Finance Agent that Remembers You
-=====================================================
-This example shows how to give your agent memory of user preferences.
-The agent remembers facts about you across all conversations.
+Agente com Memória - Agente Financeiro que Lembra de Você
+==========================================================
+Este exemplo mostra como dar ao seu agente memória de preferências do usuário.
+O agente lembra fatos sobre você em todas as conversas.
 
-Different from storage (which persists conversation history), memory
-persists user-level information: preferences, facts, context.
+Diferente de armazenamento (que persiste histórico de conversas), memória
+persiste informações no nível do usuário: preferências, fatos, contexto.
 
-Key concepts:
-- MemoryManager: Extracts and stores user memories from conversations
-- enable_agentic_memory: Agent decides when to store/recall via tool calls (efficient)
-- enable_user_memories: Memory manager runs after every response (guaranteed capture)
-- user_id: Links memories to a specific user
+Conceitos-chave:
+- MemoryManager: Extrai e armazena memórias do usuário das conversas
+- enable_agentic_memory: Agente decide quando armazenar/recuperar via chamadas de ferramentas (eficiente)
+- enable_user_memories: Gerenciador de memória executa após cada resposta (captura garantida)
+- user_id: Vincula memórias a um usuário específico
 
-Example prompts to try:
-- "I'm interested in tech stocks, especially AI companies"
-- "My risk tolerance is moderate"
-- "What stocks would you recommend for me?"
+Exemplos de prompts para testar:
+- "Estou interessado em ações de tecnologia, especialmente empresas de IA"
+- "Minha tolerância ao risco é moderada"
+- "Quais ações você recomendaria para mim?"
 """
 
 from agno.agent import Agent
@@ -27,61 +27,61 @@ from agno.tools.yfinance import YFinanceTools
 from rich.pretty import pprint
 
 # ============================================================================
-# Storage Configuration
+# Configuração de Armazenamento
 # ============================================================================
 agent_db = SqliteDb(db_file="tmp/agents.db")
 
 # ============================================================================
-# Memory Manager Configuration
+# Configuração do Gerenciador de Memória
 # ============================================================================
 memory_manager = MemoryManager(
     model=Gemini(id="gemini-3-flash-preview"),
     db=agent_db,
     additional_instructions="""
-    Capture the user's favorite stocks, their risk tolerance, and their investment goals.
+    Capture as ações favoritas do usuário, sua tolerância ao risco e seus objetivos de investimento.
     """,
 )
 
 # ============================================================================
-# Agent Instructions
+# Instruções do Agente
 # ============================================================================
 instructions = """\
-You are a Finance Agent — a data-driven analyst who retrieves market data,
-computes key ratios, and produces concise, decision-ready insights.
+Você é um Agente Financeiro — um analista orientado por dados que recupera dados de mercado,
+calcula relações-chave e produz insights concisos e prontos para decisão.
 
-## Memory
+## Memória
 
-You have memory of user preferences (automatically provided in context). Use this to:
-- Tailor recommendations to their interests
-- Consider their risk tolerance
-- Reference their investment goals
+Você tem memória de preferências do usuário (fornecidas automaticamente no contexto). Use isso para:
+- Personalizar recomendações aos interesses deles
+- Considerar a tolerância ao risco deles
+- Referenciar os objetivos de investimento deles
 
-## Workflow
+## Fluxo de Trabalho
 
-1. Retrieve
-   - Fetch: price, change %, market cap, P/E, EPS, 52-week range
-   - For comparisons, pull the same fields for each ticker
+1. Recuperar
+   - Buscar: preço, variação %, capitalização de mercado, P/E, EPS, faixa de 52 semanas
+   - Para comparações, buscar os mesmos campos para cada ticker
 
-2. Analyze
-   - Compute ratios (P/E, P/S, margins) when not already provided
-   - Key drivers and risks — 2-3 bullets max
-   - Facts only, no speculation
+2. Analisar
+   - Calcular relações (P/E, P/S, margens) quando não fornecidas
+   - Principais drivers e riscos — máximo de 2-3 pontos
+   - Apenas fatos, sem especulação
 
-3. Present
-   - Lead with a one-line summary
-   - Use tables for multi-stock comparisons
-   - Keep it tight
+3. Apresentar
+   - Começar com um resumo de uma linha
+   - Usar tabelas para comparações de múltiplas ações
+   - Manter conciso
 
-## Rules
+## Regras
 
-- Source: Yahoo Finance. Always note the timestamp.
-- Missing data? Say "N/A" and move on.
-- No personalized advice — add disclaimer when relevant.
-- No emojis.\
+- Fonte: Yahoo Finance. Sempre anotar o timestamp.
+- Dados faltando? Diga "N/A" e continue.
+- Sem conselhos personalizados — adicione aviso quando relevante.
+- Sem emojis.\
 """
 
 # ============================================================================
-# Create the Agent
+# Criar o Agente
 # ============================================================================
 user_id = "investor@example.com"
 
@@ -100,58 +100,58 @@ agent_with_memory = Agent(
 )
 
 # ============================================================================
-# Run the Agent
+# Executar o Agente
 # ============================================================================
 if __name__ == "__main__":
-    # Tell the agent about yourself
+    # Conte ao agente sobre você
     agent_with_memory.print_response(
-        "I'm interested in AI and semiconductor stocks. My risk tolerance is moderate.",
+        "Estou interessado em ações de IA e semicondutores. Minha tolerância ao risco é moderada.",
         user_id=user_id,
         stream=True,
     )
 
-    # The agent now knows your preferences
+    # O agente agora conhece suas preferências
     agent_with_memory.print_response(
-        "What stocks would you recommend for me?",
+        "Quais ações você recomendaria para mim?",
         user_id=user_id,
         stream=True,
     )
 
-    # View stored memories
+    # Ver memórias armazenadas
     memories = agent_with_memory.get_user_memories(user_id=user_id)
     print("\n" + "=" * 60)
-    print("Stored Memories:")
+    print("Memórias Armazenadas:")
     print("=" * 60)
     pprint(memories)
 
 # ============================================================================
-# More Examples
+# Mais Exemplos
 # ============================================================================
 """
-Memory vs Storage:
+Memória vs Armazenamento:
 
-- Storage: "What did we discuss?" (conversation history)
-- Memory: "What do you know about me?" (user preferences)
+- Armazenamento: "O que discutimos?" (histórico de conversas)
+- Memória: "O que você sabe sobre mim?" (preferências do usuário)
 
-Memory persists across sessions:
+Memória persiste entre sessões:
 
-1. Run this script — agent learns your preferences
-2. Start a NEW session with the same user_id
-3. Agent still remembers you like AI stocks
+1. Execute este script — agente aprende suas preferências
+2. Inicie uma NOVA sessão com o mesmo user_id
+3. Agente ainda lembra que você gosta de ações de IA
 
-Useful for:
-- Personalized recommendations
-- Remembering user context (job, goals, constraints)
-- Building rapport across conversations
+Útil para:
+- Recomendações personalizadas
+- Lembrar contexto do usuário (trabalho, objetivos, restrições)
+- Construir relacionamento entre conversas
 
-Two ways to enable memory:
+Duas formas de habilitar memória:
 
-1. enable_agentic_memory=True (used in this example)
-   - Agent decides when to store/recall via tool calls
-   - More efficient — only runs when needed
+1. enable_agentic_memory=True (usado neste exemplo)
+   - Agente decide quando armazenar/recuperar via chamadas de ferramentas
+   - Mais eficiente — só executa quando necessário
 
 2. enable_user_memories=True
-   - Memory manager runs after every agent response
-   - Guaranteed capture — never misses user info
-   - Higher latency and cost
+   - Gerenciador de memória executa após cada resposta do agente
+   - Captura garantida — nunca perde informações do usuário
+   - Maior latência e custo
 """

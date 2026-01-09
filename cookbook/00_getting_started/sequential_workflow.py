@@ -1,21 +1,21 @@
 """
-Sequential Workflow - Stock Research Pipeline
-==============================================
-This example shows how to create a workflow with sequential steps.
-Each step is handled by a specialized agent, and outputs flow to the next step.
+Workflow Sequencial - Pipeline de Pesquisa de Ações
+====================================================
+Este exemplo mostra como criar um workflow com etapas sequenciais.
+Cada etapa é tratada por um agente especializado, e as saídas fluem para a próxima etapa.
 
-Different from Teams (agents collaborate dynamically), Workflows give you
-explicit control over execution order and data flow.
+Diferente de Times (agentes colaboram dinamicamente), Workflows dão a você
+controle explícito sobre a ordem de execução e o fluxo de dados.
 
-Key concepts:
-- Workflow: Orchestrates a sequence of steps
-- Step: Wraps an agent with a specific task
-- Steps execute in order, each building on the previous
+Conceitos-chave:
+- Workflow: Orquestra uma sequência de etapas
+- Step: Envolve um agente com uma tarefa específica
+- Etapas executam em ordem, cada uma construindo sobre a anterior
 
-Example prompts to try:
-- "Analyze NVDA"
-- "Research Tesla for investment"
-- "Give me a report on Apple"
+Exemplos de prompts para testar:
+- "Analise NVDA"
+- "Pesquise Tesla para investimento"
+- "Me dê um relatório sobre a Apple"
 """
 
 from agno.agent import Agent
@@ -25,28 +25,28 @@ from agno.tools.yfinance import YFinanceTools
 from agno.workflow import Step, Workflow
 
 # ============================================================================
-# Storage Configuration
+# Configuração de Armazenamento
 # ============================================================================
 workflow_db = SqliteDb(db_file="tmp/agents.db")
 
 # ============================================================================
-# Step 1: Data Gatherer — Fetches raw market data
+# Etapa 1: Coletor de Dados — Busca dados brutos de mercado
 # ============================================================================
 data_agent = Agent(
     name="Data Gatherer",
     model=Gemini(id="gemini-3-flash-preview"),
     tools=[YFinanceTools()],
     instructions="""\
-You are a data gathering agent. Your job is to fetch comprehensive market data.
+Você é um agente coletor de dados. Seu trabalho é buscar dados abrangentes de mercado.
 
-For the requested stock, gather:
-- Current price and daily change
-- Market cap and volume
-- P/E ratio, EPS, and other key ratios
-- 52-week high and low
-- Recent price trends
+Para a ação solicitada, colete:
+- Preço atual e variação diária
+- Capitalização de mercado e volume
+- Relação P/E, EPS e outras relações-chave
+- Máximo e mínimo de 52 semanas
+- Tendências de preço recentes
 
-Present the raw data clearly. Don't analyze — just gather and organize.\
+Apresente os dados brutos claramente. Não analise — apenas colete e organize.\
 """,
     db=workflow_db,
     add_datetime_to_context=True,
@@ -57,25 +57,25 @@ Present the raw data clearly. Don't analyze — just gather and organize.\
 data_step = Step(
     name="Data Gathering",
     agent=data_agent,
-    description="Fetch comprehensive market data for the stock",
+    description="Buscar dados abrangentes de mercado para a ação",
 )
 
 # ============================================================================
-# Step 2: Analyst — Interprets the data
+# Etapa 2: Analista — Interpreta os dados
 # ============================================================================
 analyst_agent = Agent(
     name="Analyst",
     model=Gemini(id="gemini-3-flash-preview"),
     instructions="""\
-You are a financial analyst. You receive raw market data from the data team.
+Você é um analista financeiro. Você recebe dados brutos de mercado da equipe de dados.
 
-Your job is to:
-- Interpret the key metrics (is the P/E high or low for this sector?)
-- Identify strengths and weaknesses
-- Note any red flags or positive signals
-- Compare to typical industry benchmarks
+Seu trabalho é:
+- Interpretar as métricas-chave (o P/E está alto ou baixo para este setor?)
+- Identificar pontos fortes e fracos
+- Notar quaisquer sinais de alerta ou sinais positivos
+- Comparar com benchmarks típicos da indústria
 
-Provide analysis, not recommendations. Be objective and data-driven.\
+Forneça análise, não recomendações. Seja objetivo e orientado por dados.\
 """,
     db=workflow_db,
     add_datetime_to_context=True,
@@ -86,26 +86,26 @@ Provide analysis, not recommendations. Be objective and data-driven.\
 analysis_step = Step(
     name="Analysis",
     agent=analyst_agent,
-    description="Analyze the market data and identify key insights",
+    description="Analisar os dados de mercado e identificar insights-chave",
 )
 
 # ============================================================================
-# Step 3: Report Writer — Produces final output
+# Etapa 3: Escritor de Relatório — Produz saída final
 # ============================================================================
 report_agent = Agent(
     name="Report Writer",
     model=Gemini(id="gemini-3-flash-preview"),
     instructions="""\
-You are a report writer. You receive analysis from the research team.
+Você é um escritor de relatórios. Você recebe análise da equipe de pesquisa.
 
-Your job is to:
-- Synthesize the analysis into a clear investment brief
-- Lead with a one-line summary
-- Include a recommendation (Buy/Hold/Sell) with rationale
-- Keep it concise — max 200 words
-- End with key metrics in a small table
+Seu trabalho é:
+- Sintetizar a análise em um resumo de investimento claro
+- Começar com um resumo de uma linha
+- Incluir uma recomendação (Buy/Hold/Sell) com justificativa
+- Manter conciso — máximo 200 palavras
+- Terminar com métricas-chave em uma pequena tabela
 
-Write for a busy investor who wants the bottom line fast.\
+Escreva para um investidor ocupado que quer a conclusão rapidamente.\
 """,
     db=workflow_db,
     add_datetime_to_context=True,
@@ -117,54 +117,54 @@ Write for a busy investor who wants the bottom line fast.\
 report_step = Step(
     name="Report Writing",
     agent=report_agent,
-    description="Produce a concise investment brief",
+    description="Produzir um resumo de investimento conciso",
 )
 
 # ============================================================================
-# Create the Workflow
+# Criar o Workflow
 # ============================================================================
 sequential_workflow = Workflow(
     name="Sequential Workflow",
-    description="Three-step research pipeline: Data → Analysis → Report",
+    description="Pipeline de pesquisa de três etapas: Dados → Análise → Relatório",
     steps=[
-        data_step,  # Step 1: Gather data
-        analysis_step,  # Step 2: Analyze data
-        report_step,  # Step 3: Write report
+        data_step,  # Etapa 1: Coletar dados
+        analysis_step,  # Etapa 2: Analisar dados
+        report_step,  # Etapa 3: Escrever relatório
     ],
 )
 
 # ============================================================================
-# Run the Workflow
+# Executar o Workflow
 # ============================================================================
 if __name__ == "__main__":
     sequential_workflow.print_response(
-        "Analyze NVIDIA (NVDA) for investment",
+        "Analise NVIDIA (NVDA) para investimento",
         stream=True,
     )
 
 # ============================================================================
-# More Examples
+# Mais Exemplos
 # ============================================================================
 """
-Workflow vs Team:
+Workflow vs Time:
 
-- Workflow: Explicit step order, predictable execution, clear data flow
-- Team: Dynamic collaboration, leader decides who does what
+- Workflow: Ordem explícita de etapas, execução previsível, fluxo de dados claro
+- Time: Colaboração dinâmica, líder decide quem faz o quê
 
-Use Workflow when:
-- Steps must happen in a specific order
-- Each step has a clear, specialized role
-- You want predictable, repeatable execution
-- Output from step N feeds into step N+1
+Use Workflow quando:
+- Etapas devem acontecer em uma ordem específica
+- Cada etapa tem um papel claro e especializado
+- Você quer execução previsível e repetível
+- Saída da etapa N alimenta a etapa N+1
 
-Use Team when:
-- Agents need to collaborate dynamically
-- The leader should decide who to involve
-- Tasks benefit from back-and-forth discussion
+Use Time quando:
+- Agentes precisam colaborar dinamicamente
+- O líder deve decidir quem envolver
+- Tarefas se beneficiam de discussão de ida e volta
 
-Advanced workflow features (not shown here):
-- Parallel: Run steps concurrently
-- Condition: Run steps only if criteria met
-- Loop: Repeat steps until condition met
-- Router: Dynamically select which step to run
+Recursos avançados de workflow (não mostrados aqui):
+- Paralelo: Executar etapas simultaneamente
+- Condição: Executar etapas apenas se critérios atendidos
+- Loop: Repetir etapas até condição atendida
+- Router: Selecionar dinamicamente qual etapa executar
 """

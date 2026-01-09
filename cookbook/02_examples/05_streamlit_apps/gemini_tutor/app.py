@@ -66,7 +66,7 @@ st.markdown(
 
 
 def restart_tutor(model_id: str = None, education_level: str = None):
-    """Restart the tutor with new settings."""
+    """Reiniciar o tutor com novas configurações."""
     target_model = model_id or st.session_state.get("current_model", GEMINI_MODELS[0])
     target_level = education_level or st.session_state.get(
         "education_level", EDUCATION_LEVELS[1]
@@ -87,7 +87,7 @@ def restart_tutor(model_id: str = None, education_level: str = None):
 
 
 def on_education_level_change():
-    """Handle education level changes."""
+    """Lidar com mudanças de nível educacional."""
     selected_level = st.session_state.get("education_level_selector")
     if selected_level:
         current_level = st.session_state.get("education_level")
@@ -96,11 +96,11 @@ def on_education_level_change():
                 st.session_state["is_loading_session"] = False
                 restart_tutor(education_level=selected_level)
             except Exception as e:
-                st.sidebar.error(f"Error changing education level: {str(e)}")
+                st.sidebar.error(f"Erro ao mudar nível educacional: {str(e)}")
 
 
 def on_model_change():
-    """Handle model changes."""
+    """Lidar com mudanças de modelo."""
     selected_model = st.session_state.get("model_selector")
     if selected_model:
         if selected_model in GEMINI_MODELS:
@@ -110,46 +110,46 @@ def on_model_change():
                     st.session_state["is_loading_session"] = False
                     restart_tutor(model_id=selected_model)
                 except Exception as e:
-                    st.sidebar.error(f"Error switching to {selected_model}: {str(e)}")
+                    st.sidebar.error(f"Erro ao mudar para {selected_model}: {str(e)}")
 
 
 def main():
     ####################################################################
     # App header
     ####################################################################
-    st.markdown("<h1 class='main-title'>Gemini Tutor</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 class='main-title'>Tutor Gemini</h1>", unsafe_allow_html=True)
     st.markdown(
-        "<p class='subtitle'>Your intelligent educational AI assistant powered by Google Gemini</p>",
+        "<p class='subtitle'>Seu assistente educacional de IA inteligente alimentado por Google Gemini</p>",
         unsafe_allow_html=True,
     )
 
     ####################################################################
-    # Sidebar - Authentication
+    # Barra lateral - Autenticação
     ####################################################################
-    st.sidebar.header("🔑 Authentication")
+    st.sidebar.header("🔑 Autenticação")
     google_api_key = st.sidebar.text_input(
-        "Google API Key",
+        "Chave de API Google",
         type="password",
-        help="Get your API key from Google AI Studio (makersuite.google.com)",
+        help="Obter sua chave de API do Google AI Studio (makersuite.google.com)",
     )
 
     if google_api_key:
         import os
 
         os.environ["GOOGLE_API_KEY"] = google_api_key
-        st.sidebar.success("✅ Google API key configured")
+        st.sidebar.success("✅ Chave de API Google configurada")
     else:
-        st.sidebar.warning("⚠️ Google API key required for Gemini models")
+        st.sidebar.warning("⚠️ Chave de API Google necessária para modelos Gemini")
         st.sidebar.info(
-            "💡 Get your free API key from [Google AI Studio](https://makersuite.google.com)"
+            "💡 Obter sua chave de API gratuita do [Google AI Studio](https://makersuite.google.com)"
         )
 
     ####################################################################
-    # Model and Education Level selectors
+    # Seletores de Modelo e Nível Educacional
     ####################################################################
     st.sidebar.markdown("---")
     selected_model = st.sidebar.selectbox(
-        "Select Gemini Model",
+        "Selecionar Modelo Gemini",
         options=GEMINI_MODELS,
         index=0,
         key="model_selector",
@@ -157,9 +157,9 @@ def main():
     )
 
     selected_education_level = st.sidebar.selectbox(
-        "Select Education Level",
+        "Selecionar Nível Educacional",
         options=EDUCATION_LEVELS,
-        index=1,  # Default to High School
+        index=1,  # Padrão para High School
         key="education_level_selector",
         on_change=on_education_level_change,
     )
@@ -177,98 +177,98 @@ def main():
     )
     reset_session_state(gemini_tutor_agent)
 
-    # Display current education level
+    # Exibir nível educacional atual
     st.sidebar.markdown(
-        f"**Current Level:** <span class='education-level'>{selected_education_level}</span>",
+        f"**Nível Atual:** <span class='education-level'>{selected_education_level}</span>",
         unsafe_allow_html=True,
     )
 
-    if prompt := st.chat_input("🎓 What would you like to learn about today?"):
+    if prompt := st.chat_input("🎓 Sobre o que você gostaria de aprender hoje?"):
         add_message("user", prompt)
 
     ####################################################################
-    # Learning Templates
+    # Modelos de Aprendizado
     ####################################################################
-    st.sidebar.markdown("#### 📚 Learning Templates")
+    st.sidebar.markdown("#### 📚 Modelos de Aprendizado")
 
-    if st.sidebar.button("🔬 Science Concepts"):
+    if st.sidebar.button("🔬 Conceitos de Ciência"):
         add_message(
             "user",
-            f"Explain a fundamental science concept appropriate for {selected_education_level} level with interactive examples and practice questions.",
+            f"Explicar um conceito fundamental de ciência apropriado para nível {selected_education_level} com exemplos interativos e questões de prática.",
         )
 
-    if st.sidebar.button("📊 Math Problem Solving"):
+    if st.sidebar.button("📊 Resolução de Problemas de Matemática"):
         add_message(
             "user",
-            f"Teach me a math concept with step-by-step problem solving examples suitable for {selected_education_level} students.",
+            f"Ensinar-me um conceito de matemática com exemplos de resolução de problemas passo a passo adequados para estudantes de {selected_education_level}.",
         )
 
-    if st.sidebar.button("🌍 History & Culture"):
+    if st.sidebar.button("🌍 História e Cultura"):
         add_message(
             "user",
-            f"Create a learning module about a historical event or cultural topic, adapted for {selected_education_level} level.",
+            f"Criar um módulo de aprendizado sobre um evento histórico ou tópico cultural, adaptado para nível {selected_education_level}.",
         )
 
-    if st.sidebar.button("💻 Technology & Programming"):
+    if st.sidebar.button("💻 Tecnologia e Programação"):
         add_message(
             "user",
-            f"Explain a technology or programming concept with hands-on examples for {selected_education_level} learners.",
-        )
-
-    ####################################################################
-    # Sample Learning Questions
-    ####################################################################
-    st.sidebar.markdown("#### ❓ Sample Questions")
-
-    if st.sidebar.button("🧬 How does DNA work?"):
-        add_message(
-            "user",
-            "How does DNA work? Please explain with examples and create an interactive learning experience.",
-        )
-
-    if st.sidebar.button("🚀 Physics of Space Travel"):
-        add_message(
-            "user",
-            "Explain the physics behind space travel with practical examples and thought experiments.",
-        )
-
-    if st.sidebar.button("🎨 Art History Overview"):
-        add_message(
-            "user",
-            "Give me an overview of Renaissance art with visual analysis and interactive elements.",
+            f"Explicar um conceito de tecnologia ou programação com exemplos práticos para aprendizes de {selected_education_level}.",
         )
 
     ####################################################################
-    # Study Tools
+    # Perguntas de Aprendizado de Exemplo
     ####################################################################
-    st.sidebar.markdown("#### 🛠️ Study Tools")
+    st.sidebar.markdown("#### ❓ Perguntas de Exemplo")
 
-    if st.sidebar.button("📝 Create Study Guide"):
+    if st.sidebar.button("🧬 Como o DNA funciona?"):
         add_message(
             "user",
-            "Create a comprehensive study guide for my last learning topic with key points, practice questions, and review materials.",
+            "Como o DNA funciona? Por favor, explique com exemplos e crie uma experiência de aprendizado interativa.",
         )
 
-    if st.sidebar.button("🧪 Practice Quiz"):
+    if st.sidebar.button("🚀 Física das Viagens Espaciais"):
         add_message(
             "user",
-            "Generate a practice quiz based on our recent learning session with different question types and detailed explanations.",
+            "Explicar a física por trás das viagens espaciais com exemplos práticos e experimentos mentais.",
         )
 
-    if st.sidebar.button("🔍 Deep Dive Analysis"):
+    if st.sidebar.button("🎨 Visão Geral da História da Arte"):
         add_message(
             "user",
-            "Let's do a deep dive analysis of the most complex topic we've discussed, breaking it down into simpler components.",
+            "Dar-me uma visão geral da arte renascentista com análise visual e elementos interativos.",
         )
 
     ####################################################################
-    # Utility buttons
+    # Ferramentas de Estudo
     ####################################################################
-    st.sidebar.markdown("#### 🛠️ Utilities")
+    st.sidebar.markdown("#### 🛠️ Ferramentas de Estudo")
+
+    if st.sidebar.button("📝 Criar Guia de Estudo"):
+        add_message(
+            "user",
+            "Criar um guia de estudo abrangente para meu último tópico de aprendizado com pontos-chave, questões de prática e materiais de revisão.",
+        )
+
+    if st.sidebar.button("🧪 Questionário de Prática"):
+        add_message(
+            "user",
+            "Gerar um questionário de prática baseado em nossa sessão de aprendizado recente com diferentes tipos de questões e explicações detalhadas.",
+        )
+
+    if st.sidebar.button("🔍 Análise Profunda"):
+        add_message(
+            "user",
+            "Vamos fazer uma análise profunda do tópico mais complexo que discutimos, dividindo-o em componentes mais simples.",
+        )
+
+    ####################################################################
+    # Botões de utilidade
+    ####################################################################
+    st.sidebar.markdown("#### 🛠️ Utilitários")
     col1, col2 = st.sidebar.columns([1, 1])
 
     with col1:
-        if st.sidebar.button("🔄 New Learning Session", use_container_width=True):
+        if st.sidebar.button("🔄 Nova Sessão de Aprendizado", use_container_width=True):
             restart_tutor()
             st.rerun()
 
@@ -289,20 +289,20 @@ def main():
                 filename = "gemini_tutor_session_new.md"
 
             if st.sidebar.download_button(
-                "💾 Export Learning",
+                "💾 Exportar Aprendizado",
                 export_chat_history("Gemini Tutor"),
                 file_name=filename,
                 mime="text/markdown",
                 use_container_width=True,
-                help=f"Export {len(st.session_state['messages'])} learning interactions",
+                help=f"Exportar {len(st.session_state['messages'])} interações de aprendizado",
             ):
-                st.sidebar.success("Learning session exported!")
+                st.sidebar.success("Sessão de aprendizado exportada!")
         else:
             st.sidebar.button(
-                "💾 Export Learning",
+                "💾 Exportar Aprendizado",
                 disabled=True,
                 use_container_width=True,
-                help="No learning content to export",
+                help="Nenhum conteúdo de aprendizado para exportar",
             )
 
     ####################################################################
@@ -337,7 +337,7 @@ def main():
     # About section
     ####################################################################
     about_section(
-        f"This Gemini Tutor provides personalized educational experiences for {selected_education_level} students using Google's advanced Gemini AI models with multimodal learning capabilities."
+        f"Este Tutor Gemini fornece experiências educacionais personalizadas para estudantes de {selected_education_level} usando os modelos avançados de IA Gemini do Google com capacidades de aprendizado multimodal."
     )
 
 

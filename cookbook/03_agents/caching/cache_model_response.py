@@ -1,10 +1,10 @@
 """
-Example showing how to cache model responses to avoid redundant API calls.
+Exemplo mostrando como armazenar em cache respostas do modelo para evitar chamadas de API redundantes.
 
-The first run will take a while to finish.
-The second run will hit the cache and be much faster.
+A primeira execução levará um tempo para terminar.
+A segunda execução acertará o cache e será muito mais rápida.
 
-You can also see the cache hit log in the console logs.
+Você também pode ver o log de acerto de cache nos logs do console.
 """
 
 import time
@@ -14,20 +14,20 @@ from agno.models.openai import OpenAIChat
 
 agent = Agent(model=OpenAIChat(id="gpt-4o", cache_response=True))
 
-# Run the same query twice to demonstrate caching
+# Executar a mesma consulta duas vezes para demonstrar cache
 for i in range(1, 3):
     print(f"\n{'=' * 60}")
     print(
-        f"Run {i}: {'Cache Miss (First Request)' if i == 1 else 'Cache Hit (Cached Response)'}"
+        f"Execução {i}: {'Cache Miss (Primeira Solicitação)' if i == 1 else 'Cache Hit (Resposta em Cache)'}"
     )
     print(f"{'=' * 60}\n")
 
     response = agent.run(
-        "Write me a short story about a cat that can talk and solve problems."
+        "Escreva-me uma história curta sobre um gato que pode falar e resolver problemas."
     )
     print(response.content)
-    print(f"\n Elapsed time: {response.metrics.duration:.3f}s")
+    print(f"\n Tempo decorrido: {response.metrics.duration:.3f}s")
 
-    # Small delay between iterations for clarity
+    # Pequeno atraso entre iterações para clareza
     if i == 1:
         time.sleep(0.5)

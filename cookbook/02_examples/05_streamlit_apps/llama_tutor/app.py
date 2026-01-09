@@ -61,13 +61,13 @@ def on_model_change():
             if current_model and current_model != new_model_id:
                 try:
                     st.session_state["is_loading_session"] = False
-                    # Start new chat with new model
+                    # Iniciar novo chat com novo modelo
                     restart_agent(model_id=new_model_id)
 
                 except Exception as e:
-                    st.sidebar.error(f"Error switching to {selected_model}: {str(e)}")
+                    st.sidebar.error(f"Erro ao mudar para {selected_model}: {str(e)}")
         else:
-            st.sidebar.error(f"Unknown model: {selected_model}")
+            st.sidebar.error(f"Modelo desconhecido: {selected_model}")
 
 
 def on_education_level_change():
@@ -76,35 +76,35 @@ def on_education_level_change():
 
     if selected_level and selected_level != current_level:
         try:
-            # Start new chat with new education level
+            # Iniciar novo chat com novo nível educacional
             restart_agent(education_level=selected_level)
         except Exception as e:
-            st.sidebar.error(f"Error switching to {selected_level}: {str(e)}")
+            st.sidebar.error(f"Erro ao mudar para {selected_level}: {str(e)}")
 
 
 def main():
     ####################################################################
     # App header
     ####################################################################
-    st.markdown("<h1 class='main-title'>Llama Tutor</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 class='main-title'>Tutor Llama</h1>", unsafe_allow_html=True)
     st.markdown(
-        "<p class='subtitle'>Your intelligent educational assistant powered by Agno</p>",
+        "<p class='subtitle'>Seu assistente educacional inteligente alimentado por Agno</p>",
         unsafe_allow_html=True,
     )
 
     ####################################################################
-    # Model selector
+    # Seletor de modelo
     ####################################################################
     selected_model = st.sidebar.selectbox(
-        "Select Model",
+        "Selecionar Modelo",
         options=TUTOR_MODELS,
-        index=len(MODELS),  # Default to first Groq model
+        index=len(MODELS),  # Padrão para primeiro modelo Groq
         key="model_selector",
         on_change=on_model_change,
     )
 
     ####################################################################
-    # Education level selector
+    # Seletor de nível educacional
     ####################################################################
     education_levels = [
         "Elementary School",
@@ -116,9 +116,9 @@ def main():
     ]
 
     selected_education_level = st.sidebar.selectbox(
-        "Education Level",
+        "Nível Educacional",
         options=education_levels,
-        index=2,  # Default to High School
+        index=2,  # Padrão para High School
         key="education_level_selector",
         on_change=on_education_level_change,
     )
@@ -140,41 +140,41 @@ def main():
     )
     reset_session_state(llama_tutor_agent)
 
-    if prompt := st.chat_input("✨ What would you like to learn about?"):
+    if prompt := st.chat_input("✨ Sobre o que você gostaria de aprender?"):
         add_message("user", prompt)
 
     ###############################################################
-    # Sample Questions
+    # Perguntas de Exemplo
     ###############################################################
-    st.sidebar.markdown("#### ❓ Sample Questions")
-    if st.sidebar.button("🧬 How does photosynthesis work?"):
+    st.sidebar.markdown("#### ❓ Perguntas de Exemplo")
+    if st.sidebar.button("🧬 Como funciona a fotossíntese?"):
         add_message(
             "user",
-            "How does photosynthesis work?",
+            "Como funciona a fotossíntese?",
         )
-    if st.sidebar.button("📚 Explain calculus basics"):
+    if st.sidebar.button("📚 Explicar fundamentos de cálculo"):
         add_message(
             "user",
-            "What is calculus and how is it used in real life?",
+            "O que é cálculo e como é usado na vida real?",
         )
-    if st.sidebar.button("🌍 Causes of World War I"):
+    if st.sidebar.button("🌍 Causas da Primeira Guerra Mundial"):
         add_message(
             "user",
-            "What were the main causes of World War I?",
+            "Quais foram as principais causas da Primeira Guerra Mundial?",
         )
-    if st.sidebar.button("⚛️ What is quantum physics?"):
+    if st.sidebar.button("⚛️ O que é física quântica?"):
         add_message(
             "user",
-            "Explain quantum physics in simple terms",
+            "Explicar física quântica em termos simples",
         )
 
     ###############################################################
-    # Utility buttons
+    # Botões de utilidade
     ###############################################################
-    st.sidebar.markdown("#### 🛠️ Utilities")
+    st.sidebar.markdown("#### 🛠️ Utilitários")
     col1, col2 = st.sidebar.columns([1, 1])
     with col1:
-        if st.sidebar.button("🔄 New Chat", use_container_width=True):
+        if st.sidebar.button("🔄 Novo Chat", use_container_width=True):
             restart_agent()
             st.rerun()
 
@@ -198,20 +198,20 @@ def main():
                 filename = "llama_tutor_analysis_new.md"
 
             if st.sidebar.download_button(
-                "💾 Export Chat",
+                "💾 Exportar Chat",
                 export_chat_history("Llama Tutor"),
                 file_name=filename,
                 mime="text/markdown",
                 use_container_width=True,
-                help=f"Export {len(st.session_state['messages'])} messages",
+                help=f"Exportar {len(st.session_state['messages'])} mensagens",
             ):
-                st.sidebar.success("Chat history exported!")
+                st.sidebar.success("Histórico de chat exportado!")
         else:
             st.sidebar.button(
-                "💾 Export Chat",
+                "💾 Exportar Chat",
                 disabled=True,
                 use_container_width=True,
-                help="No messages to export",
+                help="Nenhuma mensagem para exportar",
             )
 
     ####################################################################
@@ -246,7 +246,7 @@ def main():
     # About section
     ####################################################################
     about_section(
-        "This Llama Tutor provides personalized educational assistance across all subjects and education levels."
+        "Este Tutor Llama fornece assistência educacional personalizada em todas as matérias e níveis educacionais."
     )
 
 

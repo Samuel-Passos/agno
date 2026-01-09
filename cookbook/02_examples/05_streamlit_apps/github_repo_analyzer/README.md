@@ -1,7 +1,7 @@
-# GitHub Repository Analyzer
+# Analisador de Repositório GitHub
 
-**GitHub Repository Analyzer** is a chat application that provides an interface to analyze GitHub repositories using AI.
-It allows users to explore code, review pull requests, analyze project structures, and get insights about repository activity through natural language queries.
+**Analisador de Repositório GitHub** é uma aplicação de chat que fornece uma interface para analisar repositórios do GitHub usando IA.
+Permite que os usuários explorem código, revisem pull requests, analisem estruturas de projeto e obtenham insights sobre atividade de repositório através de consultas em linguagem natural.
 
 > Note: Fork and clone this repository if needed
 

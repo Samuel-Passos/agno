@@ -18,13 +18,13 @@ def generate_podcast_agent(
     user_id: Optional[str] = None,
     session_id: Optional[str] = None,
 ) -> Agent:
-    """Create a Podcast Generator Agent"""
+    """Criar um Agente Gerador de Podcast"""
 
     os.makedirs("tmp", exist_ok=True)
 
     model = get_model_with_provider(model_id)
 
-    # If using OpenAI, configure for audio output
+    # Se usar OpenAI, configurar para saída de áudio
     if model_id.startswith("openai:"):
         model = OpenAIChat(
             id=model_id.split("openai:")[1],
@@ -47,36 +47,36 @@ def generate_podcast_agent(
         session_id=session_id,
         tools=[DuckDuckGoTools()],
         instructions=dedent("""
-            You are a podcast scriptwriter specializing in concise and engaging narratives.
-            Your task is to research a given topic and compose a compelling podcast script.
+            Você é um roteirista de podcast especializado em narrativas concisas e envolventes.
+            Sua tarefa é pesquisar um tópico fornecido e compor um roteiro de podcast convincente.
 
-            ### Research Phase:
-            - Use DuckDuckGo to gather the most recent and relevant information on the given topic
-            - Prioritize trustworthy sources such as news sites, academic articles, or established publications
-            - Identify key points, statistics, expert opinions, and interesting facts
+            ### Fase de Pesquisa:
+            - Usar DuckDuckGo para reunir as informações mais recentes e relevantes sobre o tópico fornecido
+            - Priorizar fontes confiáveis como sites de notícias, artigos acadêmicos ou publicações estabelecidas
+            - Identificar pontos-chave, estatísticas, opiniões de especialistas e fatos interessantes
 
-            ### Scripting Phase:
-            - Write a concise podcast script in a conversational tone
-            - Begin with a strong hook to capture the listener's attention
-            - Present key insights in an engaging, easy-to-follow manner
-            - Include smooth transitions between ideas to maintain narrative flow
-            - End with a closing remark that summarizes main takeaways
+            ### Fase de Roteiro:
+            - Escrever um roteiro de podcast conciso em tom conversacional
+            - Começar com um gancho forte para capturar a atenção do ouvinte
+            - Apresentar insights-chave de forma envolvente e fácil de seguir
+            - Incluir transições suaves entre ideias para manter o fluxo narrativo
+            - Terminar com uma observação de fechamento que resuma as principais conclusões
 
-            ### Formatting Guidelines:
-            - Use simple, engaging language suitable for audio
-            - Keep the script under 300 words (around 2 minutes of audio)
-            - Write in a natural, spoken format, avoiding overly formal or technical jargon
-            - Structure: intro hook → main content → conclusion
-            - No special formatting or markdown - just plain conversational text
+            ### Diretrizes de Formatação:
+            - Usar linguagem simples e envolvente adequada para áudio
+            - Manter o roteiro abaixo de 300 palavras (cerca de 2 minutos de áudio)
+            - Escrever em formato natural e falado, evitando jargão excessivamente formal ou técnico
+            - Estrutura: gancho introdutório → conteúdo principal → conclusão
+            - Sem formatação especial ou markdown - apenas texto conversacional simples
 
-            ### Example Output Structure:
-            "Welcome to today's episode where we explore [TOPIC]. [Hook or interesting fact]
+            ### Estrutura de Saída de Exemplo:
+            "Bem-vindo ao episódio de hoje onde exploramos [TÓPICO]. [Gancho ou fato interessante]
             
-            [Main content with 2-3 key points, smooth transitions between ideas]
+            [Conteúdo principal com 2-3 pontos-chave, transições suaves entre ideias]
             
-            [Conclusion with key takeaways and closing thoughts]
+            [Conclusão com principais conclusões e pensamentos finais]
             
-            Thanks for listening, and we'll see you next time!"
+            Obrigado por ouvir, e nos vemos na próxima vez!"
         """),
         markdown=True,
         debug_mode=True,
@@ -89,26 +89,26 @@ def generate_podcast(
     topic: str, voice: str = "alloy", model_id: str = "openai:gpt-4o"
 ) -> Optional[str]:
     """
-    Generate a podcast script and convert it to audio.
+    Gerar um roteiro de podcast e convertê-lo em áudio.
 
     Args:
-        topic (str): The topic of the podcast
-        voice (str): Voice model for OpenAI TTS. Options: ["alloy", "echo", "fable", "onyx", "nova", "shimmer"]
-        model_id (str): Model to use for script generation
+        topic (str): O tópico do podcast
+        voice (str): Modelo de voz para OpenAI TTS. Opções: ["alloy", "echo", "fable", "onyx", "nova", "shimmer"]
+        model_id (str): Modelo a usar para geração de roteiro
 
     Returns:
-        str: Path to the generated audio file, or None if generation failed
+        str: Caminho para o arquivo de áudio gerado, ou None se a geração falhou
     """
     try:
-        # Create the podcast generator agent
+        # Criar o agente gerador de podcast
         agent = generate_podcast_agent(model_id=model_id, voice=voice)
 
-        # Generate the podcast script
-        response = agent.run(f"Write a podcast script for the topic: {topic}")
+        # Gerar o roteiro do podcast
+        response = agent.run(f"Escrever um roteiro de podcast para o tópico: {topic}")
 
         audio_file_path = "tmp/generated_podcast.wav"
 
-        # If the model supports audio output and audio was generated
+        # Se o modelo suporta saída de áudio e áudio foi gerado
         if hasattr(response, "response_audio") and response.response_audio is not None:
             audio_content = response.response_audio.content
 
@@ -122,5 +122,5 @@ def generate_podcast(
         return None
 
     except Exception as e:
-        print(f"Error generating podcast: {e}")
+        print(f"Erro ao gerar podcast: {e}")
         return None

@@ -1,22 +1,22 @@
 """
-This example demonstrates max_tool_calls_from_history to limit tool calls sent to the model.
+Este exemplo demonstra max_tool_calls_from_history para limitar chamadas de ferramenta enviadas ao modelo.
 
-How it works:
-1. Database stores ALL runs (no limit)
-2. num_history_runs loads last N runs from database (default: 3)
-3. max_tool_calls_from_history filters loaded history to keep only M most recent tool calls
+Como funciona:
+1. Banco de dados armazena TODAS as execuções (sem limite)
+2. num_history_runs carrega as últimas N execuções do banco de dados (padrão: 3)
+3. max_tool_calls_from_history filtra o histórico carregado para manter apenas as M chamadas de ferramenta mais recentes
 
-Flow: Database → Load History → Filter Tool Calls → Send to Model
+Fluxo: Banco de Dados → Carregar Histórico → Filtrar Chamadas de Ferramenta → Enviar ao Modelo
 
-Expected behavior (with add_history_to_context=True, no num_history_runs limit):
-- Run 1: No history → Model sees: [1] → DB has: [1]
-- Run 2: History [1] → Model sees: [1, 2] → DB has: [1, 2]
-- Run 3: History [1,2] → Model sees: [1, 2, 3] → DB has: [1, 2, 3]
-- Run 4: History [1,2,3] → Model sees: [1, 2, 3, 4] → DB has: [1, 2, 3, 4]
-- Run 5: History [1,2,3,4] filtered to [2,3,4] → Model sees: [2, 3, 4, 5] → DB has: [1, 2, 3, 4, 5]
-- Run 6: History [2,3,4,5] filtered to [3,4,5] → Model sees: [3, 4, 5, 6] → DB has: [1, 2, 3, 4, 5, 6]
+Comportamento esperado (com add_history_to_context=True, sem limite num_history_runs):
+- Execução 1: Sem histórico → Modelo vê: [1] → BD tem: [1]
+- Execução 2: Histórico [1] → Modelo vê: [1, 2] → BD tem: [1, 2]
+- Execução 3: Histórico [1,2] → Modelo vê: [1, 2, 3] → BD tem: [1, 2, 3]
+- Execução 4: Histórico [1,2,3] → Modelo vê: [1, 2, 3, 4] → BD tem: [1, 2, 3, 4]
+- Execução 5: Histórico [1,2,3,4] filtrado para [2,3,4] → Modelo vê: [2, 3, 4, 5] → BD tem: [1, 2, 3, 4, 5]
+- Execução 6: Histórico [2,3,4,5] filtrado para [3,4,5] → Modelo vê: [3, 4, 5, 6] → BD tem: [1, 2, 3, 4, 5, 6]
 
-Key insight: Filtering affects MODEL INPUT only. Database stores everything, always.
+Insight chave: A filtragem afeta apenas a ENTRADA DO MODELO. O banco de dados armazena tudo, sempre.
 """
 
 import random
@@ -37,8 +37,8 @@ def get_weather_for_city(city: str) -> str:
 agent = Agent(
     model=OpenAIChat(id="gpt-4o-mini"),
     tools=[get_weather_for_city],
-    instructions="You are a weather assistant. Get the weather using the get_weather_for_city tool.",
-    # Only keep 3 most recent tool calls from history in context (reduces token costs)
+    instructions="Você é um assistente de clima. Obter o clima usando a ferramenta get_weather_for_city.",
+    # Manter apenas as 3 chamadas de ferramenta mais recentes do histórico no contexto (reduz custos de token)
     max_tool_calls_from_history=3,
     db=SqliteDb(db_file="tmp/weather_data.db"),
     add_history_to_context=True,
@@ -58,18 +58,18 @@ cities = [
 ]
 
 print("\n" + "=" * 90)
-print("Tool Call Filtering Demo: max_tool_calls_from_history=3")
+print("Demonstração de Filtragem de Chamadas de Ferramenta: max_tool_calls_from_history=3")
 print("=" * 90)
 print(
-    f"{'Run':<5} | {'City':<15} | {'History':<8} | {'Current':<8} | {'In Context':<11} | {'In DB':<8}"
+    f"{'Execução':<9} | {'Cidade':<15} | {'Histórico':<9} | {'Atual':<8} | {'No Contexto':<12} | {'No BD':<8}"
 )
 print("-" * 90)
 
 
 for i, city in enumerate(cities, 1):
-    run_response = agent.run(f"What's the weather in {city}?")
+    run_response = agent.run(f"Qual é o clima em {city}?")
 
-    # Count tool calls from history (sent to model after filtering)
+    # Contar chamadas de ferramenta do histórico (enviadas ao modelo após filtragem)
     history_tool_calls = sum(
         len(msg.tool_calls)
         for msg in run_response.messages
@@ -78,7 +78,7 @@ for i, city in enumerate(cities, 1):
         and getattr(msg, "from_history", False)
     )
 
-    # Count tool calls from current run
+    # Contar chamadas de ferramenta da execução atual
     current_tool_calls = sum(
         len(msg.tool_calls)
         for msg in run_response.messages
@@ -89,7 +89,7 @@ for i, city in enumerate(cities, 1):
 
     total_in_context = history_tool_calls + current_tool_calls
 
-    # Total tool calls stored in database (unfiltered)
+    # Total de chamadas de ferramenta armazenadas no banco de dados (não filtradas)
     saved_messages = agent.get_session_messages()
     total_in_db = (
         sum(
@@ -102,5 +102,5 @@ for i, city in enumerate(cities, 1):
     )
 
     print(
-        f"{i:<5} | {city:<15} | {history_tool_calls:<8} | {current_tool_calls:<8} | {total_in_context:<11} | {total_in_db:<8}"
+        f"{i:<9} | {city:<15} | {history_tool_calls:<9} | {current_tool_calls:<8} | {total_in_context:<12} | {total_in_db:<8}"
     )

@@ -19,13 +19,13 @@ def get_recipe_image_agent(
     session_id: Optional[str] = None,
     local_pdf_path: Optional[str] = None,
 ) -> Agent:
-    """Get a Recipe Image Generation Agent with Knowledge Base"""
+    """Obter um Agente de Geração de Imagem de Receita com Base de Conhecimento"""
 
-    # Choose the appropriate knowledge base
+    # Escolher a base de conhecimento apropriada
     if local_pdf_path:
         knowledge = Knowledge(
             name="Recipe Knowledge Base",
-            description="Custom uploaded recipe collection",
+            description="Coleção de receitas personalizadas enviadas",
             vector_db=PgVector(
                 db_url=db_url,
                 table_name="recipe_image_documents",
@@ -34,15 +34,15 @@ def get_recipe_image_agent(
             max_results=3,
         )
         knowledge.add_content(
-            name=f"Uploaded Recipe: {local_pdf_path.split('/')[-1]}",
+            name=f"Receita Enviada: {local_pdf_path.split('/')[-1]}",
             path=local_pdf_path,
             reader=PDFImageReader(),
-            description="Custom uploaded recipe PDF",
+            description="PDF de receita personalizado enviado",
         )
     else:
         knowledge = Knowledge(
             name="Recipe Knowledge Base",
-            description="Thai recipe collection with step-by-step instructions",
+            description="Coleção de receitas tailandesas com instruções passo a passo",
             vector_db=PgVector(
                 db_url=db_url,
                 table_name="recipe_image_documents",
@@ -53,7 +53,7 @@ def get_recipe_image_agent(
         knowledge.add_content(
             name="Thai Recipes Collection",
             url=DEFAULT_RECIPE_URL,
-            description="Comprehensive Thai recipe book with traditional dishes",
+            description="Livro abrangente de receitas tailandesas com pratos tradicionais",
         )
 
     agent = Agent(
@@ -67,32 +67,32 @@ def get_recipe_image_agent(
         session_id=session_id,
         tools=[OpenAITools(image_model="gpt-image-1")],
         instructions="""
-            You are a specialized recipe assistant that creates visual cooking guides.
+            Você é um assistente de receitas especializado que cria guias visuais de culinária.
             
-            When asked for a recipe:
-            1. **Search Knowledge Base**: Use the `search_knowledge_base` tool to find the most relevant recipe
-            2. **Format Recipe**: Extract and present the recipe in exactly this format:
+            Quando solicitado uma receita:
+            1. **Buscar Base de Conhecimento**: Usar a ferramenta `search_knowledge_base` para encontrar a receita mais relevante
+            2. **Formatar Receita**: Extrair e apresentar a receita exatamente neste formato:
             
-               ## Ingredients
-               - List each ingredient with quantities using bullet points
+               ## Ingredientes
+               - Listar cada ingrediente com quantidades usando marcadores
                
-               ## Directions  
-               1. Step-by-step numbered instructions
-               2. Be clear and concise for each cooking step
-               3. Include cooking times and temperatures where relevant
+               ## Instruções  
+               1. Instruções numeradas passo a passo
+               2. Ser claro e conciso para cada etapa de culinária
+               3. Incluir tempos de cozimento e temperaturas quando relevante
                
-            3. **Generate Visual Guide**: After presenting the recipe, use the `generate_image` tool with a prompt like:
-               '{Dish Name}: A step-by-step visual cooking guide showing all preparation and cooking steps in one overhead view with bright natural lighting. Include all ingredients and show the progression from raw ingredients to final plated dish.'
+            3. **Gerar Guia Visual**: Após apresentar a receita, usar a ferramenta `generate_image` com um prompt como:
+               '{Nome do Prato}: Um guia visual de culinária passo a passo mostrando todas as etapas de preparação e cozimento em uma vista superior com iluminação natural brilhante. Incluir todos os ingredientes e mostrar a progressão dos ingredientes crus ao prato final servido.'
                
-            4. **Maintain Quality**: 
-               - Ensure visual consistency across images
-               - Include all ingredients and key steps in the image
-               - Use bright, appetizing lighting and overhead perspective
-               - Show the complete cooking process in one comprehensive view
+            4. **Manter Qualidade**: 
+               - Garantir consistência visual entre imagens
+               - Incluir todos os ingredientes e etapas-chave na imagem
+               - Usar iluminação brilhante e apetitosa e perspectiva superior
+               - Mostrar o processo completo de culinária em uma vista abrangente
                
-            5. **Complete the Response**: End with 'Recipe generation complete!'
+            5. **Completar a Resposta**: Terminar com 'Geração de receita completa!'
             
-            Keep responses focused, clear, and visually appealing. Always search the knowledge base first before responding.
+            Manter respostas focadas, claras e visualmente atraentes. Sempre buscar na base de conhecimento primeiro antes de responder.
         """,
         markdown=True,
         debug_mode=True,

@@ -6,22 +6,22 @@ from agno.tools.youtube import YouTubeTools
 from db import demo_db
 
 # ============================================================================
-# Description & Instructions
+# Descrição e Instruções
 # ============================================================================
 description = dedent("""\
-    You are the YouTube Agent — an AI Agent that analyzes YouTube videos
-    and answers questions about their content with accuracy and clarity.
+    Você é o Agente YouTube — um Agente de IA que analisa vídeos do YouTube
+    e responde perguntas sobre seu conteúdo com precisão e clareza.
     """)
 instructions = dedent("""
-    1. When given a YouTube URL, use the `get_youtube_video_data` and `get_youtube_video_captions`
-       tools to retrieve video info and captions.
-    2. Use that data to answer the user's question clearly and concisely.
-    3. If the answer isn't in the video, say so and ask for more details.
-    4. Keep responses short, engaging, and focused on key insights.
+    1. Quando receber uma URL do YouTube, usar as ferramentas `get_youtube_video_data` e `get_youtube_video_captions`
+       para recuperar informações do vídeo e legendas.
+    2. Usar esses dados para responder à pergunta do usuário de forma clara e concisa.
+    3. Se a resposta não estiver no vídeo, dizer isso e pedir mais detalhes.
+    4. Manter respostas curtas, envolventes e focadas em insights-chave.
     """)
 
 # ============================================================================
-# Create the Agent
+# Criar o Agente
 # ============================================================================
 youtube_agent = Agent(
     name="YouTube Agent",

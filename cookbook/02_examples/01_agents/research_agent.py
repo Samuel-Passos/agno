@@ -1,25 +1,25 @@
-"""🔍 Research Agent - Your AI Investigative Journalist!
+"""🔍 Research Agent - Seu Jornalista Investigativo de IA!
 
-This example shows how to create a sophisticated research agent that combines
-web search capabilities with professional journalistic writing skills. The agent performs
-comprehensive research using multiple sources, fact-checks information, and delivers
-well-structured, NYT-style articles on any topic.
+Este exemplo mostra como criar um agente de pesquisa sofisticado que combina
+capacidades de busca na web com habilidades de escrita jornalística profissional. O agente realiza
+pesquisa abrangente usando múltiplas fontes, verifica informações e entrega
+artigos bem estruturados, no estilo NYT, sobre qualquer tópico.
 
-Key capabilities:
-- Advanced web search across multiple sources
-- Content extraction and analysis
-- Cross-reference verification
-- Professional journalistic writing
-- Balanced and objective reporting
+Capacidades principais:
+- Busca avançada na web em múltiplas fontes
+- Extração e análise de conteúdo
+- Verificação de referência cruzada
+- Escrita jornalística profissional
+- Reportagem equilibrada e objetiva
 
-Example prompts to try:
+Exemplos de prompts para tentar:
 - "Analyze the impact of AI on healthcare delivery and patient outcomes"
 - "Report on the latest breakthroughs in quantum computing"
 - "Investigate the global transition to renewable energy sources"
 - "Explore the evolution of cybersecurity threats and defenses"
 - "Research the development of autonomous vehicle technology"
 
-Dependencies: `pip install openai ddgs newspaper4k lxml_html_clean agno`
+Dependências: `pip install openai ddgs newspaper4k lxml_html_clean agno`
 """
 
 from textwrap import dedent
@@ -30,88 +30,88 @@ from agno.models.openai import OpenAIChat
 from agno.tools.duckduckgo import DuckDuckGoTools
 from agno.tools.newspaper4k import Newspaper4kTools
 
-# Initialize the research agent with advanced journalistic capabilities
+# Inicializar o agente de pesquisa com capacidades jornalísticas avançadas
 research_agent = Agent(
     model=OpenAIChat(id="gpt-4o"),
     tools=[DuckDuckGoTools(), Newspaper4kTools()],
     description=dedent("""\
-        You are an elite investigative journalist with decades of experience at the New York Times.
-        Your expertise encompasses: 📰
+        Você é um jornalista investigativo de elite com décadas de experiência no New York Times.
+        Sua expertise abrange: 📰
 
-        - Deep investigative research and analysis
-        - Meticulous fact-checking and source verification
-        - Compelling narrative construction
-        - Data-driven reporting and visualization
-        - Expert interview synthesis
-        - Trend analysis and future predictions
-        - Complex topic simplification
-        - Ethical journalism practices
-        - Balanced perspective presentation
-        - Global context integration\
+        - Pesquisa e análise investigativa profunda
+        - Verificação meticulosa de fatos e fontes
+        - Construção de narrativa convincente
+        - Reportagem e visualização baseada em dados
+        - Síntese de entrevistas com especialistas
+        - Análise de tendências e previsões futuras
+        - Simplificação de tópicos complexos
+        - Práticas de jornalismo ético
+        - Apresentação de perspectiva equilibrada
+        - Integração de contexto global\
     """),
     instructions=dedent("""\
-        1. Research Phase 🔍
-           - Search for 10+ authoritative sources on the topic
-           - Prioritize recent publications and expert opinions
-           - Identify key stakeholders and perspectives
+        1. Fase de Pesquisa 🔍
+           - Buscar 10+ fontes autoritárias sobre o tópico
+           - Priorizar publicações recentes e opiniões de especialistas
+           - Identificar partes interessadas e perspectivas-chave
 
-        2. Analysis Phase 📊
-           - Extract and verify critical information
-           - Cross-reference facts across multiple sources
-           - Identify emerging patterns and trends
-           - Evaluate conflicting viewpoints
+        2. Fase de Análise 📊
+           - Extrair e verificar informações críticas
+           - Fazer referência cruzada de fatos em múltiplas fontes
+           - Identificar padrões e tendências emergentes
+           - Avaliar pontos de vista conflitantes
 
-        3. Writing Phase ✍️
-           - Craft an attention-grabbing headline
-           - Structure content in NYT style
-           - Include relevant quotes and statistics
-           - Maintain objectivity and balance
-           - Explain complex concepts clearly
+        3. Fase de Escrita ✍️
+           - Criar uma manchete que chame atenção
+           - Estruturar conteúdo no estilo NYT
+           - Incluir citações e estatísticas relevantes
+           - Manter objetividade e equilíbrio
+           - Explicar conceitos complexos claramente
 
-        4. Quality Control ✓
-           - Verify all facts and attributions
-           - Ensure narrative flow and readability
-           - Add context where necessary
-           - Include future implications
+        4. Controle de Qualidade ✓
+           - Verificar todos os fatos e atribuições
+           - Garantir fluxo narrativo e legibilidade
+           - Adicionar contexto onde necessário
+           - Incluir implicações futuras
     """),
     expected_output=dedent("""\
-        # {Compelling Headline} 📰
+        # {Manchete Convincente} 📰
 
-        ## Executive Summary
-        {Concise overview of key findings and significance}
+        ## Resumo Executivo
+        {Visão geral concisa dos principais achados e significância}
 
-        ## Background & Context
-        {Historical context and importance}
-        {Current landscape overview}
+        ## Contexto e Antecedentes
+        {Contexto histórico e importância}
+        {Visão geral do cenário atual}
 
-        ## Key Findings
-        {Main discoveries and analysis}
-        {Expert insights and quotes}
-        {Statistical evidence}
+        ## Principais Achados
+        {Principais descobertas e análise}
+        {Insights e citações de especialistas}
+        {Evidências estatísticas}
 
-        ## Impact Analysis
-        {Current implications}
-        {Stakeholder perspectives}
-        {Industry/societal effects}
+        ## Análise de Impacto
+        {Implicações atuais}
+        {Perspectivas das partes interessadas}
+        {Efeitos na indústria/sociedade}
 
-        ## Future Outlook
-        {Emerging trends}
-        {Expert predictions}
-        {Potential challenges and opportunities}
+        ## Perspectiva Futura
+        {Tendências emergentes}
+        {Previsões de especialistas}
+        {Desafios e oportunidades potenciais}
 
-        ## Expert Insights
-        {Notable quotes and analysis from industry leaders}
-        {Contrasting viewpoints}
+        ## Insights de Especialistas
+        {Citações e análises notáveis de líderes da indústria}
+        {Pontos de vista contrastantes}
 
-        ## Sources & Methodology
-        {List of primary sources with key contributions}
-        {Research methodology overview}
+        ## Fontes e Metodologia
+        {Lista de fontes primárias com contribuições-chave}
+        {Visão geral da metodologia de pesquisa}
 
         ---
-        Research conducted by AI Investigative Journalist
-        New York Times Style Report
-        Published: {current_date}
-        Last Updated: {current_time}\
+        Pesquisa conduzida por Jornalista Investigativo de IA
+        Relatório no Estilo New York Times
+        Publicado: {current_date}
+        Última Atualização: {current_time}\
     """),
     db=SqliteDb(db_file="tmp/research_agent.db"),
     num_history_runs=2,
@@ -122,7 +122,7 @@ research_agent = Agent(
     debug_mode=True,
 )
 
-# Example usage with detailed research request
+# Exemplo de uso com solicitação de pesquisa detalhada
 if __name__ == "__main__":
     research_agent.print_response(
         "Analyze the current state and future implications of artificial intelligence regulation worldwide",
@@ -149,27 +149,27 @@ if __name__ == "__main__":
         stream=True,
     )
 
-# Advanced research topics to explore:
+# Tópicos de pesquisa avançados para explorar:
 """
-Technology & Innovation:
+Tecnologia e Inovação:
 1. "Investigate the development and impact of large language models in 2024"
 2. "Research the current state of quantum computing and its practical applications"
 3. "Analyze the evolution and future of edge computing technologies"
 4. "Explore the latest advances in brain-computer interface technology"
 
-Environmental & Sustainability:
+Ambiental e Sustentabilidade:
 1. "Report on innovative carbon capture technologies and their effectiveness"
 2. "Investigate the global progress in renewable energy adoption"
 3. "Analyze the impact of circular economy practices on global sustainability"
 4. "Research the development of sustainable aviation technologies"
 
-Healthcare & Biotechnology:
+Saúde e Biotecnologia:
 1. "Explore the latest developments in CRISPR gene editing technology"
 2. "Analyze the impact of AI on drug discovery and development"
 3. "Investigate the evolution of personalized medicine approaches"
 4. "Research the current state of longevity science and anti-aging research"
 
-Societal Impact:
+Impacto Social:
 1. "Examine the effects of social media on democratic processes"
 2. "Analyze the impact of remote work on urban development"
 3. "Investigate the role of blockchain in transforming financial systems"

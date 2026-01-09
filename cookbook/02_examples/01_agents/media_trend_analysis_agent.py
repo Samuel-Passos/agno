@@ -1,4 +1,4 @@
-"""Please install dependencies using:
+"""Por favor instale as dependências usando:
 pip install openai exa-py agno firecrawl
 """
 
@@ -12,7 +12,7 @@ from agno.tools.firecrawl import FirecrawlTools
 
 
 def calculate_start_date(days: int) -> str:
-    """Calculate start date based on number of days."""
+    """Calcular data de início com base no número de dias."""
     start_date = datetime.now() - timedelta(days=days)
     return start_date.strftime("%Y-%m-%d")
 
@@ -24,56 +24,56 @@ agent = Agent(
         FirecrawlTools(scrape=True),
     ],
     description=dedent("""\
-        You are an expert media trend analyst specializing in:
-        1. Identifying emerging trends across news and digital platforms
-        2. Recognizing pattern changes in media coverage
-        3. Providing actionable insights based on data
-        4. Forecasting potential future developments
+        Você é um analista especialista de tendências de mídia especializado em:
+        1. Identificar tendências emergentes em notícias e plataformas digitais
+        2. Reconhecer mudanças de padrão na cobertura da mídia
+        3. Fornecer insights acionáveis baseados em dados
+        4. Prever desenvolvimentos futuros potenciais
     """),
     instructions=[
-        "Analyze the provided topic according to the user's specifications:",
-        "1. Use keywords to perform targeted searches",
-        "2. Identify key influencers and authoritative sources",
-        "3. Extract main themes and recurring patterns",
-        "4. Provide actionable recommendations",
-        "5. if got sources less then 2, only then scrape them using firecrawl tool, dont crawl it  and use them to generate the report",
-        "6. growth rate should be in percentage , and if not possible dont give growth rate",
+        "Analisar o tópico fornecido de acordo com as especificações do usuário:",
+        "1. Usar palavras-chave para realizar buscas direcionadas",
+        "2. Identificar influenciadores-chave e fontes autoritárias",
+        "3. Extrair temas principais e padrões recorrentes",
+        "4. Fornecer recomendações acionáveis",
+        "5. se obtiver menos de 2 fontes, apenas então fazer scraping delas usando ferramenta firecrawl, não fazer crawl e usá-las para gerar o relatório",
+        "6. taxa de crescimento deve estar em porcentagem, e se não for possível não fornecer taxa de crescimento",
     ],
     expected_output=dedent("""\
-    # Media Trend Analysis Report
+    # Relatório de Análise de Tendências de Mídia
 
-    ## Executive Summary
-    {High-level overview of findings and key metrics}
+    ## Resumo Executivo
+    {Visão geral de alto nível dos achados e métricas-chave}
 
-    ## Trend Analysis
-    ### Volume Metrics
-    - Peak discussion periods: {dates}
-    - Growth rate: {percentage or dont show this}
+    ## Análise de Tendências
+    ### Métricas de Volume
+    - Períodos de pico de discussão: {dates}
+    - Taxa de crescimento: {percentage or dont show this}
 
-    ## Source Analysis
-    ### Top Sources
+    ## Análise de Fontes
+    ### Principais Fontes
     1. {Source 1}
 
     2. {Source 2}
 
 
-    ## Actionable Insights
+    ## Insights Acionáveis
     1. {Insight 1}
-       - Evidence: {data points}
-       - Recommended action: {action}
+       - Evidência: {data points}
+       - Ação recomendada: {action}
 
-    ## Future Predictions
+    ## Previsões Futuras
     1. {Prediction 1}
-       - Supporting evidence: {evidence}
+       - Evidência de apoio: {evidence}
 
-    ## References
-    {Detailed source list with links}
+    ## Referências
+    {Lista detalhada de fontes com links}
     """),
     markdown=True,
     add_datetime_to_context=True,
 )
 
-# Example usage:
+# Exemplo de uso:
 analysis_prompt = """\
 Analyze media trends for:
 Keywords: ai agents
@@ -82,7 +82,7 @@ Sources: verge.com ,linkedin.com, x.com
 
 agent.print_response(analysis_prompt, stream=True)
 
-# Alternative prompt example
+# Exemplo de prompt alternativo
 crypto_prompt = """\
 Analyze media trends for:
 Keywords: cryptocurrency, bitcoin, ethereum

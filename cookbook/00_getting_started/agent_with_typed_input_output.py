@@ -1,18 +1,18 @@
 """
-Agent with Typed Input and Output - Full Type Safety
-=====================================================
-This example shows how to define both input and output schemas for your agent.
-You get end-to-end type safety: validate what goes in, guarantee what comes out.
+Agente com Entrada e Saída Tipadas - Segurança de Tipos Completa
+==================================================================
+Este exemplo mostra como definir schemas de entrada e saída para seu agente.
+Você obtém segurança de tipos de ponta a ponta: valida o que entra, garante o que sai.
 
-Perfect for building robust pipelines where you need contracts on both ends.
-The agent validates inputs and guarantees output structure.
+Perfeito para construir pipelines robustos onde você precisa de contratos em ambas as extremidades.
+O agente valida entradas e garante a estrutura de saída.
 
-Key concepts:
-- input_schema: A Pydantic model defining what the agent accepts
-- output_schema: A Pydantic model defining what the agent returns
-- Pass input as a dict or Pydantic model — both work
+Conceitos-chave:
+- input_schema: Um modelo Pydantic que define o que o agente aceita
+- output_schema: Um modelo Pydantic que define o que o agente retorna
+- Passe entrada como dict ou modelo Pydantic — ambos funcionam
 
-Example inputs to try:
+Exemplos de entradas para testar:
 - {"ticker": "NVDA", "analysis_type": "quick", "include_risks": True}
 - {"ticker": "TSLA", "analysis_type": "deep", "include_risks": True}
 """
@@ -26,77 +26,77 @@ from agno.tools.yfinance import YFinanceTools
 from pydantic import BaseModel, Field
 
 # ============================================================================
-# Storage Configuration
+# Configuração de Armazenamento
 # ============================================================================
 agent_db = SqliteDb(db_file="tmp/agents.db")
 
 
 # ============================================================================
-# Input Schema — what the agent accepts
+# Schema de Entrada — o que o agente aceita
 # ============================================================================
 class AnalysisRequest(BaseModel):
-    """Structured input for requesting a stock analysis."""
+    """Entrada estruturada para solicitar uma análise de ação."""
 
-    ticker: str = Field(..., description="Stock ticker symbol (e.g., NVDA, AAPL)")
+    ticker: str = Field(..., description="Símbolo do ticker da ação (ex: NVDA, AAPL)")
     analysis_type: Literal["quick", "deep"] = Field(
         default="quick",
-        description="quick = summary only, deep = full analysis with drivers/risks",
+        description="quick = apenas resumo, deep = análise completa com drivers/riscos",
     )
     include_risks: bool = Field(
-        default=True, description="Whether to include risk analysis"
+        default=True, description="Se deve incluir análise de riscos"
     )
 
 
 # ============================================================================
-# Output Schema — what the agent returns
+# Schema de Saída — o que o agente retorna
 # ============================================================================
 class StockAnalysis(BaseModel):
-    """Structured output for stock analysis."""
+    """Saída estruturada para análise de ações."""
 
-    ticker: str = Field(..., description="Stock ticker symbol")
-    company_name: str = Field(..., description="Full company name")
-    current_price: float = Field(..., description="Current stock price in USD")
-    summary: str = Field(..., description="One-line summary of the stock")
+    ticker: str = Field(..., description="Símbolo do ticker da ação")
+    company_name: str = Field(..., description="Nome completo da empresa")
+    current_price: float = Field(..., description="Preço atual da ação em USD")
+    summary: str = Field(..., description="Resumo de uma linha da ação")
     key_drivers: Optional[List[str]] = Field(
-        None, description="Key growth drivers (if deep analysis)"
+        None, description="Principais drivers de crescimento (se análise profunda)"
     )
     key_risks: Optional[List[str]] = Field(
-        None, description="Key risks (if include_risks=True)"
+        None, description="Principais riscos (se include_risks=True)"
     )
     recommendation: str = Field(
-        ..., description="One of: Strong Buy, Buy, Hold, Sell, Strong Sell"
+        ..., description="Um de: Strong Buy, Buy, Hold, Sell, Strong Sell"
     )
 
 
 # ============================================================================
-# Agent Instructions
+# Instruções do Agente
 # ============================================================================
 instructions = """\
-You are a Finance Agent that produces structured stock analyses.
+Você é um Agente Financeiro que produz análises estruturadas de ações.
 
-## Input Parameters
+## Parâmetros de Entrada
 
-You receive structured requests with:
-- ticker: The stock to analyze
-- analysis_type: "quick" (summary only) or "deep" (full analysis)
-- include_risks: Whether to include risk analysis
+Você recebe solicitações estruturadas com:
+- ticker: A ação a analisar
+- analysis_type: "quick" (apenas resumo) ou "deep" (análise completa)
+- include_risks: Se deve incluir análise de riscos
 
-## Workflow
+## Fluxo de Trabalho
 
-1. Fetch data for the requested ticker
-2. If analysis_type is "deep", identify key drivers
-3. If include_risks is True, identify key risks
-4. Provide a clear recommendation
+1. Buscar dados para o ticker solicitado
+2. Se analysis_type for "deep", identificar principais drivers
+3. Se include_risks for True, identificar principais riscos
+4. Fornecer uma recomendação clara
 
-## Rules
+## Regras
 
-- Source: Yahoo Finance
-- Match output to input parameters — don't include drivers for "quick" analysis
-- Recommendation must be one of: Strong Buy, Buy, Hold, Sell, Strong Sell\
+- Fonte: Yahoo Finance
+- Corresponder saída aos parâmetros de entrada — não incluir drivers para análise "quick"
+- Recomendação deve ser uma de: Strong Buy, Buy, Hold, Sell, Strong Sell\
 """
 
 # ============================================================================
-# Create the Agent
+# Criar o Agente
 # ============================================================================
 agent_with_typed_input_output = Agent(
     name="Agent with Typed Input Output",
@@ -113,10 +113,10 @@ agent_with_typed_input_output = Agent(
 )
 
 # ============================================================================
-# Run the Agent
+# Executar o Agente
 # ============================================================================
 if __name__ == "__main__":
-    # Option 1: Pass input as a dict
+    # Opção 1: Passar entrada como dict
     response_1 = agent_with_typed_input_output.run(
         input={
             "ticker": "NVDA",
@@ -125,26 +125,26 @@ if __name__ == "__main__":
         }
     )
 
-    # Access the typed output
+    # Acessar a saída tipada
     analysis_1: StockAnalysis = response_1.content
 
     print(f"\n{'=' * 60}")
-    print(f"Stock Analysis: {analysis_1.company_name} ({analysis_1.ticker})")
+    print(f"Análise de Ação: {analysis_1.company_name} ({analysis_1.ticker})")
     print(f"{'=' * 60}")
-    print(f"Price: ${analysis_1.current_price:.2f}")
-    print(f"Summary: {analysis_1.summary}")
+    print(f"Preço: ${analysis_1.current_price:.2f}")
+    print(f"Resumo: {analysis_1.summary}")
     if analysis_1.key_drivers:
-        print("\nKey Drivers:")
+        print("\nPrincipais Drivers:")
         for driver in analysis_1.key_drivers:
             print(f"  • {driver}")
     if analysis_1.key_risks:
-        print("\nKey Risks:")
+        print("\nPrincipais Riscos:")
         for risk in analysis_1.key_risks:
             print(f"  • {risk}")
-    print(f"\nRecommendation: {analysis_1.recommendation}")
+    print(f"\nRecomendação: {analysis_1.recommendation}")
     print(f"{'=' * 60}\n")
 
-    # Option 2: Pass input as a Pydantic model
+    # Opção 2: Passar entrada como modelo Pydantic
     request = AnalysisRequest(
         ticker="AAPL",
         analysis_type="quick",
@@ -152,37 +152,37 @@ if __name__ == "__main__":
     )
     response_2 = agent_with_typed_input_output.run(input=request)
 
-    # Access the typed output
+    # Acessar a saída tipada
     analysis_2: StockAnalysis = response_2.content
 
     print(f"\n{'=' * 60}")
-    print(f"Stock Analysis: {analysis_2.company_name} ({analysis_2.ticker})")
+    print(f"Análise de Ação: {analysis_2.company_name} ({analysis_2.ticker})")
     print(f"{'=' * 60}")
-    print(f"Price: ${analysis_2.current_price:.2f}")
-    print(f"Summary: {analysis_2.summary}")
+    print(f"Preço: ${analysis_2.current_price:.2f}")
+    print(f"Resumo: {analysis_2.summary}")
     if analysis_2.key_drivers:
-        print("\nKey Drivers:")
+        print("\nPrincipais Drivers:")
         for driver in analysis_2.key_drivers:
             print(f"  • {driver}")
     if analysis_2.key_risks:
-        print("\nKey Risks:")
+        print("\nPrincipais Riscos:")
         for risk in analysis_2.key_risks:
             print(f"  • {risk}")
-    print(f"\nRecommendation: {analysis_2.recommendation}")
+    print(f"\nRecomendação: {analysis_2.recommendation}")
     print(f"{'=' * 60}\n")
 
 # ============================================================================
-# More Examples
+# Mais Exemplos
 # ============================================================================
 """
-Typed input + output is perfect for:
+Entrada + saída tipadas são perfeitas para:
 
-1. API endpoints
+1. Endpoints de API
    @app.post("/analyze")
    def analyze(request: AnalysisRequest) -> StockAnalysis:
        return agent.run(input=request).content
 
-2. Batch processing
+2. Processamento em lote
    requests = [
        AnalysisRequest(ticker="NVDA", analysis_type="quick"),
        AnalysisRequest(ticker="AMD", analysis_type="quick"),
@@ -190,10 +190,10 @@ Typed input + output is perfect for:
    ]
    results = [agent.run(input=r).content for r in requests]
 
-3. Pipeline composition
-   # Agent 1 outputs what Agent 2 expects as input
+3. Composição de pipeline
+   # Agente 1 produz o que o Agente 2 espera como entrada
    screening_result = screener_agent.run(input=criteria).content
    analysis_result = analysis_agent.run(input=screening_result).content
 
-Type safety on both ends = fewer bugs, better tooling, clearer contracts.
+Segurança de tipos em ambas as extremidades = menos bugs, melhor ferramentaria, contratos mais claros.
 """

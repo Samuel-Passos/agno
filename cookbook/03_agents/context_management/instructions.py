@@ -1,4 +1,4 @@
 from agno.agent import Agent
 
-agent = Agent(instructions="Share a 2 sentence story about")
-agent.print_response("Love in the year 12000.")
+agent = Agent(instructions="Compartilhar uma história de 2 frases sobre")
+agent.print_response("Amor no ano 12000.")

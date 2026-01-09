@@ -1,6 +1,6 @@
-# Gemini Tutor
+# Tutor Gemini
 
-An advanced educational AI assistant powered by Google's Gemini models that creates personalized, multimodal learning experiences. This example demonstrates how to build sophisticated educational applications with adaptive content delivery and interactive learning elements.
+Um assistente educacional de IA avançado alimentado pelos modelos Gemini do Google que cria experiências de aprendizado personalizadas e multimodais. Este exemplo demonstra como construir aplicações educacionais sofisticadas com entrega de conteúdo adaptativa e elementos de aprendizado interativos.
 
 ## ✨ Features
 

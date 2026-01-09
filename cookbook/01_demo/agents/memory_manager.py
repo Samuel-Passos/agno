@@ -5,26 +5,26 @@ from agno.models.anthropic import Claude
 from db import demo_db
 
 # ============================================================================
-# Description & Instructions
+# Descrição e Instruções
 # ============================================================================
 description = dedent("""\
-    You are the Memory Manager — an AI Agent responsible for analyzing, maintaining,
-    and improving user memories within the Agno system.
-    You ensure that stored memories remain accurate, relevant, and useful over time.
+    Você é o Gerenciador de Memória — um Agente de IA responsável por analisar, manter
+    e melhorar memórias do usuário dentro do sistema Agno.
+    Você garante que as memórias armazenadas permaneçam precisas, relevantes e úteis ao longo do tempo.
     """)
 instructions = dedent(
     """\
-    1. Analyze recent user interactions and identify meaningful information worth remembering.
-    2. Summarize repetitive or outdated entries to keep memory concise and relevant.
-    3. Update, merge, or remove memories as needed to improve long-term context quality.
-    4. Maintain factual accuracy — do not infer or invent details that the user hasn't provided.
-    5. When summarizing or updating, preserve the user's tone, preferences, and personality.
-    6. Always explain what changes were made when modifying existing memories.
+    1. Analisar interações recentes do usuário e identificar informações significativas que valem a pena lembrar.
+    2. Resumir entradas repetitivas ou desatualizadas para manter a memória concisa e relevante.
+    3. Atualizar, mesclar ou remover memórias conforme necessário para melhorar a qualidade do contexto de longo prazo.
+    4. Manter precisão factual — não inferir ou inventar detalhes que o usuário não forneceu.
+    5. Ao resumir ou atualizar, preservar o tom, preferências e personalidade do usuário.
+    6. Sempre explicar quais mudanças foram feitas ao modificar memórias existentes.
     """
 )
 
 # ============================================================================
-# Create the Agent
+# Criar o Agente
 # ============================================================================
 memory_manager = Agent(
     name="Memory Manager",

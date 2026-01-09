@@ -1,8 +1,8 @@
-"""Example of a Team using the `collaborate` mode.
+"""Exemplo de uma Equipe usando o modo `collaborate`.
 
-In Collaborate Mode, all team members are given the same task and the team leader synthesizes their outputs into a cohesive response.
+No Modo Colaboração, todos os membros da equipe recebem a mesma tarefa e o líder da equipe sintetiza suas saídas em uma resposta coesa.
 
-Run `pip install agno arxiv pypdf pycountry` to install the dependencies.
+Executar `pip install agno arxiv pypdf pycountry` para instalar as dependências.
 """
 
 import asyncio
@@ -21,57 +21,57 @@ arxiv_download_dir.mkdir(parents=True, exist_ok=True)
 
 reddit_researcher = Agent(
     name="Reddit Researcher",
-    role="Research a topic on Reddit",
+    role="Pesquisar um tópico no Reddit",
     model=OpenAIChat(id="gpt-4o"),
     tools=[DuckDuckGoTools()],
     add_name_to_context=True,
     instructions=dedent("""
-    You are a Reddit researcher.
-    You will be given a topic to research on Reddit.
-    You will need to find the most relevant posts on Reddit.
+    Você é um pesquisador do Reddit.
+    Você receberá um tópico para pesquisar no Reddit.
+    Você precisará encontrar os posts mais relevantes no Reddit.
     """),
 )
 
 hackernews_researcher = Agent(
     name="HackerNews Researcher",
     model=OpenAIChat("gpt-4o"),
-    role="Research a topic on HackerNews.",
+    role="Pesquisar um tópico no HackerNews.",
     tools=[HackerNewsTools()],
     add_name_to_context=True,
     instructions=dedent("""
-    You are a HackerNews researcher.
-    You will be given a topic to research on HackerNews.
-    You will need to find the most relevant posts on HackerNews.
+    Você é um pesquisador do HackerNews.
+    Você receberá um tópico para pesquisar no HackerNews.
+    Você precisará encontrar os posts mais relevantes no HackerNews.
     """),
 )
 
 academic_paper_researcher = Agent(
     name="Academic Paper Researcher",
     model=OpenAIChat("gpt-4o"),
-    role="Research academic papers and scholarly content",
+    role="Pesquisar artigos acadêmicos e conteúdo acadêmico",
     tools=[DuckDuckGoTools(), ArxivTools(download_dir=arxiv_download_dir)],
     add_name_to_context=True,
     instructions=dedent("""
-    You are a academic paper researcher.
-    You will be given a topic to research in academic literature.
-    You will need to find relevant scholarly articles, papers, and academic discussions.
-    Focus on peer-reviewed content and citations from reputable sources.
-    Provide brief summaries of key findings and methodologies.
+    Você é um pesquisador de artigos acadêmicos.
+    Você receberá um tópico para pesquisar na literatura acadêmica.
+    Você precisará encontrar artigos acadêmicos, papers e discussões acadêmicas relevantes.
+    Focar em conteúdo revisado por pares e citações de fontes respeitáveis.
+    Fornecer resumos breves de principais achados e metodologias.
     """),
 )
 
 twitter_researcher = Agent(
     name="Twitter Researcher",
     model=OpenAIChat("gpt-4o"),
-    role="Research trending discussions and real-time updates",
+    role="Pesquisar discussões em tendência e atualizações em tempo real",
     tools=[DuckDuckGoTools()],
     add_name_to_context=True,
     instructions=dedent("""
-    You are a Twitter/X researcher.
-    You will be given a topic to research on Twitter/X.
-    You will need to find trending discussions, influential voices, and real-time updates.
-    Focus on verified accounts and credible sources when possible.
-    Track relevant hashtags and ongoing conversations.
+    Você é um pesquisador do Twitter/X.
+    Você receberá um tópico para pesquisar no Twitter/X.
+    Você precisará encontrar discussões em tendência, vozes influentes e atualizações em tempo real.
+    Focar em contas verificadas e fontes credíveis quando possível.
+    Rastrear hashtags relevantes e conversas em andamento.
     """),
 )
 
@@ -87,8 +87,8 @@ agent_team = Team(
     ],
     delegate_to_all_members=True,
     instructions=[
-        "You are a discussion master.",
-        "You have to stop the discussion when you think the team has reached a consensus.",
+        "Você é um mestre de discussão.",
+        "Você deve parar a discussão quando achar que a equipe chegou a um consenso.",
     ],
     markdown=True,
     show_members_responses=True,

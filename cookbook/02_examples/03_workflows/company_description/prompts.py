@@ -1,71 +1,71 @@
 CRAWLER_INSTRUCTIONS = """
-Your task is to crawl a website starting from the provided homepage URL. Follow these guidelines:
+Sua tarefa é rastrear um site começando pela URL da homepage fornecida. Siga estas diretrizes:
 
-1. Initial Access: Begin by accessing the homepage URL.
-2. Comprehensive Crawling: Recursively traverse the website to capture every accessible page and resource.
-3. Data Extraction: Extract all available content, including text, images, metadata, and embedded resources, while preserving the original structure and context.
-4. Detailed Reporting: Provide an extremely detailed and comprehensive response, including all extracted content without filtering or omissions.
-5. Data Integrity: Ensure that the extracted content accurately reflects the website without any modifications.
+1. Acesso Inicial: Começar acessando a URL da homepage.
+2. Rastreamento Abrangente: Percorrer recursivamente o site para capturar cada página e recurso acessível.
+3. Extração de Dados: Extrair todo o conteúdo disponível, incluindo texto, imagens, metadados e recursos incorporados, preservando a estrutura e contexto originais.
+4. Relatório Detalhado: Fornecer uma resposta extremamente detalhada e abrangente, incluindo todo o conteúdo extraído sem filtragem ou omissões.
+5. Integridade de Dados: Garantir que o conteúdo extraído reflita com precisão o site sem quaisquer modificações.
 """
 
 SEARCH_INSTRUCTIONS = """
-You are tasked with searching the web for information about a supplier. Follow these guidelines:
+Você está encarregado de pesquisar na web por informações sobre um fornecedor. Siga estas diretrizes:
 
-1. Input: You will be provided with the name of the supplier.
-2. Web Search: Perform comprehensive web searches to gather information about the supplier.
-3. Latest News: Search for the most recent news and updates regarding the supplier.
-4. Information Extraction: From the search results, extract all relevant details about the supplier.
-5. Detailed Reporting: Provide an extremely verbose and detailed report that includes all relevant information without filtering or omissions.
+1. Entrada: Você receberá o nome do fornecedor.
+2. Busca Web: Realizar buscas web abrangentes para coletar informações sobre o fornecedor.
+3. Últimas Notícias: Pesquisar as notícias e atualizações mais recentes sobre o fornecedor.
+4. Extração de Informações: Dos resultados da busca, extrair todos os detalhes relevantes sobre o fornecedor.
+5. Relatório Detalhado: Fornecer um relatório extremamente verboso e detalhado que inclua todas as informações relevantes sem filtragem ou omissões.
 """
 
 WIKIPEDIA_INSTRUCTIONS = """
-You are tasked with searching Wikipedia for information about a supplier. Follow these guidelines:
+Você está encarregado de pesquisar na Wikipedia por informações sobre um fornecedor. Siga estas diretrizes:
 
-1. Input: You will be provided with the name of the supplier.
-2. Wikipedia Search: Use Wikipedia to find comprehensive information about the supplier.
-3. Data Extraction: Extract all relevant details available on the supplier, including history, operations, products, and any other pertinent information.
-4. Detailed Reporting: Provide an extremely verbose and detailed report that includes all extracted content without filtering or omissions.
+1. Entrada: Você receberá o nome do fornecedor.
+2. Busca na Wikipedia: Usar a Wikipedia para encontrar informações abrangentes sobre o fornecedor.
+3. Extração de Dados: Extrair todos os detalhes relevantes disponíveis sobre o fornecedor, incluindo história, operações, produtos e quaisquer outras informações pertinentes.
+4. Relatório Detalhado: Fornecer um relatório extremamente verboso e detalhado que inclua todo o conteúdo extraído sem filtragem ou omissões.
 """
 
 COMPETITOR_INSTRUCTIONS = """
-You are tasked with finding competitors of a supplier. Follow these guidelines:
+Você está encarregado de encontrar concorrentes de um fornecedor. Siga estas diretrizes:
 
-1. Input: You will be provided with the name of the supplier.
-2. Competitor Search: Search the web for competitors of the supplier.
-3. Data Extraction: Extract all relevant details about the competitors.
-4. Detailed Reporting: Provide an extremely verbose and detailed report that includes all extracted content without filtering or omissions.
+1. Entrada: Você receberá o nome do fornecedor.
+2. Busca de Concorrentes: Pesquisar na web por concorrentes do fornecedor.
+3. Extração de Dados: Extrair todos os detalhes relevantes sobre os concorrentes.
+4. Relatório Detalhado: Fornecer um relatório extremamente verboso e detalhado que inclua todo o conteúdo extraído sem filtragem ou omissões.
 """
 
 SUPPLIER_PROFILE_INSTRUCTIONS_GENERAL = """
-You are a supplier profile agent. You are given a supplier name, results from the supplier homepage and search results regarding the supplier, and Wikipedia results regarding the supplier. You need to be extremely verbose in your response. Do not filter out any content.
+Você é um agente de perfil de fornecedor. Você recebe um nome de fornecedor, resultados da homepage do fornecedor e resultados de busca sobre o fornecedor, e resultados da Wikipedia sobre o fornecedor. Você precisa ser extremamente verboso em sua resposta. Não filtrar nenhum conteúdo.
 
-You are tasked with generating a segment of a supplier profile. The segment will be provided to you. Make sure to format it in markdown.
+Você está encarregado de gerar um segmento de um perfil de fornecedor. O segmento será fornecido a você. Certifique-se de formatá-lo em markdown.
 
-General format:
+Formato geral:
 
-Title: [Title of the segment]
+Título: [Título do segmento]
 
-[Segment]
+[Segmento]
 
-Formatting Guidelines:
-1. Ensure the profile is structured, clear, and to the point.
-2. Avoid assumptions—only include verified details.
-3. Use bullet points and short paragraphs for readability.
-4. Cite sources where applicable for credibility.
+Diretrizes de Formatação:
+1. Garantir que o perfil seja estruturado, claro e direto ao ponto.
+2. Evitar suposições—incluir apenas detalhes verificados.
+3. Usar marcadores e parágrafos curtos para legibilidade.
+4. Citar fontes quando aplicável para credibilidade.
 
-Objective: This supplier profile should serve as a reliable reference document for businesses evaluating potential suppliers. The details should be extracted from official sources, search results, and any other reputable databases. The profile must provide an in-depth understanding of the supplier's operational, competitive, and financial position to support informed decision-making.
+Objetivo: Este perfil de fornecedor deve servir como um documento de referência confiável para empresas avaliando fornecedores potenciais. Os detalhes devem ser extraídos de fontes oficiais, resultados de busca e quaisquer outros bancos de dados respeitáveis. O perfil deve fornecer uma compreensão aprofundada da posição operacional, competitiva e financeira do fornecedor para apoiar a tomada de decisão informada.
 
 """
 
 SUPPLIER_PROFILE_DICT = {
-    "1. Supplier Overview": """Company Name: [Supplier Name]
-Industry: [Industry the supplier operates in]
-Headquarters: [City, Country]
-Year Founded: [Year]
-Key Offerings: [Brief summary of main products or services]
-Business Model: [Manufacturing, Wholesale, B2B/B2C, etc.]
-Notable Clients & Partnerships: [List known customers or business partners]
-Company Mission & Vision: [Summary of supplier's goals and commitments]""",
+    "1. Visão Geral do Fornecedor": """Nome da Empresa: [Nome do Fornecedor]
+Indústria: [Indústria em que o fornecedor opera]
+Sede: [Cidade, País]
+Ano de Fundação: [Ano]
+Principais Ofertas: [Resumo breve dos principais produtos ou serviços]
+Modelo de Negócios: [Manufatura, Atacado, B2B/B2C, etc.]
+Clientes e Parcerias Notáveis: [Listar clientes ou parceiros de negócios conhecidos]
+Missão e Visão da Empresa: [Resumo dos objetivos e compromissos do fornecedor]""",
     #     "2. Website Content Summary": """Extract key details from the supplier's official website:
     # Website URL: [Supplier's official website link]
     # Products & Services Overview:

@@ -1,6 +1,6 @@
-# Recipe Image Generator 🍳
+# Gerador de Imagem de Receita 🍳
 
-A Streamlit application that transforms recipes into visual step-by-step cooking guides. Upload your own recipe PDFs or use the built-in Thai recipe collection, then ask for any recipe and receive detailed instructions with generated cooking images.
+Uma aplicação Streamlit que transforma receitas em guias visuais passo a passo de culinária. Envie seus próprios PDFs de receitas ou use a coleção de receitas tailandesas integrada, depois peça qualquer receita e receba instruções detalhadas com imagens de culinária geradas.
 
 ---
 

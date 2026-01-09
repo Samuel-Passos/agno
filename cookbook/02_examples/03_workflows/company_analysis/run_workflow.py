@@ -26,54 +26,54 @@ def should_run_analysis(analysis_type: str) -> callable:
 company_overview_step = Step(
     name="Company Overview",
     agent=company_overview_agent,
-    description="Research and analyze the target company",
+    description="Pesquisar e analisar a empresa-alvo",
 )
 
 switching_barriers_step = Step(
     name="Switching Barriers Analysis",
     agent=switching_barriers_agent,
-    description="Analyze supplier switching barriers and costs",
+    description="Analisar barreiras e custos de troca de fornecedores",
 )
 
 pestle_step = Step(
     name="PESTLE Analysis",
     agent=pestle_agent,
-    description="Conduct PESTLE analysis for procurement strategy",
+    description="Realizar análise PESTLE para estratégia de compras",
 )
 
 porter_step = Step(
     name="Porter's Five Forces Analysis",
     agent=porter_agent,
-    description="Analyze competitive forces in the supply market",
+    description="Analisar forças competitivas no mercado de suprimentos",
 )
 
 kraljic_step = Step(
     name="Kraljic Matrix Analysis",
     agent=kraljic_agent,
-    description="Position category on Kraljic Matrix",
+    description="Posicionar categoria na Matriz Kraljic",
 )
 
 cost_drivers_step = Step(
     name="Cost Drivers Analysis",
     agent=cost_drivers_agent,
-    description="Analyze cost structure and volatility",
+    description="Analisar estrutura de custos e volatilidade",
 )
 
 alternative_suppliers_step = Step(
     name="Alternative Suppliers Research",
     agent=alternative_suppliers_agent,
-    description="Identify and evaluate alternative suppliers",
+    description="Identificar e avaliar fornecedores alternativos",
 )
 
 report_compilation_step = Step(
     name="Report Compilation",
     agent=report_compiler_agent,
-    description="Compile comprehensive procurement analysis report",
+    description="Compilar relatório abrangente de análise de compras",
 )
 
 procurement_workflow = Workflow(
     name="Procurement Analysis Workflow",
-    description="Comprehensive procurement intelligence using multiple strategic frameworks",
+    description="Inteligência abrangente de compras usando múltiplas estruturas estratégicas",
     steps=[
         company_overview_step,
         Parallel(

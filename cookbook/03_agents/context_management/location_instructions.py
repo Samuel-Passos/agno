@@ -7,5 +7,5 @@ agent = Agent(
     add_location_to_context=True,
     tools=[DuckDuckGoTools(cache_results=True)],
 )
-agent.print_response("What city am I in?")
-agent.print_response("What is current news about my city?")
+agent.print_response("Em qual cidade estou?")
+agent.print_response("Quais são as notícias atuais sobre minha cidade?")

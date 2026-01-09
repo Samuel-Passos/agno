@@ -10,22 +10,22 @@ agent = Agent(
 
 
 async def basic():
-    response = await agent.arun(input="Tell me a joke.")
+    response = await agent.arun(input="Conte-me uma piada.")
     print(response.content)
 
 
 async def basic_print():
-    await agent.aprint_response(input="Tell me a joke.")
+    await agent.aprint_response(input="Conte-me uma piada.")
 
 
 async def basic_pprint():
-    response = await agent.arun(input="Tell me a joke.")
+    response = await agent.arun(input="Conte-me uma piada.")
     await apprint_run_response(response)
 
 
 if __name__ == "__main__":
     asyncio.run(basic())
-    # OR
+    # OU
     asyncio.run(basic_print())
-    # OR
+    # OU
     asyncio.run(basic_pprint())

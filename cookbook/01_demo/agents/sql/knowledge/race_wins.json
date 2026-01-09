@@ -1,48 +1,48 @@
 
 {
   "table_name": "race_wins",
-  "table_description": "Documents race win data from 1950-2020, detailing venue, winner, team, and race duration.",
+  "table_description": "Documenta dados de vitórias de corridas de 1950-2020, detalhando local, vencedor, equipe e duração da corrida.",
   "table_columns": [
     {
         "name": "index",
         "type": "int",
-        "description": "Unique index for each entry."
+        "description": "Índice único para cada entrada."
     },
     {
         "name": "venue",
         "type": "text",
-        "description": "Venue where the race was held."
+        "description": "Local onde a corrida foi realizada."
     },
     {
         "name": "date",
         "type": "text",
-        "description": "Date of the race in the format 'DD Mon YYYY'.",
-        "tip": "Use the `TO_DATE` function to convert the date to a date type."
+        "description": "Data da corrida no formato 'DD Mon YYYY'.",
+        "tip": "Usar a função `TO_DATE` para converter a data para um tipo de data."
     },
     {
         "name": "name",
         "type": "text",
-        "description": "Name of the winning driver."
+        "description": "Nome do piloto vencedor."
     },
     {
         "name": "name_tag",
         "type": "text",
-        "description": "Tag associated with the driver's name."
+        "description": "Tag associada ao nome do piloto."
     },
     {
         "name": "team",
         "type": "text",
-        "description": "Team of the winning driver."
+        "description": "Equipe do piloto vencedor."
     },
     {
         "name": "laps",
         "type": "float",
-        "description": "Number of laps completed in the race."
+        "description": "Número de voltas completadas na corrida."
     },
     {
         "name": "time",
         "type": "text",
-        "description": "Winning time of the race."
+        "description": "Tempo de vitória da corrida."
     }
 ]
 }

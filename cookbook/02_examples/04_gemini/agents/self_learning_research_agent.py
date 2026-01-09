@@ -13,7 +13,7 @@ from agno.vectordb.pgvector import PgVector, SearchType
 from db import db_url, gemini_agents_db
 
 # =============================================================================
-# Knowledge base for storing historical research snapshots
+# Base de conhecimento para armazenar snapshots de pesquisa históricos
 # =============================================================================
 research_knowledge = Knowledge(
     name="Research Snapshots",
@@ -23,13 +23,13 @@ research_knowledge = Knowledge(
         search_type=SearchType.hybrid,
         embedder=GeminiEmbedder(id="gemini-embedding-001"),
     ),
-    max_results=3,  # fetch a few candidates; agent selects latest by created_at
+    max_results=3,  # buscar alguns candidatos; agente seleciona o mais recente por created_at
     contents_db=gemini_agents_db,
 )
 
 
 # =============================================================================
-# Tool: Save a research snapshot (explicit user approval required)
+# Ferramenta: Salvar um snapshot de pesquisa (aprovação explícita do usuário necessária)
 # =============================================================================
 def save_research_snapshot(
     name: str,
@@ -40,23 +40,23 @@ def save_research_snapshot(
     sources: List[Dict[str, str]],
     notes: Optional[str] = None,
 ) -> str:
-    """Save a validated research snapshot to the knowledge base.
+    """Salvar um snapshot de pesquisa validado na base de conhecimento.
 
     Args:
-        name: The name of the snapshot.
-        question: The original question asked by the user.
-        report_summary: A concise summary of this run (max 8 bullets or ~120 words).
-        consensus_summary: 1–2 sentence consensus summary.
-        claims: A list of claims supported by the evidence.
-        sources: A list of sources used to support the claims.
-        notes: Optional caveats, assumptions, or data-quality considerations.
+        name: O nome do snapshot.
+        question: A pergunta original feita pelo usuário.
+        report_summary: Um resumo conciso desta execução (máx 8 marcadores ou ~120 palavras).
+        consensus_summary: Resumo de consenso de 1-2 frases.
+        claims: Uma lista de afirmações apoiadas pela evidência.
+        sources: Uma lista de fontes usadas para apoiar as afirmações.
+        notes: Considerações opcionais de ressalvas, suposições ou qualidade de dados.
 
     Returns:
-        str: Status message.
+        str: Mensagem de status.
     """
 
     if research_knowledge is None:
-        return "Knowledge not available"
+        return "Conhecimento não disponível"
 
     payload = {
         "name": name.strip(),
@@ -69,87 +69,87 @@ def save_research_snapshot(
         "notes": notes,
     }
 
-    logger.info("Saving research snapshot")
+    logger.info("Salvando snapshot de pesquisa")
 
     research_knowledge.add_content(
         name=payload["name"],
         text_content=json.dumps(payload, ensure_ascii=False),
         reader=TextReader(),
-        skip_if_exists=False,  # snapshots are historical
+        skip_if_exists=False,  # snapshots são históricos
     )
 
-    return "Saved research snapshot to knowledge base"
+    return "Snapshot de pesquisa salvo na base de conhecimento"
 
 
 # =============================================================================
-# Instructions
+# Instruções
 # =============================================================================
 instructions = """\
-You are a self-learning research agent with access to web search and a knowledge base
-containing prior research snapshots.
+Você é um agente de pesquisa de auto-aprendizado com acesso a busca web e uma base de conhecimento
+contendo snapshots de pesquisa anteriores.
 
-Your job:
-- Answer the user's question using web search (via parallel_search).
-- Summarize the current internet consensus as structured claims.
-- Search your knowledge base for the most recent snapshot of a similar question.
-- Compare the current claims to the prior snapshot and explain what changed and why.
-- Ask the user if they want to save the new snapshot to the knowledge base.
+Seu trabalho:
+- Responder a pergunta do usuário usando busca web (via parallel_search).
+- Resumir o consenso atual da internet como afirmações estruturadas.
+- Buscar sua base de conhecimento pelo snapshot mais recente de uma pergunta semelhante.
+- Comparar as afirmações atuais ao snapshot anterior e explicar o que mudou e por quê.
+- Perguntar ao usuário se ele quer salvar o novo snapshot na base de conhecimento.
 
-You MUST follow this flow:
-1) Use `parallel_search` tool to gather current information.
-   - Issue MULTIPLE search queries in parallel (fan-out) and then aggregate results.
-   - Cover at least:
-     - Primary/official sources (docs, vendor pages, standards bodies)
-     - Independent analysis (reputable industry blogs, benchmarks, research labs)
-2) Use `search_knowledge` to retrieve up to 3 similar snapshots (if any).
-3) From the retrieved snapshots, select the one with the newest `created_at` as "previous consensus".
-4) Diff the current claims against the previous claims.
-5) Present results using the format below.
-6) Ask the user if they want to save the new snapshot to the knowledge base.
+Você DEVE seguir este fluxo:
+1) Usar a ferramenta `parallel_search` para coletar informações atuais.
+   - Emitir MÚLTIPLAS consultas de busca em paralelo (fan-out) e depois agregar resultados.
+   - Cobrir pelo menos:
+     - Fontes primárias/oficiais (docs, páginas de fornecedores, órgãos de padrões)
+     - Análise independente (blogs respeitáveis da indústria, benchmarks, laboratórios de pesquisa)
+2) Usar `search_knowledge` para recuperar até 3 snapshots semelhantes (se houver).
+3) Dos snapshots recuperados, selecionar o com `created_at` mais novo como "consenso anterior".
+4) Diferenciar as afirmações atuais das afirmações anteriores.
+5) Apresentar resultados usando o formato abaixo.
+6) Perguntar ao usuário se ele quer salvar o novo snapshot na base de conhecimento.
 
-Consensus rules:
-- A claim must be supported by at least two independent sources, unless it is a primary/official source.
-- If sources disagree, mark the claim as disputed and lower confidence.
+Regras de consenso:
+- Uma afirmação deve ser apoiada por pelo menos duas fontes independentes, a menos que seja uma fonte primária/oficial.
+- Se as fontes discordarem, marcar a afirmação como disputada e reduzir a confiança.
 
-Response format (must follow exactly):
+Formato de resposta (deve seguir exatamente):
 
-## Quick Answer
-(2-4 sentences)
+## Resposta Rápida
+(2-4 frases)
 
-## Research Summary
-(Structured sections with bullets)
+## Resumo da Pesquisa
+(Seções estruturadas com marcadores)
 
-## Current Consensus (Claims)
-Provide 4-10 claims. Each claim must include:
-- claim_id: stable id (generate a short slug)
-- claim: short statement
+## Consenso Atual (Afirmações)
+Fornecer 4-10 afirmações. Cada afirmação deve incluir:
+- claim_id: id estável (gerar um slug curto)
+- claim: declaração curta
 - confidence: Low | Medium | High
 - source_urls: 1-3 URLs
 
-## What Changed Since Last Time
-- If a prior snapshot exists:
-  - New or strengthened claims
-  - Weakened or disputed claims
-  - Removed claims
-  - For each change, briefly explain why and cite sources
-- If no prior snapshot exists:
-  - Say: “No prior snapshot found. This is the first recorded consensus.”
+## O Que Mudou Desde a Última Vez
+- Se um snapshot anterior existir:
+  - Novas ou fortalecidas afirmações
+  - Enfraquecidas ou disputadas afirmações
+  - Afirmações removidas
+  - Para cada mudança, explicar brevemente por quê e citar fontes
+- Se nenhum snapshot anterior existir:
+  - Dizer: "Nenhum snapshot anterior encontrado. Este é o primeiro consenso registrado."
 
-## Sources
-- Deduplicate URLs
-- Prefer canonical URLs
-- Max 12 sources
-(Clickable URLs)
+## Fontes
+- Desduplicar URLs
+- Preferir URLs canônicas
+- Máx 12 fontes
+(URLs clicáveis)
 
-After the response, add:
+Após a resposta, adicionar:
 
-## Save Snapshot?
-"Want me to save this snapshot to the knowledge base for future comparisons?"
+## Salvar Snapshot?
+"Quer que eu salve este snapshot na base de conhecimento para comparações futuras?"
 
-Rules:
-- Clearly separate facts from interpretation.
-- Note uncertainty or outdated information explicitly.
-- Ask the user if they want to save the new snapshot to the knowledge base and then call the `save_research_snapshot` tool if they say yes.
+Regras:
+- Separar claramente fatos de interpretação.
+- Notar incerteza ou informações desatualizadas explicitamente.
+- Perguntar ao usuário se ele quer salvar o novo snapshot na base de conhecimento e então chamar a ferramenta `save_research_snapshot` se ele disser sim.
 """
 
 
@@ -163,17 +163,17 @@ self_learning_research_agent = Agent(
     db=gemini_agents_db,
     knowledge=research_knowledge,
     tools=[ParallelTools(), save_research_snapshot],
-    # Enable the agent to remember user information and preferences
+    # Habilitar o agente para lembrar informações e preferências do usuário
     enable_agentic_memory=True,
-    # Enable the agent to search the knowledge base (i.e previous research snapshots)
+    # Habilitar o agente para buscar a base de conhecimento (ex: snapshots de pesquisa anteriores)
     search_knowledge=True,
-    # Add the current date and time to the context
+    # Adicionar a data e hora atuais ao contexto
     add_datetime_to_context=True,
-    # Add the history of the agent's runs to the context
+    # Adicionar o histórico das execuções do agente ao contexto
     add_history_to_context=True,
-    # Number of historical runs to include in the context
+    # Número de execuções históricas para incluir no contexto
     num_history_runs=5,
-    # Give the agent a tool to read chat history beyond the last 5 messages
+    # Dar ao agente uma ferramenta para ler histórico de chat além das últimas 5 mensagens
     read_chat_history=True,
     markdown=True,
 )

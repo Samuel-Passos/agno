@@ -25,8 +25,8 @@ asyncio.run(
 agno_assist = Agent(
     name="Agno Assist",
     model=OpenAIChat(id="gpt-4o"),
-    description="You help answer questions about the Agno framework.",
-    instructions="Search your knowledge before answering the question.",
+    description="Você ajuda a responder perguntas sobre o framework Agno.",
+    instructions="Pesquise seu conhecimento antes de responder a pergunta.",
     knowledge=knowledge,
     db=SqliteDb(session_table="agno_assist_sessions", db_file="tmp/agents.db"),
     add_history_to_context=True,

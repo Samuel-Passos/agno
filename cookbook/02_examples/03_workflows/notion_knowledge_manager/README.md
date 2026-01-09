@@ -1,77 +1,77 @@
-# Notion Integration Setup Guide
+# Guia de Configuração de Integração Notion
 
-This guide will help you set up the Notion integration for the query classification workflow.
+Este guia ajudará você a configurar a integração Notion para o workflow de classificação de consultas.
 
-## Prerequisites
+## Pré-requisitos
 
-1. A Notion account
-2. Python 3.9 or higher
-3. Agno framework installed
+1. Uma conta Notion
+2. Python 3.9 ou superior
+3. Framework Agno instalado
 
-## Step 1: Install Required Dependencies
+## Passo 1: Instalar Dependências Necessárias
 
 ```bash
 pip install notion-client
 ```
 
-## Step 2: Create a Notion Integration
+## Passo 2: Criar uma Integração Notion
 
-1. Go to [https://www.notion.so/my-integrations](https://www.notion.so/my-integrations)
-2. Click on **"+ New integration"**
-3. Fill in the details:
-   - **Name**: Give it a name like "Agno Query Classifier"
-   - **Associated workspace**: Select your workspace
-   - **Type**: Internal integration
-4. Click **"Submit"**
-5. Copy the **"Internal Integration Token"** (starts with `secret_`)
-   - ⚠️ Keep this secret! This is your `NOTION_API_KEY`
+1. Ir para [https://www.notion.so/my-integrations](https://www.notion.so/my-integrations)
+2. Clicar em **"+ New integration"**
+3. Preencher os detalhes:
+   - **Nome**: Dar um nome como "Agno Query Classifier"
+   - **Workspace associado**: Selecionar seu workspace
+   - **Tipo**: Integração interna
+4. Clicar em **"Submit"**
+5. Copiar o **"Internal Integration Token"** (começa com `secret_`)
+   - ⚠️ Manter isso em segredo! Esta é sua `NOTION_API_KEY`
 
-## Step 3: Create a Notion Database
+## Passo 3: Criar um Banco de Dados Notion
 
-1. Open Notion and create a new page
-2. Add a **Database** (you can use "/database" command)
-3. Set up the database with these properties:
-   - **Name** (Title) - Already exists by default
-   - **Tag** (Select) - Click "+" to add a new property
-     - Property type: **Select**
-     - Property name: **Tag**
-     - Add these options:
+1. Abrir Notion e criar uma nova página
+2. Adicionar um **Database** (você pode usar o comando "/database")
+3. Configurar o banco de dados com estas propriedades:
+   - **Nome** (Título) - Já existe por padrão
+   - **Tag** (Select) - Clicar em "+" para adicionar uma nova propriedade
+     - Tipo de propriedade: **Select**
+     - Nome da propriedade: **Tag**
+     - Adicionar estas opções:
        - travel
        - tech
        - general-blogs
        - fashion
        - documents
 
-## Step 4: Share Database with Your Integration
+## Passo 4: Compartilhar Banco de Dados com Sua Integração
 
-1. Open your database page in Notion
-2. Click the **"..."** (three dots) menu in the top right
-3. Scroll down and click **"Add connections"**
-4. Search for your integration name (e.g., "Agno Query Classifier")
-5. Click on it to grant access
+1. Abrir sua página de banco de dados no Notion
+2. Clicar no menu **"..."** (três pontos) no canto superior direito
+3. Rolar para baixo e clicar em **"Add connections"**
+4. Pesquisar pelo nome da sua integração (ex: "Agno Query Classifier")
+5. Clicar nela para conceder acesso
 
-## Step 5: Get Your Database ID
+## Passo 5: Obter Seu ID de Banco de Dados
 
-Your database ID is in the URL of your database page:
+Seu ID de banco de dados está na URL da sua página de banco de dados:
 
 ```
 https://www.notion.so/../{database_id}?v={view_id}
 ```
 
-The `database_id` is the 32-character string (with hyphens) between the workspace name and the `?v=`.
+O `database_id` é a string de 32 caracteres (com hífens) entre o nome do workspace e o `?v=`.
 
-Example:
+Exemplo:
 ```
 https://www.notion.so/myworkspace/28fee27fd9128039b3f8f47cb7ade7cb?v=...
                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                                 This is your database_id
+                                 Este é seu database_id
 ```
 
-Copy this database ID.
+Copiar este ID de banco de dados.
 
-## Step 6: Set Environment Variables
+## Passo 6: Definir Variáveis de Ambiente
 
-Create a `.env` file in your project root or export these variables:
+Criar um arquivo `.env` na raiz do seu projeto ou exportar estas variáveis:
 
 ```bash
 export NOTION_API_KEY="secret_your_integration_token_here"
@@ -79,20 +79,20 @@ export NOTION_DATABASE_ID="your_database_id_here"
 export OPENAI_API_KEY="your_openai_api_key_here"
 ```
 
-Or in a `.env` file:
+Ou em um arquivo `.env`:
 ```
 NOTION_API_KEY=secret_your_integration_token_here
 NOTION_DATABASE_ID=your_database_id_here
 OPENAI_API_KEY=your_openai_api_key_here
 ```
 
-## Step 7: Run the Workflow
+## Passo 7: Executar o Workflow
 
 ```bash
 python cookbook/examples/workflows/thoughts_dump_notion/thoughts_dump_notion.py
 ```
 
-The server will start on `http://localhost:7777` (or another port).
+O servidor iniciará em `http://localhost:7777` (ou outra porta).
 
-Go to [AgentOS](https://os.agno.com/) and test!
+Ir para [AgentOS](https://os.agno.com/) e testar!
 

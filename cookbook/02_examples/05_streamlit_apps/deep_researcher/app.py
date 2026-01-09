@@ -25,9 +25,9 @@ def main():
     ####################################################################
     # App header
     ####################################################################
-    st.markdown("<h1 class='main-title'>Deep Researcher</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 class='main-title'>Pesquisador Profundo</h1>", unsafe_allow_html=True)
     st.markdown(
-        "<p class='subtitle'>Your AI-powered research assistant with multi-agent workflow</p>",
+        "<p class='subtitle'>Seu assistente de pesquisa alimentado por IA com workflow multi-agente</p>",
         unsafe_allow_html=True,
     )
 
@@ -37,60 +37,60 @@ def main():
     if "messages" not in st.session_state:
         st.session_state["messages"] = []
 
-    if prompt := st.chat_input("🔎 What would you like me to research?"):
+    if prompt := st.chat_input("🔎 Sobre o que você gostaria que eu pesquisasse?"):
         add_message("user", prompt)
 
     ####################################################################
-    # API Configuration
+    # Configuração de API
     ####################################################################
-    st.sidebar.markdown("#### 🔑 Configuration")
+    st.sidebar.markdown("#### 🔑 Configuração")
 
     nebius_api_key = st.sidebar.text_input(
-        "Nebius API Key",
+        "Chave de API Nebius",
         type="password",
-        help="Required for powering the research agents",
+        help="Necessária para alimentar os agentes de pesquisa",
         placeholder="nebius_xxxxxxxxxxxx",
     )
 
     scrapegraph_api_key = st.sidebar.text_input(
-        "ScrapeGraph API Key",
+        "Chave de API ScrapeGraph",
         type="password",
-        help="Required for web scraping and content extraction",
+        help="Necessária para web scraping e extração de conteúdo",
         placeholder="sgai_xxxxxxxxxxxx",
     )
 
     if nebius_api_key and scrapegraph_api_key:
-        st.sidebar.success("✅ API keys configured")
+        st.sidebar.success("✅ Chaves de API configuradas")
     else:
-        st.sidebar.warning("⚠️ Please configure your API keys to start researching")
+        st.sidebar.warning("⚠️ Por favor, configure suas chaves de API para começar a pesquisar")
 
     ###############################################################
-    # Example Research Topics
+    # Tópicos de Pesquisa de Exemplo
     ###############################################################
-    st.sidebar.markdown("#### 🔍 Example Topics")
+    st.sidebar.markdown("#### 🔍 Tópicos de Exemplo")
 
-    if st.sidebar.button("🚀 AI & ML Developments 2024"):
-        add_message("user", "Latest developments in AI and machine learning in 2024")
+    if st.sidebar.button("🚀 Desenvolvimentos de IA e ML 2024"):
+        add_message("user", "Últimos desenvolvimentos em IA e aprendizado de máquina em 2024")
 
-    if st.sidebar.button("🌱 Sustainable Energy"):
-        add_message("user", "Current trends in sustainable energy technologies")
+    if st.sidebar.button("🌱 Energia Sustentável"):
+        add_message("user", "Tendências atuais em tecnologias de energia sustentável")
 
-    if st.sidebar.button("💊 Personalized Medicine"):
+    if st.sidebar.button("💊 Medicina Personalizada"):
         add_message(
-            "user", "Recent breakthroughs in personalized medicine and genomics"
+            "user", "Descobertas recentes em medicina personalizada e genômica"
         )
 
-    if st.sidebar.button("🔒 Quantum Cybersecurity"):
-        add_message("user", "Impact of quantum computing on cybersecurity")
+    if st.sidebar.button("🔒 Cibersegurança Quântica"):
+        add_message("user", "Impacto da computação quântica na cibersegurança")
 
     ###############################################################
-    # Utility buttons
+    # Botões de utilidade
     ###############################################################
-    st.sidebar.markdown("#### 🛠️ Utilities")
+    st.sidebar.markdown("#### 🛠️ Utilitários")
     col1, col2 = st.sidebar.columns([1, 1])
 
     with col1:
-        if st.sidebar.button("🔄 New Research", use_container_width=True):
+        if st.sidebar.button("🔄 Nova Pesquisa", use_container_width=True):
             st.session_state["messages"] = []
             st.rerun()
 
@@ -101,20 +101,20 @@ def main():
 
         if has_messages:
             if st.sidebar.download_button(
-                "💾 Export Report",
+                "💾 Exportar Relatório",
                 export_chat_history("Deep Research Report"),
                 file_name="research_report.md",
                 mime="text/markdown",
                 use_container_width=True,
-                help=f"Export {len(st.session_state['messages'])} messages",
+                help=f"Exportar {len(st.session_state['messages'])} mensagens",
             ):
-                st.sidebar.success("Research report exported!")
+                st.sidebar.success("Relatório de pesquisa exportado!")
         else:
             st.sidebar.button(
-                "💾 Export Report",
+                "💾 Exportar Relatório",
                 disabled=True,
                 use_container_width=True,
-                help="No research to export",
+                help="Nenhuma pesquisa para exportar",
             )
 
     ####################################################################
@@ -131,32 +131,32 @@ def main():
     if last_message and last_message.get("role") == "user":
         if not (nebius_api_key and scrapegraph_api_key):
             st.error(
-                "🔑 Please configure your API keys in the sidebar to start research."
+                "🔑 Por favor, configure suas chaves de API na barra lateral para começar a pesquisa."
             )
             return
 
         research_topic = last_message["content"]
 
         with st.chat_message("assistant"):
-            # Create containers for different phases
+            # Criar containers para diferentes fases
             response_container = st.empty()
 
             try:
-                # Get the workflow
+                # Obter o workflow
                 app = get_deep_researcher_workflow()
 
-                # Execute the research workflow with status updates
+                # Executar o workflow de pesquisa com atualizações de status
                 with st.status(
-                    "🔎 Executing research workflow...", expanded=True
+                    "🔎 Executando workflow de pesquisa...", expanded=True
                 ) as status:
                     status.write(
-                        "🧠 **Phase 1: Researching** - Finding and extracting relevant information..."
+                        "🧠 **Fase 1: Pesquisando** - Encontrando e extraindo informações relevantes..."
                     )
                     status.write(
-                        "📊 **Phase 2: Analyzing** - Synthesizing and interpreting the research findings..."
+                        "📊 **Fase 2: Analisando** - Sintetizando e interpretando as descobertas da pesquisa..."
                     )
                     status.write(
-                        "📝 **Phase 3: Writing** - Crafting the final report..."
+                        "📝 **Fase 3: Escrevendo** - Criando o relatório final..."
                     )
 
                     result = app.run(topic=research_topic)
@@ -167,24 +167,24 @@ def main():
                         response_container.markdown(full_report)
                     else:
                         full_report = (
-                            "❌ Failed to generate research report. Please try again."
+                            "❌ Falha ao gerar relatório de pesquisa. Por favor, tente novamente."
                         )
                         response_container.markdown(full_report)
 
-                    status.update(label="✅ Research completed!", state="complete")
+                    status.update(label="✅ Pesquisa concluída!", state="complete")
 
-                # Add the complete response to messages
+                # Adicionar a resposta completa às mensagens
                 add_message("assistant", full_report)
 
             except Exception as e:
-                st.error(f"❌ Research failed: {str(e)}")
-                st.info("💡 Please check your API keys and try again.")
+                st.error(f"❌ Pesquisa falhou: {str(e)}")
+                st.info("💡 Por favor, verifique suas chaves de API e tente novamente.")
 
     ####################################################################
     # About section
     ####################################################################
     about_section(
-        "This Deep Researcher uses a multi-agent workflow to conduct comprehensive research, analysis, and report generation. Built with Agno, ScrapeGraph, and Nebius AI."
+        "Este Pesquisador Profundo usa um workflow multi-agente para conduzir pesquisa abrangente, análise e geração de relatórios. Construído com Agno, ScrapeGraph e Nebius AI."
     )
 
 

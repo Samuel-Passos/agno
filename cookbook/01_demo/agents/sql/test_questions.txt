@@ -1,69 +1,69 @@
-Here are 10 questions where:
-- 3 questions work with existing knowledge
-- 4 questions produce reusable artifacts worth saving to the KB
-- 3 questions become noticeably better once those artifacts exist in the KB
+Aqui estão 10 perguntas onde:
+- 3 perguntas funcionam com conhecimento existente
+- 4 perguntas produzem artefatos reutilizáveis que valem a pena salvar na KB
+- 3 perguntas ficam notavelmente melhores uma vez que esses artefatos existam na KB
 
 ==============================
-A) 3 questions that don't need KB updates
+A) 3 perguntas que não precisam de atualizações na KB
 ==============================
 
-1) How many championships has each driver won?
-2) Top 10 drivers by total career points
-3) Which team won the most Constructors Championships?
+1) Quantos campeonatos cada piloto ganhou?
+2) Top 10 pilotos por total de pontos na carreira
+3) Qual equipe ganhou mais Campeonatos de Construtores?
 
 ==============================
-B) 4 questions that should update the knowledge base
+B) 4 perguntas que devem atualizar a base de conhecimento
 ==============================
 
-4) Drivers with the most podium finishes
+4) Pilotos com mais finais de pódio
 
-What to save to KB:
-- Rule: drivers_championship.position is TEXT, cast safely only after filtering numeric values
-- Pattern: numeric-position filter snippet: position ~ '^[0-9]+$'
+O que salvar na KB:
+- Regra: drivers_championship.position é TEXT, fazer cast com segurança apenas após filtrar valores numéricos
+- Padrão: snippet de filtro de posição numérica: position ~ '^[0-9]+$'
 
-5) Most race wins in a single season by a driver
+5) Mais vitórias em uma única temporada por um piloto
 
-What to save to KB:
-- Rule: race_wins.date is TEXT and must be parsed with TO_DATE(date, 'DD Mon YYYY')
-- Pattern: reusable season derivation: EXTRACT(YEAR FROM TO_DATE(date, 'DD Mon YYYY'))::INT
+O que salvar na KB:
+- Regra: race_wins.date é TEXT e deve ser analisado com TO_DATE(date, 'DD Mon YYYY')
+- Padrão: derivação de temporada reutilizável: EXTRACT(YEAR FROM TO_DATE(date, 'DD Mon YYYY'))::INT
 
-6) Compare the number of race wins vs championship position for constructors in a given year
+6) Comparar o número de vitórias vs posição no campeonato para construtores em um determinado ano
 
-What to save to KB:
-- Pattern: per-year wins CTE + standings join (LEFT JOIN + COALESCE)
-- Rule: for season-level joins to race_wins, always join with derived year
+O que salvar na KB:
+- Padrão: CTE de vitórias por ano + join de classificações (LEFT JOIN + COALESCE)
+- Regra: para joins de nível de temporada com race_wins, sempre fazer join com ano derivado
 
-7) Drivers who won races but never won a championship
+7) Pilotos que ganharam corridas mas nunca ganharam um campeonato
 
-What to save to KB:
-- Pattern: “wins but never champion” anti-join pattern
-- Gotcha note: champions come from drivers_championship WHERE position = '1' (TEXT)
+O que salvar na KB:
+- Padrão: padrão anti-join "vitórias mas nunca campeão"
+- Nota importante: campeões vêm de drivers_championship WHERE position = '1' (TEXT)
 
 ==============================
-C) 3 questions that use the updated KB artifacts
+C) 3 perguntas que usam os artefatos atualizados da KB
 ==============================
 
-These are chosen so the agent should retrieve and reuse the saved patterns and rules.
+Estas são escolhidas para que o agente recupere e reutilize os padrões e regras salvos.
 
-8) Average championship position per driver
+8) Posição média no campeonato por piloto
 
-How it improves using KB:
-- It reuses the “safe numeric cast” rule from #4
-- It avoids casting non-numeric positions if they exist
+Como melhora usando KB:
+- Reutiliza a regra de "cast numérico seguro" de #4
+- Evita fazer cast de posições não numéricas se existirem
 
-9) Championship winners with the fewest race wins in their championship season
+9) Campeões com menos vitórias em sua temporada de campeonato
 
-How it improves using KB:
-- It reuses the year extraction pattern from #5
-- It reuses the join-safety rule from #6 (season-scoped join)
+Como melhora usando KB:
+- Reutiliza o padrão de extração de ano de #5
+- Reutiliza a regra de segurança de join de #6 (join com escopo de temporada)
 
-10) Do champions usually have the most race wins that season?
+10) Campeões geralmente têm mais vitórias naquela temporada?
 
-How it improves using KB:
-- It reuses the “wins vs standings” scaffold from #6
-- It reuses the “season join must include derived year” rule from #5
-- It avoids the classic mistake of joining on name alone without year
+Como melhora usando KB:
+- Reutiliza o scaffold "vitórias vs classificações" de #6
+- Reutiliza a regra "join de temporada deve incluir ano derivado" de #5
+- Evita o erro clássico de fazer join apenas no nome sem o ano
 
-If you want, I can also provide:
-- the exact “KB artifacts” you should save after questions 4–7 (name, summary, notes, tags)
-- a recommended run order as a scripted demo (ask, query, save, then show improvement)
+Se quiser, também posso fornecer:
+- os "artefatos KB" exatos que você deve salvar após as perguntas 4–7 (nome, resumo, notas, tags)
+- uma ordem de execução recomendada como uma demonstração scriptada (perguntar, consultar, salvar, depois mostrar melhoria)

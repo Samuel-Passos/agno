@@ -12,69 +12,69 @@ from agno.tools.yfinance import YFinanceTools
 
 web_agent = Agent(
     name="Web Agent",
-    role="Search the web for information",
+    role="Buscar informações na web",
     model=OpenAIChat(id="gpt-4o"),
     tools=[DuckDuckGoTools()],
-    instructions=["Always include sources"],
+    instructions=["Sempre incluir fontes"],
 )
 
 finance_agent = Agent(
     name="Finance Agent",
-    role="Get financial data",
+    role="Obter dados financeiros",
     model=OpenAIChat(id="gpt-4o"),
     tools=[YFinanceTools()],
-    instructions=["Use tables to display data"],
+    instructions=["Usar tabelas para exibir dados"],
 )
 
 image_agent = Agent(
     name="Image Agent",
-    role="Analyze or generate images",
+    role="Analisar ou gerar imagens",
     model=OpenAIChat(id="gpt-4o"),
     tools=[DalleTools()],
-    description="You are an AI agent that can analyze images or create images using DALL-E.",
+    description="Você é um agente de IA que pode analisar imagens ou criar imagens usando DALL-E.",
     instructions=[
-        "When the user asks you about an image, give your best effort to analyze the image and return a description of the image.",
-        "When the user asks you to create an image, use the DALL-E tool to create an image.",
-        "The DALL-E tool will return an image URL.",
-        "Return the image URL in your response in the following format: `![image description](image URL)`",
+        "Quando o usuário perguntar sobre uma imagem, fazer seu melhor esforço para analisar a imagem e retornar uma descrição da imagem.",
+        "Quando o usuário pedir para criar uma imagem, usar a ferramenta DALL-E para criar uma imagem.",
+        "A ferramenta DALL-E retornará uma URL de imagem.",
+        "Retornar a URL da imagem em sua resposta no seguinte formato: `![image description](image URL)`",
     ],
 )
 
 file_analysis_agent = Agent(
     name="File Analysis Agent",
-    role="Analyze files",
+    role="Analisar arquivos",
     model=Claude(id="claude-3-7-sonnet-latest"),
-    description="You are an AI agent that can analyze files.",
+    description="Você é um agente de IA que pode analisar arquivos.",
     instructions=[
-        "You are an AI agent that can analyze files.",
-        "You are given a file and you need to answer questions about the file.",
+        "Você é um agente de IA que pode analisar arquivos.",
+        "Você recebe um arquivo e precisa responder perguntas sobre o arquivo.",
     ],
 )
 
 writer_agent = Agent(
     name="Write Agent",
-    role="Write content",
+    role="Escrever conteúdo",
     model=OpenAIChat(id="gpt-4o"),
-    description="You are an AI agent that can write content.",
+    description="Você é um agente de IA que pode escrever conteúdo.",
     instructions=[
-        "You are a versatile writer who can create content on any topic.",
-        "When given a topic, write engaging and informative content in the requested format and style.",
-        "If you receive mathematical expressions or calculations from the calculator agent, convert them into clear written text.",
-        "Ensure your writing is clear, accurate and tailored to the specific request.",
-        "Maintain a natural, engaging tone while being factually precise.",
+        "Você é um escritor versátil que pode criar conteúdo sobre qualquer tópico.",
+        "Quando receber um tópico, escrever conteúdo envolvente e informativo no formato e estilo solicitados.",
+        "Se receber expressões matemáticas ou cálculos do agente calculadora, convertê-los em texto escrito claro.",
+        "Garantir que sua escrita seja clara, precisa e adaptada à solicitação específica.",
+        "Manter um tom natural e envolvente enquanto é factualmente preciso.",
     ],
 )
 
 audio_agent = Agent(
     name="Audio Agent",
-    role="Analyze audio",
+    role="Analisar áudio",
     model=Gemini(id="gemini-2.0-flash-exp"),
 )
 
 calculator_agent = Agent(
     name="Calculator Agent",
     model=OpenAIChat(id="gpt-4o"),
-    role="Calculate",
+    role="Calcular",
     tools=[CalculatorTools()],
     markdown=True,
 )
@@ -84,11 +84,11 @@ calculator_writer_team = Team(
     model=OpenAIChat("gpt-4o"),
     members=[calculator_agent, writer_agent],
     instructions=[
-        "You are a team of two agents. The calculator agent and the writer agent.",
-        "The calculator agent is responsible for calculating the result of the mathematical expression.",
-        "The writer agent is responsible for writing the result of the mathematical expression in a clear and engaging manner."
-        "You need to coordinate the work between the two agents and give the final response to the user.",
-        "You need to give the final response to the user in the requested format and style.",
+        "Você é uma equipe de dois agentes. O agente calculadora e o agente escritor.",
+        "O agente calculadora é responsável por calcular o resultado da expressão matemática.",
+        "O agente escritor é responsável por escrever o resultado da expressão matemática de forma clara e envolvente."
+        "Você precisa coordenar o trabalho entre os dois agentes e dar a resposta final ao usuário.",
+        "Você precisa dar a resposta final ao usuário no formato e estilo solicitados.",
     ],
     markdown=True,
     show_members_responses=True,
@@ -96,10 +96,10 @@ calculator_writer_team = Team(
 
 reasoning_agent = Agent(
     name="Reasoning Agent",
-    role="Reasoning about Math",
+    role="Raciocinar sobre Matemática",
     model=OpenAIChat(id="gpt-4o"),
     reasoning_model=DeepSeek(id="deepseek-reasoner"),
-    instructions=["You are a reasoning agent that can reason about math."],
+    instructions=["Você é um agente de raciocínio que pode raciocinar sobre matemática."],
     markdown=True,
     debug_mode=True,
 )
@@ -111,12 +111,12 @@ code_execution_agent = Agent(
     tools=[E2BTools()],
     markdown=True,
     instructions=[
-        "You are an expert at writing and validating Python code using a secure E2B sandbox environment.",
-        "Your primary purpose is to:",
-        "1. Write clear, efficient Python code based on user requests",
-        "2. Execute and verify the code in the E2B sandbox",
-        "3. Share the complete code with the user, as this is the main use case",
-        "4. Provide thorough explanations of how the code works",
+        "Você é um especialista em escrever e validar código Python usando um ambiente sandbox E2B seguro.",
+        "Seu propósito principal é:",
+        "1. Escrever código Python claro e eficiente com base nas solicitações do usuário",
+        "2. Executar e verificar o código no sandbox E2B",
+        "3. Compartilhar o código completo com o usuário, pois este é o caso de uso principal",
+        "4. Fornecer explicações detalhadas de como o código funciona",
         "",
     ],
 )
@@ -135,10 +135,10 @@ agent_team = Team(
         code_execution_agent,
     ],
     instructions=[
-        "You are a team of agents that can answer questions about the web, finance, images, audio, and files.",
-        "You can use your member agents to answer the questions.",
-        "if you are asked about a file, use the file analysis agent to analyze the file.",
-        "You can also answer directly, you don't HAVE to forward the question to a member agent.",
+        "Você é uma equipe de agentes que pode responder perguntas sobre web, finanças, imagens, áudio e arquivos.",
+        "Você pode usar seus agentes membros para responder as perguntas.",
+        "se você for perguntado sobre um arquivo, usar o agente de análise de arquivos para analisar o arquivo.",
+        "Você também pode responder diretamente, não PRECISA encaminhar a pergunta para um agente membro.",
     ],
     respond_directly=True,
     markdown=True,
@@ -154,7 +154,7 @@ agent_team.print_response(
     stream=True,
 )
 
-# Use web and finance agents to answer the question
+# Usar agentes web e finance para responder a pergunta
 agent_team.print_response(
     "Summarize analyst recommendations and share the latest news for NVDA", stream=True
 )
